@@ -12,7 +12,6 @@ class Test extends Base
     public function test()
     {
         $params = $this->getParams(['name']);
-
         $rule = [
             'name' => 'require'
         ];
