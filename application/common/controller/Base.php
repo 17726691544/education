@@ -28,7 +28,7 @@ class Base extends Controller
         $params = $this->request->param();
         $fix = [];
         foreach ($keys as $key) {
-            $fix[$key] = isset($params[$key]) ? $params[$key] : null;
+            $fix[$key] = isset($params[$key]) ? trim($params[$key]) : null;
         }
         return $fix;
     }
