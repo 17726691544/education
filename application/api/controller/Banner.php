@@ -16,6 +16,5 @@ class Banner extends Base
      */
     public function getBanner($bannerId = 1)
     {
-        return xxx;
     }
 }
