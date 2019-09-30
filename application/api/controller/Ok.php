@@ -7,7 +7,7 @@ use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
 use think\Exception;
 
-class Banner extends Base
+class Ok extends Base
 {
     /**
      * 获取banner
@@ -16,6 +16,6 @@ class Banner extends Base
      */
     public function getBanner($bannerId = 1)
     {
-        return 'jkahsdfjkhasjkdhfjkhuixzchvkjzxhckjvhzxjhcvlzxvxzcvzxcv';
+        return '123123123123123';
     }
 }
