@@ -4,6 +4,8 @@
 namespace app\api\controller;
 
 use app\common\controller\Base;
+use app\common\exception\BusinessBaseException;
+use think\Exception;
 
 class Banner extends Base
 {
@@ -14,7 +16,6 @@ class Banner extends Base
      */
     public function getBanner($bannerId = 1)
     {
-
         return $bannerId;
     }
 }
