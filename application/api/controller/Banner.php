@@ -10,6 +10,6 @@ class Banner extends Base
     public function register()
     {
 
-        return  'test test faslkdjflkjsadlkfjhk sadf jaskldjflk sadlk sadf jasdlkf ';
+        return  'IJFLKASJDFLK激发了快速的减肥拉数据东方连接as代理费拉萨的交付了撒开的分';
     }
 }
