@@ -9,6 +9,10 @@ class Banner extends Base
 
     public function register()
     {
+<<<<<<< HEAD
         return 'ok';
+=======
+        return 'jkahsdfjkhasjkdhfjkhuixzchvkjzxhckjvhzxjhcvlzxvxzcvzxcv';
+>>>>>>> tem
     }
 }
