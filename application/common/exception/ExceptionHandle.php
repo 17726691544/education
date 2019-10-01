@@ -32,7 +32,7 @@ class ExceptionHandle extends Handle
             //属于系统运行异常
             $this->msg = '服务器内部错误';
             //系统异常记录日志信息
-            Log::record($e->getMessage(), 'error');
+            Log::write($e->getMessage(), 'error');
         }
         $errorArr = [
             'code' => $this->code,

@@ -12,8 +12,8 @@ use  think\Exception;
  */
 class BusinessBaseException extends Exception
 {
-    private $errorCode;
-    private $msg;
+    protected $errorCode;
+    protected $msg;
 
     /**
      * BusinessBaseException constructor.
@@ -27,7 +27,7 @@ class BusinessBaseException extends Exception
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getErrorCode()
     {
@@ -41,5 +41,6 @@ class BusinessBaseException extends Exception
     {
         return $this->msg;
     }
+
 
 }
