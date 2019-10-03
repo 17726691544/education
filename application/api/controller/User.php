@@ -1,38 +1,67 @@
 <?php
 
+
 namespace app\api\controller;
 
+use app\api\service\SmsService;
+use app\api\service\UserService;
 use app\common\controller\Base;
+use app\common\exception\BusinessBaseException;
+use app\common\validate\UserV;
 
 class User extends Base
 {
 
+    /**
+     * 注册获取验证码
+     * @return \think\response\Json
+     * @throws BusinessBaseException
+     */
+    public function getRegCode()
+    {
+        $params = $this->getParams(['tel']);
+        (new UserV())->goChick($params);
+
+        $regCode = (new SmsService())->getRegCode($params['tel']);
+        if (!$regCode) {
+            throw new BusinessBaseException('发送失败');
+        }
+
+        return $this->jsonBack(0, '发送成功');
+
+    }
+
+    /**
+     * 用户注册
+     * @return \think\response\Json
+     * @throws BusinessBaseException
+     */
     public function register()
     {
-//        $params = $this->getParams(['tel', 'reg_code', 'pass', 'safe_pass', 'invite_code']);
-//
-//        $rule = [
-//            'tel' => 'require|max:11|regex:/^1[3-8]{1}[0-9]{9}$/',
-//            'reg_code' => 'require|max:6',
-//            'pass' => 'require|max:20',
-//            'safe_pass' => 'require|max:20',
-//            'invite_code' => 'max:10',
-//        ];
-//        $msg = [
-//            'tel.require' => '手机号不能为空',
-//            'tel.max' => '手机号不能超过11位',
-//            'tel.regex' => '无效的手机号',
-//            'reg_code.require' =>'手机验证码不能为空',
-//            'reg_code.max' =>'无效的手机验证码',
-//            'pass.require' =>'登录密码不能为空',
-//            'pass.max' =>'无效的登录密码',
-//            'safe_pass.require' =>'安全密码不能为空',
-//            'safe_pass.max' =>'无效的安全密码'
-//        ];
-//
-//        $validate = $this->validate($params, $rule, $msg);
-//        if (true !== $validate) {
-//            return $this->jsonBack(1,$validate);
-//        }
+        $params = $this->getParams(['tel', 'u_type', 'tel_code', 'pass', 'safe_pass', 'invite_code']);
+        (new UserV())->goChick($params);
+
+        $register = (new UserService())->register($params);
+        if (!$register) {
+            throw  new BusinessBaseException('注册失败');
+        }
+
+        return $this->jsonBack(0, '注册成功');
     }
+
+    /**
+     * 用户登录
+     * @throws BusinessBaseException
+     */
+    public function login(){
+        $params = $this->getParams(['tel','pass']);
+        (new UserV())->goChick($params);
+
+        $login = (new UserService())->login($params['tel'], $params['pass']);
+        if(!$login){
+            throw  new BusinessBaseException('登录失败');
+        }
+        return $this->jsonBack(0, '登录成功',$login);
+    }
+
 }
