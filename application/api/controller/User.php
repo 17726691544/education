@@ -16,17 +16,17 @@ class User extends Base
 {
 
     /**
-     * 注册获取验证码
+     * 获取验证码
      * @return \think\response\Json
      * @throws BusinessBaseException
      */
-    public function getRegCode()
+    public function getCode()
     {
-        $params = $this->getParams(['tel']);
+        $params = $this->getParams(['tel','send_type','code_type']);
         (new UserV())->goChick($params);
 
-        $regCode = (new SmsService())->getRegCode($params['tel']);
-        if (!$regCode) {
+        $result = (new SmsService())->getCode($params['tel'],$params['send_type'],$params['code_type']);
+        if (!$result) {
             return $this->jsonBack(1, '发送失败');
         }
 

@@ -23,6 +23,7 @@ class BaseService
             throw new BusinessBaseException('验证码错误');
         }
         $now = time();
+        $c = $codeCahe->expire_time;
         if ($now > $codeCahe->expire_time) {
             throw new BusinessBaseException('验证码已过期');
         }

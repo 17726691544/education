@@ -2,6 +2,8 @@
 
 namespace app\common\controller;
 
+use app\api\common\JwtAuth;
+use app\common\exception\BusinessBaseException;
 use think\Controller;
 
 class Base extends Controller
@@ -31,5 +33,21 @@ class Base extends Controller
             $fix[$key] = isset($params[$key]) ? trim($params[$key]) : null;
         }
         return $fix;
+    }
+
+
+    /**
+     * 获取用户id
+     * @return mixed
+     * @throws BusinessBaseException
+     */
+    protected function getUid()
+    {
+        $jwtAuth = JwtAuth::instance();
+        $uid = $jwtAuth->getUid();
+        if (!$uid) {
+            throw new BusinessBaseException('无效的令牌');
+        }
+        return $uid;
     }
 }

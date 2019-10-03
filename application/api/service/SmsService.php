@@ -17,16 +17,6 @@ use app\common\model\CodeCahe;
 class SmsService
 {
 
-    /**
-     * 获取注册验证码
-     * @param $tel
-     * @return bool
-     * @throws BusinessBaseException
-     */
-    public function getRegCode($tel)
-    {
-        return $this->getCode($tel, 1, 1);
-    }
 
     /**
      * 获取验证码
@@ -37,7 +27,7 @@ class SmsService
      * @throws BusinessBaseException
      * @throws \think\Exception
      */
-    private function getCode($tel, $sendType, $codeType)
+    public function getCode($tel, $sendType, $codeType)
     {
         //1:获取当前电话号码信息
         $codeCahe = CodeCahe::findByWhere($tel, $sendType, $codeType);
@@ -60,6 +50,7 @@ class SmsService
             if ($codeCahe->send_at < strtotime('today')) {
                 $codeCahe->code_content = $randCode;
                 $codeCahe->send_at = $now;
+                $codeCahe->expire_time = $now + 300;
                 $codeCahe->count_day = 1;
                 $codeCahe->save();
             } else {
@@ -68,17 +59,22 @@ class SmsService
                 }
 
                 if ($codeCahe->count_day >= 30) {
-                    throw new BusinessBaseException('当前手机号验证码超过每日请求限制30次');
+                    throw new BusinessBaseException('获取验证码超过每日请求限制30次');
                 }
 
                 $codeCahe->code_content = $randCode;
                 $codeCahe->send_at = $now;
+                $codeCahe->expire_time = $now + 300;
                 $codeCahe->count_day += 1;
                 $codeCahe->save();
             }
         }
         //发送
-        return AliSms::instance()->send($tel, $randCode);
+        if($sendType === '1'){
+            return AliSms::instance()->send($tel, $randCode);
+        }else{
+            throw new BusinessBaseException('暂不支持的发送类型');
+        }
 
     }
 
