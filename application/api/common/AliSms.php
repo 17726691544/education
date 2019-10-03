@@ -60,7 +60,7 @@ class AliSms
                 return true;
             }
         } catch (\Exception $e) {
-            throw new Exception($e->getMessage());
+           return false;
         }
 
     }

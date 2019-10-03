@@ -27,7 +27,7 @@ class User extends Base
 
         $regCode = (new SmsService())->getRegCode($params['tel']);
         if (!$regCode) {
-            throw new BusinessBaseException('发送失败');
+            return $this->jsonBack(1, '发送失败');
         }
 
         return $this->jsonBack(0, '发送成功');
@@ -45,10 +45,9 @@ class User extends Base
         (new UserV())->goChick($params);
 
         $register = (new UserService())->register($params);
-        if (true !== $register) {
-            throw  new BusinessBaseException('注册失败');
+        if (!$register) {
+            return $this->jsonBack(1, '注册失败');
         }
-
         return $this->jsonBack(0, '注册成功');
     }
 
@@ -63,7 +62,7 @@ class User extends Base
 
         $login = (new UserService())->login($params['tel'], $params['pass']);
         if (!$login) {
-            throw  new BusinessBaseException('登录失败');
+            return $this->jsonBack(1, '登录失败');
         }
         return $this->jsonBack(0, '登录成功', $login);
     }
@@ -79,11 +78,11 @@ class User extends Base
         $jwtAuth = JwtAuth::instance();
         $uid = $jwtAuth->getUid();
         if (!$uid) {
-            throw new BusinessBaseException('无效的令牌');
+            return $this->jsonBack(1, '无效令牌');
         }
         //查询数据库获取用户信息
         $userInfo = UserModel::get($uid)->find();
-        return $this->jsonBack(0, '成功',$userInfo);
+        return $this->jsonBack(0, '成功', $userInfo);
 
     }
 

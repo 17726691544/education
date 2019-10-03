@@ -8,6 +8,7 @@ use app\common\enum\CodeCaheEnum;
 use app\common\enum\UserEnum;
 use app\common\exception\BusinessBaseException;
 use app\common\model\User;
+use think\Db;
 
 class UserService extends BaseService
 {
@@ -35,23 +36,31 @@ class UserService extends BaseService
         $now = time();
         //保存用户
         $parentId = $this->findParentId($invitedCode);
-        $user = new User();
-        $user->save([
-            'tel' => $tel,
-            'pass' => md5($tel . $params['pass']),
-            'safe_pass' => md5($tel . $params['safe_pass']),
-            'nick' => $tel,
-            'parent_id' => $parentId ? $parentId : 0,
-            'u_type' => $uType,
-            'reg_at' => $now
-        ]);
-        //根据保存邀请码
-        $code = $this->createCode($user->id);
-        (new User())->save([
-            'invite_code' => $code
-        ], ['id' => $user->id]);
+        Db::startTrans();
+        try {
+            $user = new User();
+            $user->save([
+                'tel' => $tel,
+                'pass' => md5($tel . $params['pass']),
+                'safe_pass' => md5($tel . $params['safe_pass']),
+                'nick' => $tel,
+                'parent_id' => $parentId ? $parentId : 0,
+                'u_type' => $uType,
+                'reg_at' => $now
+            ]);
+            //根据保存邀请码
+            $code = $this->createCode($user->id);
+            (new User())->save([
+                'invite_code' => $code
+            ], ['id' => $user->id]);
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            return false;
+        }
 
-        return true;
+
     }
 
 
@@ -73,14 +82,7 @@ class UserService extends BaseService
         }
         //生成登录令牌返回用户信息
         $jwtAuth = JwtAuth::instance();
-        try{
-            $tokenEncode = $jwtAuth->tokenEncode(['uid' => $user->id]);
-            return $tokenEncode;
-        }catch (\Exception $e){
-            throw new BusinessBaseException('获取登录令牌失败');
-        }
-
-
+        return $jwtAuth->tokenEncode(['uid' => $user->id]);
 
     }
 

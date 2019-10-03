@@ -21,27 +21,9 @@ class Userset extends Base
         $jwtAuth = JwtAuth::instance();
         $uid = $jwtAuth->getUid();
         if(!$uid){
-            throw new BusinessBaseException('无效的token');
+           return $this->jsonBack(1,'无效的令牌');
         }
-        $file = request()->file('head');
-        if(!$file){
-            throw new BusinessBaseException('上传不能为空');
-        }
-        $info = $file->validate(['size'=>10240,'ext'=>'jpg,png,gif'])->move( '../uploads');
-        if($info){
-            $saveName = $info->getSaveName();
-            $user = new UserModel();
 
-           $result = $user->save([
-                'head_url'=>'/'.$saveName
-            ],['id'=>$uid]);
-           if(!$result){
-               throw new BusinessBaseException('上传失败');
-           }
-            return $this->jsonBack(0,'上传成功','/uploads/'.$saveName);
-        }else{
-            throw new BusinessBaseException($file->getError());
-        }
     }
 
 

@@ -35,7 +35,7 @@ class JwtAuth
     public function tokenEncode($params = [])
     {
         if (!is_array($params)) {
-            throw new Exception('错误的参数传递');
+            return false;
         }
         $uniqId = md5(uniqid(microtime(true), true));
 
@@ -52,7 +52,7 @@ class JwtAuth
             }
             return (string)($builder->getToken($signer, new Key($this->secret)));
         } catch (\Exception $e) {
-            throw new \Exception('生成令牌失败');
+            return false;
         }
     }
 
@@ -82,8 +82,9 @@ class JwtAuth
             $this->tokenData = $parse->getClaims();
             return true;
         } catch (\Exception $e) {
-            throw new BusinessBaseException('无效的令牌');
+            return false;
         }
+
     }
 
     /**

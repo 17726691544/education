@@ -54,9 +54,10 @@ class BaseValidate extends Validate
     {
         $token = Request::header('token');
         $jwtAuth = JwtAuth::instance();
+
         $tokenDecode = $jwtAuth->tokenDecode($token);
-        if(true !== $tokenDecode){
-            throw  new BusinessBaseException('无效的令牌');
+        if (!$tokenDecode) {
+            throw new BusinessBaseException('校验令牌失败');
         }
         return $this;
 
