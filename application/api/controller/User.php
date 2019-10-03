@@ -3,11 +3,14 @@
 
 namespace app\api\controller;
 
+use app\api\common\JwtAuth;
 use app\api\service\SmsService;
 use app\api\service\UserService;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
+use app\common\validate\BaseValidate;
 use app\common\validate\UserV;
+use \app\common\model\User as UserModel;
 
 class User extends Base
 {
@@ -42,7 +45,7 @@ class User extends Base
         (new UserV())->goChick($params);
 
         $register = (new UserService())->register($params);
-        if (!$register) {
+        if (true !== $register) {
             throw  new BusinessBaseException('注册失败');
         }
 
@@ -53,15 +56,35 @@ class User extends Base
      * 用户登录
      * @throws BusinessBaseException
      */
-    public function login(){
-        $params = $this->getParams(['tel','pass']);
+    public function login()
+    {
+        $params = $this->getParams(['tel', 'pass']);
         (new UserV())->goChick($params);
 
         $login = (new UserService())->login($params['tel'], $params['pass']);
-        if(!$login){
+        if (!$login) {
             throw  new BusinessBaseException('登录失败');
         }
-        return $this->jsonBack(0, '登录成功',$login);
+        return $this->jsonBack(0, '登录成功', $login);
+    }
+
+    /**
+     * 获取用户基本信息
+     * @return |null
+     * @throws BusinessBaseException
+     */
+    public function getUserInfo()
+    {
+        (new BaseValidate())->tokenChick();
+        $jwtAuth = JwtAuth::instance();
+        $uid = $jwtAuth->getUid();
+        if (!$uid) {
+            throw new BusinessBaseException('无效的令牌');
+        }
+        //查询数据库获取用户信息
+        $userInfo = UserModel::get($uid)->find();
+        return $this->jsonBack(0, '成功',$userInfo);
+
     }
 
 }

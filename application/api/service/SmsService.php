@@ -25,7 +25,7 @@ class SmsService
      */
     public function getRegCode($tel)
     {
-        return $this->getCode($tel, CodeCaheEnum::SEND_TYPE_TEL, CodeCaheEnum::CODE_TYPE_REG);
+        return $this->getCode($tel, 1, 1);
     }
 
     /**

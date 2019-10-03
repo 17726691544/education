@@ -7,16 +7,14 @@ use think\Model;
 class User extends Model
 {
     protected $table = 'user';
-
-    protected $visible=['id','tel','nick','level','invite_code','head_url','reg_at'];
-
+    protected $hidden = ['pass','safe_pass','parent_id','u_type'];
     protected $type = [
         'reg_at'  =>  'timestamp'
     ];
 
     public function getLevelAttr($value)
     {
-        $status = [1=>'初级会员'];
+        $status = [1=>'普通会员'];
         return $status[$value];
     }
 

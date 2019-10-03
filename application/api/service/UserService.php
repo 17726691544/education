@@ -3,6 +3,7 @@
 
 namespace app\api\service;
 
+use app\api\common\JwtAuth;
 use app\common\enum\CodeCaheEnum;
 use app\common\enum\UserEnum;
 use app\common\exception\BusinessBaseException;
@@ -25,7 +26,7 @@ class UserService extends BaseService
         $invitedCode = $params['invite_code'];
 
         //判断验证码是否正确
-        $this->checkCode($tel, $codeContent, CodeCaheEnum::SEND_TYPE_TEL, CodeCaheEnum::CODE_TYPE_REG);
+        $this->checkCode($tel, $codeContent, 1, 1);
         //判断用户是否注册
         $user = User::findByTel($tel);
         if ($user) {
@@ -40,10 +41,8 @@ class UserService extends BaseService
             'pass' => md5($tel . $params['pass']),
             'safe_pass' => md5($tel . $params['safe_pass']),
             'nick' => $tel,
-            'level' => UserEnum::USER_LEVEL_1,
             'parent_id' => $parentId ? $parentId : 0,
             'u_type' => $uType,
-            'u_status' => (int)$uType === UserEnum::USER_TYPE_TEA ? UserEnum::USER_STATUS_AUDIT : UserEnum::USER_STATUS_AUDITSUCEE,
             'reg_at' => $now
         ]);
         //根据保存邀请码
@@ -60,8 +59,6 @@ class UserService extends BaseService
      * 用户登录
      * @param $tel
      * @param $pass
-     * @return bool
-     * @throws BusinessBaseException
      */
     public function login($tel, $pass)
     {
@@ -74,23 +71,15 @@ class UserService extends BaseService
         if ($inputPass !== $user->pass) {
             throw new BusinessBaseException('用户名或密码错误');
         }
-        //判断状态
-        $u_status = $user->u_status;
-        if($u_status !== UserEnum::USER_STATUS_AUDITSUCEE){
-            switch ($u_status) {
-                case UserEnum::USER_STATUS_AUDIT:
-                    throw new BusinessBaseException('账号审核中',1);
-                    break;
-                case UserEnum::USER_STATUS_AUDITFAIL:
-                    throw new BusinessBaseException('账号未通过审核',2);
-                    break;
-                case UserEnum::USER_STATUS_HITLIST:
-                    throw new BusinessBaseException('账号已冻结',3);
-                    break;
-            }
-        }
         //生成登录令牌返回用户信息
-        return $user;
+        $jwtAuth = JwtAuth::instance();
+        try{
+            $tokenEncode = $jwtAuth->tokenEncode(['uid' => $user->id]);
+            return $tokenEncode;
+        }catch (\Exception $e){
+            throw new BusinessBaseException('获取登录令牌失败');
+        }
+
 
 
     }

@@ -4,7 +4,9 @@
 namespace app\common\validate;
 
 
+use app\api\common\JwtAuth;
 use app\common\exception\BusinessBaseException;
+use think\facade\Request;
 use think\Validate;
 
 /**
@@ -17,6 +19,12 @@ class BaseValidate extends Validate
     //同一类操作的的验证规则，动态根据传出的data数据动态选择
     protected $rules;
 
+    /**
+     * 参数验证
+     * @param $data
+     * @param bool $batch
+     * @throws BusinessBaseException
+     */
     public function goChick($data, $batch = false)
     {
         if (!is_array($data)) {
@@ -37,4 +45,20 @@ class BaseValidate extends Validate
         }
     }
 
+    /**
+     * token检查
+     * @return $this|mixed
+     * @throws BusinessBaseException
+     */
+    public function tokenChick()
+    {
+        $token = Request::header('token');
+        $jwtAuth = JwtAuth::instance();
+        $tokenDecode = $jwtAuth->tokenDecode($token);
+        if(true !== $tokenDecode){
+            throw  new BusinessBaseException('无效的令牌');
+        }
+        return $this;
+
+    }
 }
