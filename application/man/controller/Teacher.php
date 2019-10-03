@@ -4,7 +4,11 @@ namespace app\man\controller;
 use app\common\controller\Base;
 use app\man\model\Course as CourseModel;
 use app\man\model\CourseItem;
+use app\man\model\User as UserModel;
+use app\man\model\Video as VideoModel;
+use app\man\model\TeachCenter as TeachCenterModel;
 use think\Db;
+use think\facade\Validate;
 
 class Teacher extends Base
 {
@@ -214,55 +218,6 @@ class Teacher extends Base
     }
 
     /**
-     * 修改小节
-     * @return \think\response\Json
-     */
-    public function editItem() {
-        $params = $this->getParams(['id','name','sort']);
-        $rule = [
-            'id' => 'require|integer|>=:1',
-            'name' => 'require|length:1,30',
-            'sort' => 'require|integer|between:0,100'
-        ];
-        $msg = [
-            'id' => '错误的操作',
-            'name' => '小节名称1-30个字符',
-            'sort' => '排序0-100之间'
-        ];
-        $r = $this->validate($params,$rule,$msg);
-        if (true !== $r) {
-            return $this->jsonBack(1,$r);
-        }
-
-        CourseItem::update([
-            'name' => $params['name'],
-            'sort' => $params['sort']
-        ],['id'=>$params['id']]);
-
-        return $this->jsonBack(0,'修改成功');
-    }
-
-    /**
-     * 删除小节
-     */
-    public function delItem() {
-        $params = $this->getParams(['id']);
-        $rule = [
-            'id' => 'require|integer|>=:1'
-        ];
-        $msg = [
-            'id' => '错误的操作'
-        ];
-        $r = $this->validate($params,$rule,$msg);
-        if (true !== $r) {
-            return $this->jsonBack(1,$r);
-        }
-
-        CourseItem::destroy($params['id']);
-        return $this->jsonBack(0,'操作成功');
-    }
-
-    /**
      * 删除课程
      */
     public function del() {
@@ -280,5 +235,64 @@ class Teacher extends Base
 
         CourseModel::destroy($params['id']);
         $this->success('操作成功');
+    }
+
+    /**
+     * 查询用户
+     * @return \think\response\Json
+     */
+    public function getUser() {
+        $params = $this->getParams(['key']);
+        $rule = [
+            'key' => 'require|min:1'
+        ];
+        $msg = [
+            'key' => '请输入手机号码或编号'
+        ];
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        if (Validate::is($params['key'],'mobile')) {
+            $map[] = ['tel','=',$params['key']];
+        } else {
+            $map[] = ['invite_code','=',$params['key']];
+        }
+
+        try {
+            $user = UserModel::where($map)->find();
+            if (!$user) throw new \Exception('用户不存在');
+            if ($user->is_teacher === 1) throw new \Exception('该用户已经是教师了');
+            return $this->jsonBack(0,'',$user);
+        } catch (\Exception $e) {
+            return $this->jsonBack(2,$e->getMessage());
+        }
+    }
+
+    /**
+     * 视频列表
+     * @return \think\response\Json
+     */
+    public function getVideos() {
+        try {
+            $list = VideoModel::where('status',0)->select();
+            return $this->jsonBack(0,'',$list);
+        } catch (\Exception $e) {
+            return $this->jsonBack(1,$e->getMessage());
+        }
+    }
+
+    /**
+     * 取得教学中心
+     * @return \think\response\Json
+     */
+    public function getCenters() {
+        try {
+            $list = TeachCenterModel::where('status',1)->select();
+            return $this->jsonBack(0,'',$list);
+        } catch (\Exception $e) {
+            return $this->jsonBack(1,$e->getMessage());
+        }
     }
 }
