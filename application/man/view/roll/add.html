@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加轮播</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css">
+    <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js?v=1"></script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-danger" onclick="back()">
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+            </span>
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+
+                <div class="panel-body" id="app" v-cloak="">
+                    <form class="form-horizontal" method="post">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-10">
+                                <select v-model="type" class="form-control" @change="typeChange">
+                                    <option value="1">图片</option>
+                                    <option value="2">视频</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <template v-if="type==1">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">图片</label>
+                                <div class="col-sm-10">
+                                    <button id="up-image" type="button" class="btn btn-info" v-if="!image.path">
+                                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传图片
+                                    </button>
+                                    <span class="img-preview" v-else>
+                                        <img :src="image.url" class="img-rounded" alt="140x140" style="width: 100px; height: 100px;" data-holder-rendered="true">
+                                        <span @click="clear('image','up-image')" class="glyphicon glyphicon-remove img-close" aria-hidden="true"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template v-else>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">展示视频</label>
+                                <div class="col-sm-10">
+                                    <button id="up-video" type="button" class="btn btn-info" v-if="!video.path">
+                                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传视频
+                                    </button>
+                                    <span class="img-preview" v-else>
+                                    <video width="320" height="240" controls>
+                                        <source :src="video.url" type="video/mp4">
+                                        您的浏览器不支持 video 标签。
+                                    </video>
+                                    <span @click="clear('video','up-video')" class="glyphicon glyphicon-remove video-close" aria-hidden="true"></span>
+                                </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">视频封面图</label>
+                                <div class="col-sm-10">
+                                    <button id="up-cover" type="button" class="btn btn-info" v-if="!cover.path">
+                                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传图片
+                                    </button>
+                                    <span class="img-preview" v-else>
+                                    <img :src="cover.url" class="img-rounded" alt="140x140" style="width: 100px; height: 100px;" data-holder-rendered="true">
+                                    <span @click="clear('cover','up-cover')" class="glyphicon glyphicon-remove img-close" aria-hidden="true"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">平台介绍</label>
+                            <div class="col-sm-10">
+                                <script id="container" type="text/plain"></script>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button @click="submit" type="button" class="btn btn-primary">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <!-- 配置文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
+    <script>
+        let ue = UE.getEditor('container');
+        let uploader,layer;
+        layui.use('layer', function(){
+            layer = layui.layer;
+        });
+
+        let app = new Vue({
+            el:'#app',
+            data:{
+                type:1,
+                image:{
+                    path:'',
+                    url:''
+                },
+                video:{
+                    path:'',
+                    url:''
+                },
+                cover:{
+                    path:'',
+                    url:''
+                }
+            },
+            methods:{
+                clear:function (key,id) {
+                    this[key].path = '';
+                    this[key].url = '';
+                    setTimeout(function () {
+                        app.bindUploader(id);
+                    },1000);
+                },
+                bindUploader:function (id) {
+                    uploader.render({
+                        elem: '#' + id, //绑定元素
+                        url: id === 'up-video' ? '{:url("Goods/uploadVideo")}' : '{:url("Goods/uploadImage")}', //上传接口
+                        field: id === 'up-video' ? 'video' : 'image',
+                        accept:id === 'up-video' ? 'video' : 'images',
+                        done: function(res){
+                            //上传完毕回调
+                            if (res.code === 0) {
+                                if (id === 'up-image') {
+                                    app.image = res.data;
+                                } else if (id === 'up-cover') {
+                                    app.cover = res.data;
+                                } else {
+                                    app.video = res.data;
+                                }
+                            } else {
+                                layer.msg(res.msg);
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                            layer.msg('上传错误');
+                        }
+                    });
+                },
+                typeChange:function() {
+                    localStorage.setItem('type',this.type);
+                    setTimeout(function () {
+                        location.reload();
+                    },500);
+                },
+                submit:function () {
+                    let postData = {
+                        type: this.type,
+                        image: this.image.path,
+                        video: this.video.path,
+                        cover: this.cover.path,
+                        detail: ue.getContent()
+                    };
+
+                    $.post('{:url("add")}',postData,function (ret) {
+                        layer.msg(ret.msg);
+                        if (ret.code === 0) {
+                            setTimeout(function () {
+                                location.reload();
+                            },800);
+                        }
+                    },'json');
+                }
+            },
+            created:function() {
+              this.type = localStorage.getItem('type') || 1;
+            },
+            mounted:function() {
+                layui.use('upload', function() {
+                    uploader = layui.upload;
+                    if (app.type === 1 || app.type === '1') {
+                        app.bindUploader('up-image');
+                    } else {
+                        app.bindUploader('up-video');
+                        app.bindUploader('up-cover');
+                    }
+                });
+            },
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加课程</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?v=9">
+    <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        .preview-box {
+            width: 235px;
+            height: 120px;
+            position: relative;
+            background: #888888;
+            display: inline-block;
+        }
+        .preview-box img {
+            max-width: 235px;
+            max-height: 120px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+        }
+        .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+        }
+        .close:hover{
+            color: #ff253e;
+            opacity: 1;
+        }
+        .rm-item {
+            margin-left: .5rem;
+        }
+        .rm-item:hover {
+            color: #ff253e;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" id="app" v-cloak>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程名称</label>
+                            <div class="col-sm-10">
+                                <input v-model="title" placeholder="课程名称" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程说明</label>
+                            <div class="col-sm-10">
+                                <textarea v-model="tip" placeholder="课程说明" style="resize: none;" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程价格</label>
+                            <div class="col-sm-10">
+                                <input v-model="price" placeholder="课程价格" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代奖励</label>
+                            <div class="col-sm-10">
+                                <input v-model="qydl" placeholder="区代奖励" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代推荐人奖励</label>
+                            <div class="col-sm-10">
+                                <input v-model="qdtjr" placeholder="区代推荐人奖励" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">教学中心奖励</label>
+                            <div class="col-sm-10">
+                                <input v-model="jxzx" placeholder="教学中心奖励" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">个代奖励</label>
+                            <div class="col-sm-10">
+                                <input v-model="grdl" placeholder="个代奖励" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">个代推荐人奖励</label>
+                            <div class="col-sm-10">
+                                <input v-model="gdtjr" placeholder="个代推荐人奖励" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程封面图片</label>
+                            <div class="col-sm-10">
+                                <button v-show="cover===null" id="up-button" type="button" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传图片
+                                </button>
+                                <span class="preview-box" v-show="cover!==null">
+                                    <img :src="cover">
+                                    <span @click="clear" class="glyphicon glyphicon-remove close" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">可选年级</label>
+                            <div class="col-sm-10">
+                                <div style="display: flex;margin:1rem 0 1.5rem 0;" v-show="grades.length>0">
+                                    <span v-for="(item,index) in grades" style="margin-right: 1rem;">
+                                        <span class="label label-warning">{{item}}</span>
+                                        <span @click="removeGrade(index)" class="glyphicon glyphicon-remove rm-item" aria-hidden="true"></span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <input v-model="gradeName" type="text" class="form-control" placeholder="输入可选年级，如：一年级" style="display: inline-block;width: 18rem;">
+                                    <button @click="addGrade" type="button" class="btn btn-success">添加年级</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程小节</label>
+                            <div class="col-sm-10">
+                                <ul v-show="items.length>0" style="margin-bottom: 1rem;">
+                                    <li v-for="(item,index) in items" style="display: flex;margin-top: .5rem;align-items: center;">
+                                        <span class="label label-warning">{{item.name}}</span>
+                                        <span @click="removeItem(index)" class="glyphicon glyphicon-remove rm-item" aria-hidden="true"></span>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <input v-model="itemName" type="text" class="form-control" placeholder="输入课程小节名称" style="display: inline-block;width: 18rem;">
+                                    <button @click="addItem" type="button" class="btn btn-success">添加小节</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" @click.prevent="submit">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script>
+        let uploader,layer;
+        layui.use('layer', function(){
+            layer = layui.layer;
+        });
+        
+        const app = new Vue({
+            el:'#app',
+            data:{
+                title:'',
+                price:'',
+                tip:'',
+                cover:null,
+                qydl:'',
+                qdtjr:'',
+                jxzx:'',
+                grdl:'',
+                gdtjr:'',
+                items:[],
+                itemName:'',
+                grades:[],
+                gradeName:''
+            },
+            methods:{
+                bindUploader:function () {
+                    uploader.render({
+                        elem: '#up-button', //绑定元素
+                        url: '{:url("Index/uploadImage")}', //上传接口
+                        field: 'image',
+                        accept: 'images',
+                        before:function() {
+                            layer.load(2, {
+                                shade: [0.6,'#000']
+                            });
+                        },
+                        done: function(ret){
+                            layer.closeAll('loading');
+                            //上传完毕回调
+                            if (ret.code === 0) {
+                                app.cover = ret.data;
+                            } else {
+                                layer.msg(ret.msg);
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                            layer.closeAll('loading');
+                            layer.msg('上传错误');
+                        }
+                    });
+                },
+                clear:function () {
+                    this.cover = null;
+                },
+                addItem:function() {
+                    if (this.itemName) {
+                        this.items.push({id:null,name:this.itemName});
+                        this.itemName = '';
+                    }
+                },
+                removeItem:function(index) {
+                    this.items.splice(index,1);
+                },
+                addGrade:function() {
+                    this.grades.push(this.gradeName);
+                    this.gradeName = '';
+                },
+                removeGrade:function(index) {
+                    this.grades.splice(index,1);
+                },
+                submit:function () {
+                    let postData = {
+                        title: this.title,
+                        cover: this.cover,
+                        price: this.price,
+                        tip: this.tip,
+                        qydl: this.qydl,
+                        qdtjr: this.qdtjr,
+                        jxzx: this.jxzx,
+                        grdl: this.grdl,
+                        gdtjr: this.gdtjr,
+                        items: JSON.stringify(this.items),
+                        grades: JSON.stringify(this.grades)
+                    };
+
+                    $.post('{:url("add")}', postData, function (ret) {
+                        layer.msg(ret.msg);
+                        if (ret.code === 0) {
+                            setTimeout(function () {
+                                app.cover = null;
+                                app.items = [];
+                                app.title = app.price = app.tip = app.qydl = app.qdtjr = app.jxzx = app.grdl = app.gdtjr = '';
+                            }, 800);
+                        }
+                    }, 'json');
+                }
+            },
+            mounted:function () {
+                layui.use('upload', function() {
+                    uploader = layui.upload;
+                    app.bindUploader();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

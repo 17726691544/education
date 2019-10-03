@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加案例</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css">
+    <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        .preview-box {
+            width: 200px;
+            height: 150px;
+            position: relative;
+            background: #888888;
+            display: inline-block;
+        }
+        .preview-box img {
+            max-width: 200px;
+            max-height: 150px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+        }
+        .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+        }
+        .close:hover{
+            color: #ff253e;
+            opacity: 1;
+        }
+        .video-box {
+            width: 480px;
+            height: 270px;
+            position: relative;
+            display: inline-block;
+        }
+        .video-box video{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" id="app" v-cloak>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程标题</label>
+                            <div class="col-sm-10">
+                                <input v-model="title" placeholder="课程标题" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">视频封面图</label>
+                            <div class="col-sm-10">
+                                <button v-show="cover===null" id="up-button" type="button" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传封面
+                                </button>
+                                <span class="preview-box" v-show="cover!==null">
+                                    <img :src="cover">
+                                    <span @click="clearCover" class="glyphicon glyphicon-remove close" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程视频</label>
+                            <div class="col-sm-10">
+                                <button v-show="video===null" id="up-video" type="button" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传视频
+                                </button>
+                                <span v-show="video!==null" class="video-box">
+                                    <video :src="video" controls="controls">
+                                        您的浏览器不支持 video 标签。
+                                    </video>
+                                    <span @click="clearVideo" class="glyphicon glyphicon-remove close" aria-hidden="true"></span>
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" @click.prevent="submit">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script>
+        let uploader,layer;
+        layui.use('layer', function(){
+            layer = layui.layer;
+        });
+        
+        const app = new Vue({
+            el:'#app',
+            data:{
+                title: '',
+                cover: null,
+                video: null
+            },
+            methods:{
+                bindUploader:function () {
+                    uploader.render({
+                        elem: '#up-button', //绑定元素
+                        url: '{:url("Index/uploadImage")}', //上传接口
+                        field: 'image',
+                        accept: 'images',
+                        before:function() {
+                            layer.load(2, {
+                                shade: [0.6,'#000']
+                            });
+                        },
+                        done: function(ret){
+                            layer.closeAll('loading');
+                            //上传完毕回调
+                            if (ret.code === 0) {
+                                app.cover = ret.data;
+                            } else {
+                                layer.msg(ret.msg);
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                            layer.closeAll('loading');
+                            layer.msg('上传错误');
+                        }
+                    });
+
+                    uploader.render({
+                        elem: '#up-video', //绑定元素
+                        url: '{:url("Index/uploadVideo")}', //上传接口
+                        field: 'video',
+                        accept: 'video',
+                        before:function() {
+                            layer.load(2, {
+                                shade: [0.6,'#000']
+                            });
+                        },
+                        done: function(ret){
+                            layer.closeAll('loading');
+                            //上传完毕回调
+                            if (ret.code === 0) {
+                                app.video = ret.data;
+                            } else {
+                                layer.msg(ret.msg);
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                            layer.closeAll('loading');
+                            layer.msg('上传错误');
+                        }
+                    });
+                },
+                clearCover:function () {
+                    this.cover = null;
+                },
+                clearVideo:function() {
+                    this.video = null;
+                },
+                submit:function () {
+                    let postData = {
+                        title: this.title,
+                        cover: this.cover,
+                        video: this.video
+                    };
+                    $.post('{:url("add")}', postData, function (ret) {
+                        layer.msg(ret.msg);
+                        if (ret.code === 0) {
+                            setTimeout(function () {
+                                app.title = '';
+                                app.cover = app.video = null;
+                            }, 800);
+                        }
+                    }, 'json');
+                }
+            },
+            mounted:function () {
+                layui.use('upload', function() {
+                    uploader = layui.upload;
+                    app.bindUploader();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

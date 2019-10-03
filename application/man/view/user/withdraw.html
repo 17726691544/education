@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提现记录</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        #modal{
+            position: fixed;
+            z-index: 999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.7);
+            display: none;
+        }
+        #preview {
+            max-height: 80%;
+            position:relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div id="modal" onclick="hide()">
+            <img id="preview" alt="点击预览" src="">
+        </div>
+
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <form class="form-inline" method="post">
+                        <div class="form-group">
+                            <label class="sr-only">状态</label>
+                            <select name="status" class="form-control">
+                                <option value="-1" {if($params.status==-1)}selected{/if}>全部</option>
+                                <option value="0" {if($params.status==0)}selected{/if}>待审核</option>
+                                <option value="1" {if($params.status==1)}selected{/if}>已通过</option>
+                                <option value="2" {if($params.status==2)}selected{/if}>已拒绝</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">用户编号</label>
+                            <input name="code" value="{$params.code}" type="text" class="form-control" placeholder="用户编号">
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜索</button>
+                    </form>
+
+                    <div class="margin-top-10">
+                        <table class="table table-bordered table-hover">
+                            <caption class="tip-box">
+                                <span class="label label-info">共计 {$list->total()} 条记录</span>
+                                <span class="label label-warning">总金额 {$total}</span>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">用户编号</th>
+                                    <th class="text-center">用户昵称</th>
+                                    <th class="text-center">用户头像</th>
+                                    <th class="text-center">提现金额</th>
+                                    <th class="text-center">收款二维码</th>
+                                    <th class="text-center">状态</th>
+                                    <th class="text-center">时间</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {if ($list->count() === 0)}
+                                    <tr>
+                                        <td class="text-center" colspan="9">暂无数据</td>
+                                    </tr>
+                                {else/}
+                                    {foreach $list as $item}
+                                        <tr>
+                                            <td class="text-center">{$item.id}</td>
+                                            <td class="text-center">{$item.user.ivt_code}</td>
+                                            <td class="text-center">{$item.user.nick}</td>
+                                            <td class="text-center">
+                                                <img src="{$item.user.head_url}" alt="头像" style="width: 100px;height: 100px;" class="img-rounded">
+                                            </td>
+                                            <td class="text-center">{$item.num}</td>
+                                            <td class="text-center">
+                                                <img onclick="preview('{$item.user.wx_qr_url}')" src="{$item.user.wx_qr_url}" alt="收款码" style="width: 100px;height: 100px;" class="img-rounded">
+                                            </td>
+                                            <td class="text-center">{$item.status_str}</td>
+                                            <td class="text-center">{$item.create_at_str}</td>
+                                            <td class="text-center">
+                                                <a href="{:url('doWithdraw',['id'=>$item.id,'type'=>1])}" type="button" class="btn btn-warning">同意(自动)</a>
+                                                <a href="{:url('doWithdraw',['id'=>$item.id,'type'=>2])}" type="button" class="btn btn-primary">同意(手动)</a>
+                                                <a href="{:url('doWithdraw',['id'=>$item.id,'type'=>3])}" type="button" class="btn btn-danger">拒绝</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-center">
+                        {$list->render()|raw}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script>
+        function preview(url) {
+            $('#preview').attr('src',url);
+            $('#modal').fadeIn();
+        }
+
+        function hide() {
+            $('#modal').fadeOut();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <form class="form-inline" method="post">
+                        <div class="form-group">
+                            <label class="sr-only">等级</label>
+                            <select name="level" class="form-control">
+                                <option value="0">普通会员</option>
+                                <option value="1">LV1</option>
+                                <option value="2">LV2</option>
+                                <option value="3">LV3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">编号</label>
+                            <input name="code" type="text" class="form-control" placeholder="编号">
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜索</button>
+                    </form>
+
+                    <div class="margin-top-10">
+                        <table class="table table-bordered table-hover">
+                            <caption class="tip-box">
+                                <span class="label label-info">共计 {$list->total()} 人</span>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">编号</th>
+                                    <th class="text-center">昵称</th>
+                                    <th class="text-center">头像</th>
+                                    <th class="text-center">等级</th>
+                                    <th class="text-center">余额</th>
+                                    <th class="text-center">手机</th>
+                                    <th class="text-center">推荐人编号</th>
+                                    <th class="text-center">注册时间</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {if ($list->count() === 0)}
+                                    <tr>
+                                        <td class="text-center" colspan="10">暂无数据</td>
+                                    </tr>
+                                {else/}
+                                    {foreach $list as $item}
+                                        <tr>
+                                            <td class="text-center">{$item.id}</td>
+                                            <td class="text-center">{$item.ivt_code}</td>
+                                            <td class="text-center">{$item.nick}</td>
+                                            <td class="text-center">
+                                                <img src="{$item.head_url}" alt="头像" style="width: 100px;height: 100px;" class="img-rounded">
+                                            </td>
+                                            <td class="text-center">{$item.level_str}</td>
+                                            <td class="text-center">{$item.balance}</td>
+                                            <td class="text-center">{$item.tel_tip}</td>
+                                            <td class="text-center">{$item.inviter_code}</td>
+                                            <td class="text-center">{$item.reg_at_str}</td>
+                                            <td class="text-center">
+                                                <a href="{:url('recommend',['id'=>$item.id])}" type="button" class="btn btn-primary">推荐人</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-center">
+                        {$list->render()|raw}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

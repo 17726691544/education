@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>统计</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/echarts.min.js"></script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div style="height: 400px" id="user">
+
+                    </div>
+
+                    <div style="height: 400px" id="usdt">
+
+                    </div>
+
+                    <div style="height: 400px" id="epos">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 基于准备好的dom，初始化echarts实例
+        let user = echarts.init(document.getElementById('user'));
+
+        // 指定图表的配置项和数据
+        let user_option = {
+            title: {
+                text: '用户统计'
+            },
+            tooltip: {},
+            legend: {
+                data:['人数']
+            },
+            xAxis: {
+                data: ["注册会员","有效会员","E1","E2","E3","E4"]
+            },
+            yAxis: {},
+            series: [{
+                name: '人数',
+                type: 'bar',
+                data: [
+                    Number("{$data['user_total']}"),
+                    Number("{$data['user_valid']}"),
+                    Number("{$data['user_e1']}"),
+                    Number("{$data['user_e2']}"),
+                    Number("{$data['user_e3']}"),
+                    Number("{$data['user_e4']}"),
+                ]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        user.setOption(user_option);
+
+
+
+        // 基于准备好的dom，初始化echarts实例
+        let usdt = echarts.init(document.getElementById('usdt'));
+
+        // 指定图表的配置项和数据
+        let usdt_option = {
+            title: {
+                text: 'USDT统计'
+            },
+            tooltip: {},
+            legend: {
+                data:['个数']
+            },
+            xAxis: {
+                data: ["会员可用总量","认购总量","冻结总量","充币总量","提币总量"]
+            },
+            yAxis: {},
+            series: [{
+                name: '个数',
+                type: 'bar',
+                data: [
+                    Number("{$data['usdt']}"),
+                    Number("{$data['usdt_total']}"),
+                    Number("{$data['usdt_frozen']}"),
+                    Number("{$data['usdt_recharge']}"),
+                    Number("{$data['usdt_withdraw']}"),
+                ]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        usdt.setOption(usdt_option);
+
+
+
+        // 基于准备好的dom，初始化echarts实例
+        let epos = echarts.init(document.getElementById('epos'));
+
+        // 指定图表的配置项和数据
+        let epos_option = {
+            title: {
+                text: 'EPOS统计'
+            },
+            tooltip: {},
+            legend: {
+                data:['个数']
+            },
+            xAxis: {
+                data: ["会员可用总量","提币总量"]
+            },
+            yAxis: {},
+            series: [{
+                name: '个数',
+                type: 'bar',
+                data: [
+                    Number("{$data['epos']}"),
+                    Number("{$data['epos_withdraw']}"),
+                ]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        epos.setOption(epos_option);
+
+
+
+
+
+    </script>
+</body>
+</html>

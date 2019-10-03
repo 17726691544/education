@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列表</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <form class="form-inline" method="post">
+                        <div class="form-group">
+                            <label class="sr-only">等级</label>
+                            <select name="status" class="form-control">
+                                <option value="-1" {if ($params.status==-1)}selected{/if}>全部</option>
+                                <option value="0" {if ($params.status==0)}selected{/if}>待审核</option>
+                                <option value="1" {if ($params.status==1)}selected{/if}>审核通过</option>
+                                <option value="2" {if ($params.status==2)}selected{/if}>审核被拒</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">编号</label>
+                            <input name="key" value="{$params.key}" type="text" class="form-control" placeholder="区代编号或手机">
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜索</button>
+                    </form>
+
+                    <div class="margin-top-10">
+                        <table class="table table-bordered table-hover">
+                            <caption class="tip-box">
+                                <span class="label label-info">共计 {$list->total()} 条</span>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">代理人</th>
+                                    <th class="text-center">名称</th>
+                                    <th class="text-center">区域</th>
+                                    <th class="text-center">详细地址</th>
+                                    <th class="text-center">状态</th>
+                                    <th class="text-center">时间</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {if ($list->count() === 0)}
+                                    <tr>
+                                        <td class="text-center" colspan="8">暂无数据</td>
+                                    </tr>
+                                {else/}
+                                    {foreach $list as $item}
+                                        <tr>
+                                            <td class="text-center">{$item.id}</td>
+                                            <td class="text-center">{$item.user.tel}（{$item.user.invite_code}）</td>
+                                            <td class="text-center">{$item.name}</td>
+                                            <td class="text-center">{$item.province} {$item.city} {$item.country}</td>
+                                            <td class="text-center">{$item.area}</td>
+                                            <td class="text-center">{$item.status_str}</td>
+                                            <td class="text-center">{$item.create_at_str}</td>
+                                            <td class="text-center">
+                                                {if ($item.status === 0)}
+                                                <a href="{:url('deal',['id'=>$item.id,'status'=>1])}" type="button" class="btn btn-success">通过</a>
+                                                <a href="{:url('deal',['id'=>$item.id,'status'=>2])}" type="button" class="btn btn-warning">拒绝</a>
+                                                {/if}
+                                                <a href="{:url('deal',['id'=>$item.id,'status'=>3])}" type="button" class="btn btn-danger">删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-center">
+                        {$list->render()|raw}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

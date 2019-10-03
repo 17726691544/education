@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播列表</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?id=9">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="margin-top-10">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">图片</th>
+                                    <th class="text-center">排序</th>
+                                    <th class="text-center">时间</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {if ($list->count() === 0)}
+                                    <tr>
+                                        <td class="text-center" colspan="5">暂无数据</td>
+                                    </tr>
+                                {else/}
+                                    {foreach $list as $item}
+                                        <tr>
+                                            <td class="text-center">{$item.id}</td>
+                                            <td class="text-center">
+                                                <img src="{$item.image}" alt="图片" style="width: 195px;height: 110px;" class="img-rounded">
+                                            </td>
+                                            <td class="text-center">
+                                                <span onclick="sortClick(this)" class="label label-info" data-toggle="tooltip" data-placement="top" title="点击修改">{$item.sort}</span>
+                                                <form class="form-inline hidden">
+                                                    <div class="form-group">
+                                                        <label class="sr-only">Password</label>
+                                                        <input style="width: 80px;" type="text" class="form-control" value="{$item.sort}">
+                                                    </div>
+                                                    <button data-id="{$item.id}" data-old="{$item.sort}" type="button" class="btn btn-default" onclick="change(this)">确定</button>
+                                                </form>
+                                            </td>
+                                            <td class="text-center">{$item.create_at_str}</td>
+                                            <td class="text-center">
+                                                <a href="{:url('del',['id'=>$item.id])}" type="button" class="btn btn-danger">删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-center">
+                        {$list->render()|raw}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layer/layer.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function sortClick(el) {
+            let span = $(el);
+            let form = span.siblings('form');
+            span.addClass('hidden');
+            form.removeClass('hidden');
+        }
+
+        function change(el) {
+            let button = $(el);
+            let form = button.parent('form');
+            let span = form.siblings('span');
+            let input = form.find('input');
+            let id = button.attr('data-id');
+            let oldVal = button.attr('data-old');
+            let val = input.val();
+            if (val === oldVal) {
+                form.addClass('hidden');
+                span.removeClass('hidden');
+            } else {
+                $.post("{:url('setSort')}",{id:id,sort:val},function (ret) {
+                    layer.msg(ret.msg);
+                    if (ret.code === 0) {
+                        setTimeout(function () {
+                            location.reload();
+                        },800);
+                    }
+                },'json');
+            }
+        }
+    </script>
+</body>
+</html>
