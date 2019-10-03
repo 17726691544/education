@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提示</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        html,body,.row,.panel,.box{
+            height: 100%;
+        }
+        .tip {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 box">
+            <div class="panel panel-default">
+                <div class="tip">
+                    <h1 class="text-center text-danger"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></h1>
+                    <h1 class="text-center text-danger">你没有执行当前操作的权限，请联系超级管理员</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

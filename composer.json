@@ -20,7 +20,10 @@
         "topthink/framework": "5.1.*",
         "ext-curl": "*",
         "ext-json": "*",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "ext-openssl": "*",
+        "ext-mbstring": "*",
+        "aliyuncs/oss-sdk-php": "^2.3"
     },
     "autoload": {
         "psr-4": {

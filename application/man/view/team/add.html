@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加团队</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css">
+    <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        .preview-box {
+            width: 325px;
+            height: 180px;
+            position: relative;
+            background: #888888;
+            display: inline-block;
+        }
+        .preview-box img {
+            max-width: 325px;
+            max-height: 180px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+        }
+        .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+        }
+        .close:hover{
+            color: #ff253e;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" id="app" v-cloak>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">团队名称</label>
+                            <div class="col-sm-10">
+                                <input v-model="name" placeholder="团队名称" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">一句话简介</label>
+                            <div class="col-sm-10">
+                                <input v-model="tip" placeholder="一句话简介" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">团队图片</label>
+                            <div class="col-sm-10">
+                                <ul v-show="images.length>0">
+                                    <li v-for="(item,index) in images">
+                                        <span class="preview-box">
+                                            <img :src="item">
+                                            <span @click="clear(index)" class="glyphicon glyphicon-remove close" aria-hidden="true"></span>
+                                        </span>
+                                    </li>
+                                </ul>
+
+                                <button v-show="images.length<3" id="up-button" type="button" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;{{images.length===0?'上传图片':'继续上传'}}
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">团队介绍</label>
+                            <div class="col-sm-10">
+                                <script id="container" type="text/plain"></script>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" @click.prevent="submit">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 配置文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script>
+        let uploader,layer;
+        layui.use('layer', function(){
+            layer = layui.layer;
+        });
+        
+        const app = new Vue({
+            el:'#app',
+            data:{
+                name: '',
+                tip: '',
+                images: []
+            },
+            methods:{
+                bindUploader:function () {
+                    uploader.render({
+                        elem: '#up-button', //绑定元素
+                        url: '{:url("Index/uploadImage")}', //上传接口
+                        field: 'image',
+                        accept: 'images',
+                        before:function() {
+                            layer.load(2, {
+                                shade: [0.6,'#000']
+                            });
+                        },
+                        done: function(ret){
+                            layer.closeAll('loading');
+                            //上传完毕回调
+                            if (ret.code === 0) {
+                                app.images.push(ret.data);
+                            } else {
+                                layer.msg(ret.msg);
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                            layer.closeAll('loading');
+                            layer.msg('上传错误');
+                        }
+                    });
+                },
+                clear:function (index) {
+                    app.images.splice(index,1);
+                },
+                submit:function () {
+                    let postData = {
+                        name: this.name,
+                        tip: this.tip,
+                        images: JSON.stringify(this.images),
+                        detail: ue.getContent()
+                    };
+
+                    $.post('{:url("add")}', postData, function (ret) {
+                        layer.msg(ret.msg);
+                        if (ret.code === 0) {
+                            setTimeout(function () {
+                                app.name = app.tip = '';
+                                app.images = [];
+                                ue.setContent('');
+                            }, 800);
+                        }
+                    }, 'json');
+                }
+            },
+            mounted:function () {
+                ue = UE.getEditor('container');
+                layui.use('upload', function() {
+                    uploader = layui.upload;
+                    app.bindUploader();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

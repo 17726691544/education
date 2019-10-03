@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service;
+namespace app\common\service;
 
 use think\facade\Cache;
 
