@@ -20,7 +20,7 @@ class BusinessBaseException extends Exception
      * @param int $errorCode
      * @param $msg
      */
-    public function __construct($msg, $errorCode = null)
+    public function __construct($msg, $errorCode = 1)
     {
         $this->errorCode = $errorCode;
         $this->msg = $msg;

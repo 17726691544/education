@@ -13,7 +13,6 @@ use think\facade\Log;
  */
 class ExceptionHandle extends Handle
 {
-    private $code = 1; //json返回返回code 1:代表失败
     private $errorCode = 500;
     private $msg;
 
@@ -35,9 +34,8 @@ class ExceptionHandle extends Handle
             Log::write($e->getMessage(), 'error');
         }
         $errorArr = [
-            'code' => $this->code,
-            'msg' => $this->msg,
-            'errorCode' => $this->errorCode
+            'code' => $this->errorCode,
+            'msg' => $this->msg
         ];
         return json($errorArr);
     }
