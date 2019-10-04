@@ -11,10 +11,14 @@ use app\common\validate\BaseValidate;
 use app\common\validate\UsersetV;
 use app\common\model\User as UserModel;
 
+/**
+ * 用户设置controller
+ * @package app\api\controller
+ */
 class Userset extends Base
 {
     /**
-     * 上传头像
+     * 修改头像
      */
     public function uploadHead()
     {

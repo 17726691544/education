@@ -3,7 +3,6 @@
 
 namespace app\api\controller;
 
-use app\api\common\JwtAuth;
 use app\api\service\SmsService;
 use app\api\service\UserService;
 use app\common\controller\Base;
@@ -12,6 +11,10 @@ use app\common\validate\BaseValidate;
 use app\common\validate\UserV;
 use \app\common\model\User as UserModel;
 
+/**
+ * 用户controller
+ * @package app\api\controller
+ */
 class User extends Base
 {
 
@@ -29,7 +32,6 @@ class User extends Base
         if (!$result) {
             return $this->jsonBack(1, '发送失败');
         }
-
         return $this->jsonBack(0, '发送成功');
 
     }
@@ -75,11 +77,7 @@ class User extends Base
     public function getUserInfo()
     {
         (new BaseValidate())->tokenChick();
-        $jwtAuth = JwtAuth::instance();
-        $uid = $jwtAuth->getUid();
-        if (!$uid) {
-            return $this->jsonBack(1, '无效令牌');
-        }
+        $uid = $this->getUid();
         //查询数据库获取用户信息
         $userInfo = UserModel::get($uid)->find();
         return $this->jsonBack(0, '成功', $userInfo);
