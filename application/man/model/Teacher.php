@@ -17,4 +17,12 @@ class Teacher extends Model
     public function getCreateAtStrAttr($value,$data) {
         return date('Y-m-d H:i:s', $data['create_at']);
     }
+
+    /**
+     * 关联用户
+     * @return \think\model\relation\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo('User','user_id','id');
+    }
 }

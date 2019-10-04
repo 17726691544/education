@@ -14,7 +14,7 @@ class Video extends Base
      */
     public function index() {
         try {
-            $list = VideoModel::order('id desc')->paginate(10);
+            $list = VideoModel::where('status',0)->order('id desc')->paginate(10);
             $this->assign('list',$list);
             return $this->fetch('index');
         } catch (\Exception $e) {
@@ -126,7 +126,7 @@ class Video extends Base
             $this->error($r);
         }
 
-        VideoModel::destroy($params['id']);
+        VideoModel::update(['status'=>1],['id'=>$params['id']]);
         $this->success('操作成功');
     }
 }

@@ -2,11 +2,10 @@
 
 namespace app\man\controller;
 use app\common\controller\Base;
-use app\man\model\Course as CourseModel;
-use app\man\model\CourseItem;
+use app\man\model\TeacherCenter;
 use app\man\model\User as UserModel;
-use app\man\model\Video as VideoModel;
 use app\man\model\TeachCenter as TeachCenterModel;
+use app\man\model\Teacher as TeacherModel;
 use think\Db;
 use think\facade\Validate;
 
@@ -15,12 +14,37 @@ class Teacher extends Base
     protected $middleware = ['app\man\middleware\Auth'];
 
     /**
-     * 课程列表
+     * 教师列表
      * @return mixed|string
      */
     public function index() {
+        $params = $this->getParams(['key']);
+        $map = [];
+        $query = ['query' => $params];
+        if ($this->request->isPost()) {
+            $query['page'] = 1;
+        }
+        if ($params['key']) {
+            if (Validate::is($params['key'],'mobile')) {
+                $user_id = UserModel::where('tel',$params['key'])->value('id');
+                if ($user_id) {
+                    $map[] = ['user_id','=',$user_id];
+                } else {
+                    $this->error('用户不存在');
+                }
+            } else {
+                $user_id = UserModel::where('invite_code',$params['key'])->value('id');
+                if ($user_id) {
+                    $map[] = ['user_id','=',$user_id];
+                } else {
+                    $this->error('用户不存在');
+                }
+            }
+        }
+
         try {
-            $list = CourseModel::order('id desc')->paginate(10);
+            $list = TeacherModel::with('user')->where($map)->order('id desc')->paginate(10,false,$query);
+            $this->assign('params',$params);
             $this->assign('list',$list);
             return $this->fetch('index');
         } catch (\Exception $e) {
@@ -29,75 +53,77 @@ class Teacher extends Base
     }
 
     /**
-     * 添加课程
+     * 添加教师
      * @return mixed|\think\response\Json
      */
     public function add() {
         if ($this->request->isPost()) {
-            $params = $this->getParams(['title','cover','price','tip', 'qydl','qdtjr','jxzx','grdl','gdtjr','items','grades']);
+            $params = $this->getParams(['user_id','name','education','position', 'ability','image','cover','tips','centers']);
             $rule = [
-                'title' => 'require|length:1,50',
-                'cover' => 'require|min:1',
-                'price' => 'require|float|>:0.01',
-                'tip' => 'require|length:1,255',
-                'qydl' => 'require|float|>=:0',
-                'qdtjr' => 'require|float|>=:0',
-                'jxzx' => 'require|float|>=:0',
-                'grdl' => 'require|float|>=:0',
-                'gdtjr' => 'require|float|>=:0'
+                'user_id' => 'require|integer|>:0',
+                'name' => 'require|length:1,30',
+                'education' => 'require|length:1,30',
+                'position' => 'require|length:1,30',
+                'ability' => 'require|length:1,1024',
+                'image' => 'require|min:1',
+                'cover' => 'require|min:1'
             ];
             $msg = [
-                'title' => '课程标题1-50个字符',
-                'cover' => '请上传课程封面图',
-                'price' => '课程价格不小于0.01',
-                'tip' => '课程简介1-255个字符',
-                'qydl' => '区代奖励不小于0',
-                'qdtjr' => '区代推荐人奖励不小于0',
-                'jxzx' => '教学中心奖励不小于0',
-                'grdl' => '个代奖励不小于0',
-                'gdtjr' => '个代推荐人奖励不小于0'
+                'user_id' => '请指定用户',
+                'name' => '姓名1-30个字符',
+                'education' => '学历1-30个字符',
+                'position' => '职称1-30个字符',
+                'ability' => '特长及能力1-1024个字符',
+                'image' => '请上传首页展示图',
+                'cover' => '请上传详情页展示图'
             ];
             $r = $this->validate($params,$rule,$msg);
             if (true !== $r) {
                 return $this->jsonBack(1,$r);
             }
 
-            $items = json_decode($params['items'],true);
-            if (!is_array($items) || empty($items)) {
-                return $this->jsonBack(2,'请添加课程小节');
+            $tips = json_decode($params['tips'],true);
+            if (!is_array($tips) || empty($tips)) {
+                return $this->jsonBack(2,'请添加履历成就');
             }
 
-            $grades = json_decode($params['grades'],true);
-            if (!is_array($grades) || empty($grades)) {
-                return $this->jsonBack(3,'请添加可选年级');
+            $centers = json_decode($params['centers'],true);
+            if (!is_array($centers) || empty($centers)) {
+                return $this->jsonBack(3,'请指定教学中心');
             }
 
             Db::startTrans();;
             try {
+                $user = UserModel::find($params['user_id']);
+                if ($user->is_teacher === 1) throw new \Exception('该用户已经是教师了');
+                $dbCenters = TeachCenterModel::where('id','in',$centers)
+                    ->where('status',1)
+                    ->select();
+                if ($dbCenters->count() !== count($centers)) throw new \Exception('错误的操作');
+
                 $now = time();
-                $course = CourseModel::create([
-                    'title' => $params['title'],
+                $teacher = TeacherModel::create([
+                    'user_id' => $params['user_id'],
+                    'name' => $params['name'],
+                    'education' => $params['education'],
+                    'position' => $params['position'],
+                    'ability' => $params['ability'],
+                    'tips' => $params['tips'],
+                    'image' => $params['image'],
                     'cover' => $params['cover'],
-                    'price' => $params['price'],
-                    'tip' => $params['tip'],
-                    'qydl' => $params['qydl'],
-                    'qdtjr' => $params['qdtjr'],
-                    'jxzx' => $params['jxzx'],
-                    'grdl' => $params['grdl'],
-                    'gdtjr' => $params['gdtjr'],
-                    'grades' => $params['grades'],
                     'create_at' => $now
                 ]);
 
                 $data = [];
-                foreach ($items as $item) {
+                foreach ($centers as $center) {
                     $data[] = [
-                        'course_id' => $course->id,
-                        'name' => $item['name'],
-                        'create_at' => $now
+                        'teacher_id' => $teacher->id,
+                        'center_id' => $center
                     ];
                 }
-                (new CourseItem)->saveAll($data);
+                (new TeacherCenter())->saveAll($data);
+                $user->is_teacher = 1;
+                $user->save();
                 Db::commit();
                 return $this->jsonBack(0,'添加成功');
             } catch (\Exception $e) {
@@ -111,89 +137,99 @@ class Teacher extends Base
     }
 
     /**
-     * 编辑课程
+     * 编辑教师
      * @return mixed|\think\response\Json
      */
     public function edit() {
         if ($this->request->isPost()) {
-            $params = $this->getParams(['id','title','cover','price','tip', 'qydl','qdtjr','jxzx','grdl','gdtjr','items','grades']);
+            $params = $this->getParams(['id','name','education','position', 'ability','image','cover','tips','centers']);
             $rule = [
-                'id' => 'require|integer|>=:1',
-                'title' => 'require|length:1,50',
-                'cover' => 'require|min:1',
-                'price' => 'require|float|>:0.01',
-                'tip' => 'require|length:1,255',
-                'qydl' => 'require|float|>=:0',
-                'qdtjr' => 'require|float|>=:0',
-                'jxzx' => 'require|float|>=:0',
-                'grdl' => 'require|float|>=:0',
-                'gdtjr' => 'require|float|>=:0'
+                'id' => 'require|integer|>:0',
+                'name' => 'require|length:1,30',
+                'education' => 'require|length:1,30',
+                'position' => 'require|length:1,30',
+                'ability' => 'require|length:1,1024',
+                'image' => 'require|min:1',
+                'cover' => 'require|min:1'
             ];
             $msg = [
                 'id' => '错误的操作',
-                'title' => '课程标题1-50个字符',
-                'cover' => '请上传课程封面图',
-                'price' => '课程价格不小于0.01',
-                'tip' => '课程简介1-255个字符',
-                'qydl' => '区代奖励不小于0',
-                'qdtjr' => '区代推荐人奖励不小于0',
-                'jxzx' => '教学中心奖励不小于0',
-                'grdl' => '个代奖励不小于0',
-                'gdtjr' => '个代推荐人奖励不小于0'
+                'name' => '姓名1-30个字符',
+                'education' => '学历1-30个字符',
+                'position' => '职称1-30个字符',
+                'ability' => '特长及能力1-1024个字符',
+                'image' => '请上传首页展示图',
+                'cover' => '请上传详情页展示图'
             ];
             $r = $this->validate($params,$rule,$msg);
             if (true !== $r) {
                 return $this->jsonBack(1,$r);
             }
 
-            $items = json_decode($params['items'],true);
-            if (!is_array($items) || empty($items)) {
-                return $this->jsonBack(2,'请添加课程小节');
+            $tips = json_decode($params['tips'],true);
+            if (!is_array($tips) || empty($tips)) {
+                return $this->jsonBack(2,'请添加履历成就');
             }
 
-            $grades = json_decode($params['grades'],true);
-            if (!is_array($grades) || empty($grades)) {
-                return $this->jsonBack(3,'请添加可选年级');
+            $centers = json_decode($params['centers'],true);
+            if (!is_array($centers) || empty($centers)) {
+                return $this->jsonBack(3,'请指定教学中心');
             }
 
-            Db::startTrans();
+
+            Db::startTrans();;
             try {
-                CourseModel::update([
-                    'title' => $params['title'],
-                    'cover' => $params['cover'],
-                    'price' => $params['price'],
-                    'tip' => $params['tip'],
-                    'qydl' => $params['qydl'],
-                    'qdtjr' => $params['qdtjr'],
-                    'jxzx' => $params['jxzx'],
-                    'grdl' => $params['grdl'],
-                    'gdtjr' => $params['gdtjr'],
-                    'grades' => $params['grades']
-                ],['id'=>$params['id']]);
+                $teacher = TeacherModel::find($params['id']);
+                if (!$teacher) throw new \Exception('错误的操作');
 
-                $now = time();
+                $dbCenters = TeachCenterModel::where('id','in',$centers)
+                    ->where('status',1)
+                    ->select();
+                if ($dbCenters->count() !== count($centers)) throw new \Exception('错误的操作');
+
+                $teacher->save([
+                    'name' => $params['name'],
+                    'education' => $params['education'],
+                    'position' => $params['position'],
+                    'ability' => $params['ability'],
+                    'tips' => $params['tips'],
+                    'image' => $params['image'],
+                    'cover' => $params['cover']
+                ]);
+
+                $middle = TeacherCenter::where('teacher_id',$params['id'])->select();
+                $middleMap = [];
+                foreach ($middle as $item) {
+                    $middleMap[$item->center_id] = true;
+                }
+
                 $data = [];
-                foreach ($items as $item) {
-                    if ($item['id'] === null) {
+                foreach ($centers as $center) {
+                    if (isset($middleMap[$center])) {
+                        $middleMap[$center] = false;
+                    } else {
                         $data[] = [
-                            'course_id' => $params['id'],
-                            'name' => $item['name'],
-                            'create_at' => $now
+                            'teacher_id' => $teacher->id,
+                            'center_id' => $center
                         ];
                     }
                 }
-                if (!empty($data)) {
-                    (new CourseItem)->saveAll($data);
+
+                if (!empty($data)) (new TeacherCenter())->saveAll($data);
+                $delIds = [];
+                foreach ($middleMap as $id => $flag) {
+                    if ($flag) $delIds[] = $id;
                 }
+
+                if (!empty($delIds)) TeacherCenter::destroy($delIds);
+
                 Db::commit();
                 return $this->jsonBack(0,'编辑成功');
             } catch (\Exception $e) {
                 Db::rollback();
                 return  $this->jsonBack(4,$e->getMessage());
             }
-
         } else {
-
             $params = $this->getParams(['id']);
             $rule = [
                 'id' => 'require|integer|>=:1'
@@ -206,13 +242,22 @@ class Teacher extends Base
                 $this->error($r);
             }
 
-            $course = CourseModel::find($params['id']);
-            if (!$course) {
-                $this->error('课程不存在或已经删除');
+            $teacher = TeacherModel::find($params['id']);
+            if (!$teacher) {
+                $this->error('教师不存在或已经删除');
             }
 
-            $this->assign('items',$course->items);
-            $this->assign('course',$course);
+            try {
+                $middle = TeacherCenter::with('center')->where('teacher_id',$params['id'])->select();
+                $centers = [];
+                foreach ($middle as $item) {
+                    $centers[] = $item->center;
+                }
+                $this->assign('centers',$centers);
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
+            $this->assign('teacher',$teacher);
             return $this->fetch('edit');
         }
     }
@@ -233,7 +278,19 @@ class Teacher extends Base
             $this->error($r);
         }
 
-        CourseModel::destroy($params['id']);
+        Db::startTrans();
+        try {
+            $teacher = TeacherModel::find($params['id']);
+            if (!$teacher) throw new \Exception('错误的操作');
+            $teacher->user->is_teacher = 0;
+            $teacher->user->save();
+            TeacherCenter::where('teacher_id',$teacher->id)->delete();
+            $teacher->delete();
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
         $this->success('操作成功');
     }
 
@@ -267,19 +324,6 @@ class Teacher extends Base
             return $this->jsonBack(0,'',$user);
         } catch (\Exception $e) {
             return $this->jsonBack(2,$e->getMessage());
-        }
-    }
-
-    /**
-     * 视频列表
-     * @return \think\response\Json
-     */
-    public function getVideos() {
-        try {
-            $list = VideoModel::where('status',0)->select();
-            return $this->jsonBack(0,'',$list);
-        } catch (\Exception $e) {
-            return $this->jsonBack(1,$e->getMessage());
         }
     }
 

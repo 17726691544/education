@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>教学中心列表</title>
+    <title>教师列表</title>
     <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
     <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
     <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
@@ -23,15 +23,6 @@
 
                     <form class="form-inline" method="post">
                         <div class="form-group">
-                            <label class="sr-only">等级</label>
-                            <select name="status" class="form-control">
-                                <option value="-1" {if ($params.status==-1)}selected{/if}>全部</option>
-                                <option value="0" {if ($params.status==0)}selected{/if}>待审核</option>
-                                <option value="1" {if ($params.status==1)}selected{/if}>审核通过</option>
-                                <option value="2" {if ($params.status==2)}selected{/if}>审核被拒</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label class="sr-only">编号</label>
                             <input name="key" value="{$params.key}" type="text" class="form-control" placeholder="区代编号或手机">
                         </div>
@@ -46,11 +37,12 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">ID</th>
-                                    <th class="text-center">代理人</th>
-                                    <th class="text-center">名称</th>
-                                    <th class="text-center">区域</th>
-                                    <th class="text-center">详细地址</th>
-                                    <th class="text-center">状态</th>
+                                    <th class="text-center">用户</th>
+                                    <th class="text-center">教师姓名</th>
+                                    <th class="text-center">教师学历</th>
+                                    <th class="text-center">教师职称</th>
+                                    <th class="text-center">首页图</th>
+                                    <th class="text-center">详情图</th>
                                     <th class="text-center">时间</th>
                                     <th class="text-center">操作</th>
                                 </tr>
@@ -59,7 +51,7 @@
 
                                 {if ($list->count() === 0)}
                                     <tr>
-                                        <td class="text-center" colspan="8">暂无数据</td>
+                                        <td class="text-center" colspan="9">暂无数据</td>
                                     </tr>
                                 {else/}
                                     {foreach $list as $item}
@@ -67,16 +59,18 @@
                                             <td class="text-center">{$item.id}</td>
                                             <td class="text-center">{$item.user.tel}（{$item.user.invite_code}）</td>
                                             <td class="text-center">{$item.name}</td>
-                                            <td class="text-center">{$item.province} {$item.city} {$item.country}</td>
-                                            <td class="text-center">{$item.area}</td>
-                                            <td class="text-center">{$item.status_str}</td>
+                                            <td class="text-center">{$item.education}</td>
+                                            <td class="text-center">{$item.position}</td>
+                                            <td class="text-center">
+                                                <img src="{$item.image}" alt="图片" style="width: 132px;height: 112px;" class="img-rounded">
+                                            </td>
+                                            <td class="text-center">
+                                                <img src="{$item.cover}" alt="图片" style="width: 70px;height: 90px;" class="img-rounded">
+                                            </td>
                                             <td class="text-center">{$item.create_at_str}</td>
                                             <td class="text-center">
-                                                {if ($item.status === 0)}
-                                                <a href="{:url('deal',['id'=>$item.id,'status'=>1])}" type="button" class="btn btn-success">通过</a>
-                                                <a href="{:url('deal',['id'=>$item.id,'status'=>2])}" type="button" class="btn btn-warning">拒绝</a>
-                                                {/if}
-                                                <a href="{:url('deal',['id'=>$item.id,'status'=>3])}" type="button" class="btn btn-danger">删除</a>
+                                                <a href="{:url('edit',['id'=>$item.id])}" type="button" class="btn btn-primary">编辑</a>
+                                                <a href="{:url('del',['id'=>$item.id])}" type="button" class="btn btn-danger">删除</a>
                                             </td>
                                         </tr>
                                     {/foreach}

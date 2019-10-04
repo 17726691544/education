@@ -116,7 +116,7 @@ class Index extends Base
      */
     public function logout() {
         session(null);
-        $this->redirect('Login/index');
+        $this->redirect('Normal/index');
     }
 
     /**
