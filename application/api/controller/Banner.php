@@ -28,6 +28,9 @@ class Banner extends Base
 
     public function test()
     {
+        echo 'xxxxx';
+        echo 'dddd';
+        echo 'dddd';
         echo 'dddd';
     }
 
