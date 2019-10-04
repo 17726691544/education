@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>轮播列表</title>
+    <title>教师列表</title>
     <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
     <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
     <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
@@ -22,49 +22,54 @@
                 <div class="panel-body">
 
                     <form class="form-inline" method="post">
-                        <a href="{:url('add')}" class="btn btn-primary">添加轮播</a>
+                        <div class="form-group">
+                            <label class="sr-only">编号</label>
+                            <input name="key" value="{$params.key}" type="text" class="form-control" placeholder="区代编号或手机">
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜索</button>
                     </form>
 
                     <div class="margin-top-10">
                         <table class="table table-bordered table-hover">
+                            <caption class="tip-box">
+                                <span class="label label-info">共计 {$list->total()} 条</span>
+                            </caption>
                             <thead>
                                 <tr>
                                     <th class="text-center">ID</th>
-                                    <th class="text-center">类型</th>
-                                    <th class="text-center">图片/视频</th>
-                                    <th class="text-center">封面图</th>
+                                    <th class="text-center">用户</th>
+                                    <th class="text-center">教师姓名</th>
+                                    <th class="text-center">教师学历</th>
+                                    <th class="text-center">教师职称</th>
+                                    <th class="text-center">首页图</th>
+                                    <th class="text-center">详情图</th>
+                                    <th class="text-center">时间</th>
                                     <th class="text-center">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 {if ($list->count() === 0)}
                                     <tr>
-                                        <td class="text-center" colspan="5">暂无数据</td>
+                                        <td class="text-center" colspan="9">暂无数据</td>
                                     </tr>
                                 {else/}
                                     {foreach $list as $item}
                                         <tr>
                                             <td class="text-center">{$item.id}</td>
-                                            <td class="text-center">{$item.type_zh}</td>
+                                            <td class="text-center">{$item.user.tel}（{$item.user.invite_code}）</td>
+                                            <td class="text-center">{$item.name}</td>
+                                            <td class="text-center">{$item.education}</td>
+                                            <td class="text-center">{$item.position}</td>
                                             <td class="text-center">
-                                                {if ($item.type===1)}
-                                                <img src="{$item.url_str}" alt="图片" style="width: 100px;height: 100px;" class="img-rounded">
-                                                {else/}
-                                                <video width="160" height="120" controls>
-                                                    <source src="{$item.url_str}" type="video/mp4">
-                                                    您的浏览器不支持 video 标签。
-                                                </video>
-                                                {/if}
+                                                <img src="{$item.image}" alt="图片" style="width: 132px;height: 112px;" class="img-rounded">
                                             </td>
                                             <td class="text-center">
-                                                {if ($item.type===1)}
-                                                无需封面图
-                                                {else/}
-                                                <img src="{$item.cover_str}" alt="封面图" style="width: 100px;height: 100px;" class="img-rounded">
-                                                {/if}
+                                                <img src="{$item.cover}" alt="图片" style="width: 70px;height: 90px;" class="img-rounded">
                                             </td>
+                                            <td class="text-center">{$item.create_at_str}</td>
                                             <td class="text-center">
-                                                <a href="{:url('detail',['id'=>$item.id])}" type="button" class="btn btn-primary">详情</a>
+                                                <a href="{:url('edit',['id'=>$item.id])}" type="button" class="btn btn-primary">编辑</a>
                                                 <a href="{:url('del',['id'=>$item.id])}" type="button" class="btn btn-danger">删除</a>
                                             </td>
                                         </tr>

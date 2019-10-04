@@ -8,6 +8,12 @@
     <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
     <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        .tooltip-inner {
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+    </style>
 </head>
 <body>
 
@@ -44,7 +50,9 @@
                                         <tr>
                                             <td class="text-center">{$item.id}</td>
                                             <td class="text-center">{$item.name}</td>
-                                            <td class="text-center">{$item.action}</td>
+                                            <td class="text-center">
+                                                <span data-toggle="tooltip" data-placement="top" title="{$item.action}" class="label label-success">查看</span>
+                                            </td>
                                             <td class="text-center">{$item.create_at_str}</td>
                                             <td class="text-center">
                                                 <a href="{:url('delAccess',['id'=>$item.id])}" type="button" class="btn btn-danger">删除</a>
@@ -64,5 +72,10 @@
             </div>
         </div>
     </div>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </body>
 </html>

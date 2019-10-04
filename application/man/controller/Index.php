@@ -23,31 +23,19 @@ class Index extends Base
             $admin = Admin::with('access')->find($_auth['id']);
             $access= array_column($admin->access->toArray(),'action');
             $plate = [];
-
-            $show_access = false;
-            $show_setting = false;
-
-
+            $accessArr = [];
             foreach ($access as $item) {
-
-                if (!$show_access && in_array($item,['setting/user','setting/adduser','setting/adduser','setting/access','setting/addaccess'])) {
-                    $show_access = true;
-                }
-
-                if (!$show_setting && in_array($item,['setting/lost','setting/platform'])) {
-                    $show_setting = true;
-                }
-
-                $arr = explode('/',$item);
-                if (!in_array($arr[0],$plate)) {
-                    $plate[] = $arr[0];
+                $accessArr = array_merge($accessArr,explode(',',$item));
+            }
+            foreach ($accessArr as $item) {
+                $tempArr = explode('/',$item);
+                if (!in_array($tempArr[0],$plate)) {
+                    $plate[] = $tempArr[0];
                 }
             }
 
-            $this->assign('show_access',$show_access);
-            $this->assign('show_setting',$show_setting);
             $this->assign('is_su',$_auth['is_su']);
-            $this->assign('access',$access);
+            $this->assign('access',$accessArr);
             $this->assign('plate',$plate);
         } catch (\Exception $e) {
             $this->redirect('Normal/index');
@@ -116,7 +104,7 @@ class Index extends Base
      */
     public function logout() {
         session(null);
-        $this->redirect('Login/index');
+        $this->redirect('Normal/login');
     }
 
     /**

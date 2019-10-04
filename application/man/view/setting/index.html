@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>流失账户设置</title>
+    <title>平台信息</title>
     <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
     <link rel="stylesheet" href="__STATIC__/css/admin.css">
     <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
@@ -24,10 +24,32 @@
 
                 <div class="panel-body">
                     <form class="form-horizontal" method="post">
+
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">流失账户编号</label>
+                            <label class="col-sm-2 control-label">名额单价</label>
                             <div class="col-sm-10">
-                                <input name="code" value="{$code}" type="text" class="form-control" placeholder="流失账户编号">
+                                <input name="quota_price" value="{$config.quota_price}" type="text" class="form-control" placeholder="每个名额的单价">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代购买名额</label>
+                            <div class="col-sm-10">
+                                <input name="qd_quota" value="{$config.qd_quota}" type="text" class="form-control" placeholder="成为区代需要购买的名额数">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代推荐人奖励（%）</label>
+                            <div class="col-sm-10">
+                                <input name="qdtjr_rate" value="{$config.qdtjr_rate}" type="text" class="form-control" placeholder="购买区代后，推荐人奖励百分比">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">个代购买名额）</label>
+                            <div class="col-sm-10">
+                                <input name="gd_quota" value="{$config.gd_quota}" type="text" class="form-control" placeholder="成为个代需要购买的名额数">
                             </div>
                         </div>
 

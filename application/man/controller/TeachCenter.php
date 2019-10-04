@@ -16,8 +16,8 @@ class TeachCenter extends Base
      */
     public function index() {
         $params = $this->getParams(['key','status']);
+        if ($params['status'] === null) $params['status'] = 1;
         $map = [];
-
         $query = ['query' => $params];
         if ($this->request->isPost()) {
             $query['page'] = 1;
@@ -47,8 +47,10 @@ class TeachCenter extends Base
             $map[] = ['status','in',[0,1,2]];
         }
 
+
+
         try {
-            $list = TeachCenterModel::where($map)->order('id desc')->paginate(10,false,$query);
+            $list = TeachCenterModel::with('user')->where($map)->order('id desc')->paginate(10,false,$query);
             $this->assign('params',$params);
             $this->assign('list',$list);
             return $this->fetch('index');

@@ -71,177 +71,177 @@
                                         </a>
                                     </li>
                                 {/if}
-
-                                {if ($is_su || in_array('user/partner',$access))}
-                                    <li>
-                                        <a onclick="xadmin.add_tab('合伙人列表','{:url("User/partner")}')">
-                                        <i class="iconfont">&#xe6a7;</i>
-                                        <cite>合伙人列表</cite>
-                                        </a>
-                                    </li>
-                                {/if}
-
-                                {if ($is_su || in_array('user/batcher',$access))}
-                                    <li>
-                                        <a onclick="xadmin.add_tab('批发商列表','{:url("User/batcher")}')">
-                                        <i class="iconfont">&#xe6a7;</i>
-                                        <cite>批发商列表</cite>
-                                        </a>
-                                    </li>
-                                {/if}
-
-                                {if ($is_su || in_array('user/income',$access))}
-                                    <li>
-                                        <a onclick="xadmin.add_tab('收益记录','{:url("User/income")}')">
-                                        <i class="iconfont">&#xe6a7;</i>
-                                        <cite>收益记录</cite>
-                                        </a>
-                                    </li>
-                                {/if}
-
-                                {if ($is_su || in_array('user/withdraw',$access))}
-                                    <li>
-                                        <a onclick="xadmin.add_tab('提现记录','{:url("User/withdraw")}')">
-                                        <i class="iconfont">&#xe6a7;</i>
-                                        <cite>提现记录</cite>
-                                        </a>
-                                    </li>
-                                {/if}
-
                             </ul>
                         </li>
                     {/if}
 
+                    {if ($is_su || in_array('teachcenter',$plate))}
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="教学中心">&#xe6b8;</i>
+                            <i class="iconfont left-nav-li" lay-tips="教学中心">&#xe811;</i>
                             <cite>教学中心</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
+                            {if ($is_su || in_array('teachcenter/index',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('列表','{:url("TeachCenter/index")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>列表</cite>
                                 </a>
                             </li>
+                            {/if}
                         </ul>
                     </li>
+                    {/if}
 
+                    {if ($is_su || in_array('teacher',$plate))}
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="教师管理">&#xe6b8;</i>
+                            <i class="iconfont left-nav-li" lay-tips="教师管理">&#xe726;</i>
                             <cite>教师管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
+                            {if ($is_su || in_array('teacher/index',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('教师列表','{:url("Teacher/index")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>教师列表</cite>
                                 </a>
                             </li>
+                            {/if}
+
+                            {if ($is_su || in_array('teacher/add',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('添加教师','{:url("Teacher/add")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>添加教师</cite>
                                 </a>
                             </li>
+                            {/if}
                         </ul>
                     </li>
+                    {/if}
 
+                    {if ($is_su || in_array('course',$plate))}
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="课程管理">&#xe6b8;</i>
+                            <i class="iconfont left-nav-li" lay-tips="课程管理">&#xe6fc;</i>
                             <cite>课程管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
+                            {if ($is_su || in_array('course/index',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('课程列表','{:url("Course/index")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>课程列表</cite>
                                 </a>
                             </li>
+                            {/if}
+
+                            {if ($is_su || in_array('course/add',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('添加课程','{:url("Course/add")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>添加课程</cite>
                                 </a>
                             </li>
+                            {/if}
                         </ul>
                     </li>
+                    {/if}
 
+                    {if ($is_su || in_array('team',$plate))}
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="团队管理">&#xe6b8;</i>
+                            <i class="iconfont left-nav-li" lay-tips="团队管理">&#xe82a;</i>
                             <cite>团队管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
+                            {if ($is_su || in_array('team/index',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('团队列表','{:url("Team/index")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>团队列表</cite>
                                 </a>
                             </li>
+                            {/if}
+
+                            {if ($is_su || in_array('team/add',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('添加团队','{:url("Team/add")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>添加团队</cite>
                                 </a>
                             </li>
+                            {/if}
                         </ul>
                     </li>
+                    {/if}
 
+                    {if ($is_su || in_array('video',$plate))}
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="课程案例">&#xe6b8;</i>
+                            <i class="iconfont left-nav-li" lay-tips="课程案例">&#xe719;</i>
                             <cite>课程案例</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
+                            {if ($is_su || in_array('video/index',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('案例列表','{:url("Video/index")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>案例列表</cite>
                                 </a>
                             </li>
+                            {/if}
+
+                            {if ($is_su || in_array('video/add',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('添加案例','{:url("Video/add")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>添加案例</cite>
                                 </a>
                             </li>
+                            {/if}
                         </ul>
                     </li>
+                    {/if}
 
+                    {if ($is_su || in_array('banner',$plate))}
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="轮播管理">&#xe6b8;</i>
+                            <i class="iconfont left-nav-li" lay-tips="轮播管理">&#xe70c;</i>
                             <cite>轮播管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
+                            {if ($is_su || in_array('banner/index',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('轮播列表','{:url("Banner/index")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>轮播列表</cite>
                                 </a>
                             </li>
+                            {/if}
+
+                            {if ($is_su || in_array('banner/add',$access))}
                             <li>
                                 <a onclick="xadmin.add_tab('添加轮播','{:url("Banner/add")}')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>添加轮播</cite>
                                 </a>
                             </li>
+                            {/if}
                         </ul>
                     </li>
+                    {/if}
 
-
-
-                    {if ($is_su || $show_access)}
+                    {if ($is_su || in_array('auth',$plate))}
                         <li>
                             <a href="javascript:;">
-                                <i class="iconfont left-nav-li" lay-tips="权限管理">&#xe726;</i>
+                                <i class="iconfont left-nav-li" lay-tips="权限管理">&#xe6f7;</i>
                                 <cite>权限管理</cite>
                                 <i class="iconfont nav_right">&#xe697;</i></a>
                             <ul class="sub-menu">
-                                {if ($is_su || in_array('setting/user',$access))}
+                                {if ($is_su || in_array('auth/user',$access))}
                                     <li>
                                         <a onclick="xadmin.add_tab('管理员列表','{:url("Auth/user")}')">
                                         <i class="iconfont">&#xe6a7;</i>
@@ -249,7 +249,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if ($is_su || in_array('setting/adduser',$access))}
+                                {if ($is_su || in_array('auth/adduser',$access))}
                                     <li>
                                         <a onclick="xadmin.add_tab('添加管理员','{:url("Auth/addUser")}')">
                                         <i class="iconfont">&#xe6a7;</i>
@@ -257,7 +257,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if ($is_su || in_array('setting/access',$access))}
+                                {if ($is_su || in_array('auth/access',$access))}
                                     <li>
                                         <a onclick="xadmin.add_tab('权限列表','{:url("Auth/access")}')">
                                         <i class="iconfont">&#xe6a7;</i>
@@ -265,7 +265,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if ($is_su || in_array('setting/addaccess',$access))}
+                                {if ($is_su || in_array('auth/addaccess',$access))}
                                     <li>
                                         <a onclick="xadmin.add_tab('添加权限','{:url("Auth/addAccess")}')">
                                         <i class="iconfont">&#xe6a7;</i>
@@ -275,6 +275,25 @@
                                 {/if}
                             </ul>
                         </li>
+                    {/if}
+
+                    {if ($is_su || in_array('setting',$plate))}
+                    <li>
+                        <a href="javascript:;">
+                            <i class="iconfont left-nav-li" lay-tips="设置">&#xe6ae;</i>
+                            <cite>设置</cite>
+                            <i class="iconfont nav_right">&#xe697;</i></a>
+                        <ul class="sub-menu">
+                            {if ($is_su || in_array('setting/index',$access))}
+                            <li>
+                                <a onclick="xadmin.add_tab('平台设置','{:url("Setting/index")}')">
+                                <i class="iconfont">&#xe6a7;</i>
+                                <cite>平台设置</cite>
+                                </a>
+                            </li>
+                            {/if}
+                        </ul>
+                    </li>
                     {/if}
 
                 </ul>
@@ -296,7 +315,7 @@
                 </div>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <iframe src="{:url('User/index')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                        <iframe src="{:url('TeachCenter/index')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
                     </div>
                 </div>
                 <div id="tab_show"></div>

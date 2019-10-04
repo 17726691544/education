@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>添加教师</title>
+    <title>编辑教师</title>
     <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
     <link rel="stylesheet" href="__STATIC__/css/admin.css?v=9">
     <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
@@ -73,13 +73,12 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">用户</label>
                             <div class="col-sm-10">
-                                <input v-model="key" placeholder="手机或编号" type="text" class="form-control" style="width: 10rem;display: inline-block;">
-                                <button @click="getUser" type="button" class="btn btn-primary">搜索</button>
+                                <input disabled v-model="key" placeholder="手机或编号" type="text" class="form-control" style="width: 10rem;display: inline-block;">
                             </div>
                         </div>
                     </form>
 
-                    <form class="form-horizontal" method="post" v-show="user">
+                    <form class="form-horizontal" method="post">
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">教师姓名</label>
@@ -174,7 +173,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" @click.prevent="submit">提交</button>
+                                <button type="submit" class="btn btn-primary" @click.prevent="submit">编辑</button>
                                 <button type="reset" class="btn btn-default">重置</button>
                             </div>
                         </div>
@@ -195,19 +194,19 @@
         const app = new Vue({
             el:'#app',
             data:{
-                key: '',
-                user: null,
-                name:'',
-                education:'',
-                position:'',
-                ability:'',
-                image: null,
-                cover: null,
-                tips: [],
+                id: '{$teacher.id}',
+                key: '{$teacher.user.tel}',
+                name:'{$teacher.name}',
+                education:'{$teacher.education}',
+                position:'{$teacher.position}',
+                ability:'{$teacher.ability}',
+                image: '{$teacher.image}',
+                cover: '{$teacher.cover}',
+                tips: JSON.parse('{$teacher.tips|raw}'),
                 tempTip: '',
                 centers:[],
                 sKey:'',
-                checkCenters:[]
+                checkCenters: JSON.parse('{:json_encode($centers)}'),
             },
             methods:{
                 bindUploader:function () {
@@ -295,15 +294,6 @@
                 removeCenter:function(index) {
                     this.checkCenters.splice(index,1);
                 },
-                getUser:function() {
-                    $.post("{:url('getUser')}",{key:this.key},function (ret) {
-                        if (ret.code === 0) {
-                            app.user = ret.data;
-                        } else {
-                            layer.msg(ret.msg);
-                        }
-                    },'json');
-                },
                 getCenters:function() {
                     $.post("{:url('getCenters')}",null,function (ret) {
                         if (ret.code === 0) {
@@ -322,7 +312,7 @@
                         centers.push(temp.id);
                     }
                     let postData = {
-                        user_id: this.user.id,
+                        id: this.id,
                         name: this.name,
                         education: this.education,
                         position: this.position,
@@ -333,13 +323,8 @@
                         centers: JSON.stringify(centers)
                     };
 
-                    $.post("{:url('add')}",postData,function (ret) {
+                    $.post("{:url('edit')}",postData,function (ret) {
                         layer.msg(ret.msg);
-                        if (ret.code === 0) {
-                            setTimeout(function () {
-                                location.reload();
-                            },800);
-                        }
                     },'json');
                 }
             },

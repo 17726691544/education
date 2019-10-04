@@ -16,7 +16,7 @@ class Course extends Base
      */
     public function index() {
         try {
-            $list = CourseModel::order('id desc')->paginate(10);
+            $list = CourseModel::where('status',0)->order('id desc')->paginate(10);
             $this->assign('list',$list);
             return $this->fetch('index');
         } catch (\Exception $e) {
@@ -278,7 +278,7 @@ class Course extends Base
             $this->error($r);
         }
 
-        CourseModel::destroy($params['id']);
+        CourseModel::update(['status'=>1],['id'=>$params['id']]);
         $this->success('操作成功');
     }
 }
