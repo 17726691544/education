@@ -21,7 +21,6 @@ class User extends Model
         return $status[$value];
     }
 
-
     public static function findByTel($tel)
     {
         return self::where('tel', $tel)->find();
@@ -52,7 +51,6 @@ class User extends Model
         if ($md5Pass !== $dbPass) {
             throw new BusinessBaseException('原始密码错误');
         }
-
         if ($type === 1) {
             return $this->editByUId($uid, ['pass' => md5($user->tel . $newpass)]);
         } else {
