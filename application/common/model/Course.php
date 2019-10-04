@@ -43,16 +43,14 @@ class Course extends Model
             ->find();
     }
 
-//    public function test($id)
-//    {
-//        return self::with(['courseItems' => function ($query) {
-//            $query->order('sort desc');
-//        }])
-//            ->where('id', $id)//
-//            ->where('status', 0)//
-//            ->hidden(['create_at', ''])//
-//            ->find();
-//    }
-
+    /**
+     * grades_arr
+     * @param $value
+     * @param $data
+     * @return mixed
+     */
+    public function getGradesArrAttr($value,$data) {
+        return json_decode($data['grades'],true);
+    }
 
 }
