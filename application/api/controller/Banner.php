@@ -30,4 +30,8 @@ class Banner extends Base
     {
         echo 'dddd';
     }
+
+    public function testaa() {
+        return 'ssafsdfaasdfasdfsadfsadfasdfasdfasdfsadfsdf';
+    }
 }
