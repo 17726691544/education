@@ -26,7 +26,8 @@ class Banner extends Base
         return $this->jsonBack(0, '成功', $banners);
     }
 
-    public function test() {
-        return 'okokokokokokokokokoko';
+    public function test()
+    {
+        echo 'dddd';
     }
 }
