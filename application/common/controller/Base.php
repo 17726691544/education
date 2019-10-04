@@ -50,4 +50,13 @@ class Base extends Controller
         }
         return $uid;
     }
+
+    /**
+     * 创建exception
+     * @param $msg
+     * @return \Exception
+     */
+    public function createError($msg) {
+        return new \Exception($msg);
+    }
 }
