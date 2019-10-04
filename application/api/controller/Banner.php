@@ -22,19 +22,6 @@ class Banner extends Base
         $params = $this->getParams(['num']);
         (new BannerV())->goChick($params);
         $banners = BannerModel::getBannerList($params['num'] ?? 5);
-
         return $this->jsonBack(0, '成功', $banners);
-    }
-
-    public function test()
-    {
-        echo 'xxxxx';
-        echo 'dddd';
-        echo 'dddd';
-        echo 'dddd';
-    }
-
-    public function testaa() {
-        return 'ssafsdfaasdfasdfsadsfafdaadfaddasfddfsadfasdfasdfasdfsadfsdf';
     }
 }
