@@ -7,6 +7,7 @@ use app\common\controller\Base;
 use app\common\validate\PageV;
 use app\common\model\Teacher as TeacherModel;
 use app\common\validate\IdV;
+use app\common\model\Video;
 
 class Teacher extends Base
 {
@@ -33,8 +34,15 @@ class Teacher extends Base
     {
         $params = $this->getParams(['id']);
         (new IdV())->goChick($params);
+        //老师介绍详情
         $teacherDetail = TeacherModel::getTeacherDetail($params['id']);
+        $teacherDetail = $teacherDetail ? $teacherDetail->toArray() : null;
 
+        if ($teacherDetail) {
+            //获取最新的10条视频
+            $videoList = Video::getVideoListByNum(10);
+            $teacherDetail['videoList'] = $videoList ? $videoList->toArray() : null;
+        }
         return $this->jsonBack(0, '成功', $teacherDetail);
     }
 }
