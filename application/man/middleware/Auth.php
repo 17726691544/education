@@ -21,9 +21,15 @@ class Auth
                 try {
                     $_admin = Admin::with('access')->find($_auth['id']);
                     $_access = array_column($_admin->access->toArray(),'action');
-                    $_access = array_merge($_defaultAccess,$_access);
+                    $_accessArr = [];
+                    foreach ($_access as $item) {
+                        $_accessArr = array_merge($_accessArr,explode(',',$item));
+                    }
+
+                    $_accessArr = array_merge($_defaultAccess,$_accessArr);
                     $_action = strtolower($request->controller() . '/' . $request->action());
-                    if (!in_array($_action,$_access)) {
+
+                    if (!in_array($_action,$_accessArr)) {
                         return redirect('Index/noneAuth');
                     }
                 } catch (\Exception $e) {
