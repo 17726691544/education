@@ -30,7 +30,7 @@ class User extends Base
 
         $result = (new SmsService())->getCode($params['tel'],$params['send_type'],$params['code_type']);
         if (!$result) {
-            return $this->jsonBack(1, '发送失败');
+            throw new BusinessBaseException('发送失败');
         }
         return $this->jsonBack(0, '发送成功');
 
@@ -48,7 +48,7 @@ class User extends Base
 
         $register = (new UserService())->register($params);
         if (!$register) {
-            return $this->jsonBack(1, '注册失败');
+            throw new BusinessBaseException('注册失败');
         }
         return $this->jsonBack(0, '注册成功');
     }
@@ -64,7 +64,7 @@ class User extends Base
 
         $login = (new UserService())->login($params['tel'], $params['pass']);
         if (!$login) {
-            return $this->jsonBack(1, '登录失败');
+            throw new BusinessBaseException('登录失败');
         }
         return $this->jsonBack(0, '登录成功', $login);
     }

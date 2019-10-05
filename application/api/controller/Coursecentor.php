@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 use app\api\service\CourseCentorService;
 use app\common\controller\Base;
+use app\common\exception\BusinessBaseException;
 use app\common\model\Orders;
 use app\common\validate\CourseCentorV;
 use app\common\validate\IdV;
@@ -52,7 +53,7 @@ class Coursecentor extends Base
 
         $sinCourse = (new CourseCentorService())->sinCourse($uid, $params['id'], $params['signId']);
         if (!$sinCourse) {
-            return $this->jsonBack(1, '打卡失败');
+            throw new BusinessBaseException('打卡失败');
         }
         return $this->jsonBack(0, '打卡成功');
     }

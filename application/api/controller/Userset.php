@@ -6,6 +6,7 @@ namespace app\api\controller;
 
 use app\api\service\UsersetService;
 use app\common\controller\Base;
+use app\common\exception\BusinessBaseException;
 use app\common\service\OssService;
 use app\common\validate\BaseValidate;
 use app\common\validate\UsersetV;
@@ -61,7 +62,7 @@ class Userset extends Base
 
         $result = (new UserModel())->editByUId($uid, ['nick' => $params['nick']]);
         if (!$result) {
-            return $this->jsonBack(1, '修改失败');
+            throw new BusinessBaseException('修改失败');
         }
         return $this->jsonBack(0, '修改成功');
     }
@@ -78,7 +79,7 @@ class Userset extends Base
 
         $result = (new UserModel())->editPass($uid, $params['pass'], $params['newpass'], 1);
         if (!$result) {
-            return $this->jsonBack(1, '修改失败');
+            throw new BusinessBaseException('修改失败');
         }
         return $this->jsonBack(0, '修改成功');
 
@@ -96,7 +97,7 @@ class Userset extends Base
 
         $result = (new UserModel())->editPass($uid, $params['safe_pass'], $params['newpass'], 2);
         if (!$result) {
-            return $this->jsonBack(1, '修改失败');
+            throw new BusinessBaseException('修改失败');
         }
         return $this->jsonBack(0, '修改成功');
 
@@ -114,7 +115,7 @@ class Userset extends Base
 
         $result = (new UsersetService())->findPass($params);
         if (!$result) {
-            return $this->jsonBack(1, '设置失败');
+            throw new BusinessBaseException('设置失败');
         }
         return $this->jsonBack(0, '设置成功');
     }

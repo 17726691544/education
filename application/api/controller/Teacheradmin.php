@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 use app\api\service\TeacherAdminService;
 use app\common\controller\Base;
+use app\common\exception\BusinessBaseException;
 use app\common\validate\PageV;
 use app\common\validate\TeacherAdminV;
 
@@ -51,7 +52,7 @@ class Teacheradmin extends Base
 
         $confirm = (new TeacherAdminService())->confirm($uid, $params['id'], $params['status']);
         if (!$confirm) {
-            return $this->jsonBack(1, '确认失败');
+            throw new BusinessBaseException('确认失败');
         }
         return $this->jsonBack('0', '成功');
     }
