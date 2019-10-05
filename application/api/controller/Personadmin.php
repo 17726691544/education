@@ -6,7 +6,6 @@ namespace app\api\controller;
 use app\api\service\PersonAdminService;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
-use app\common\model\User;
 use app\common\validate\BaseValidate;
 use app\common\validate\PageV;
 use app\common\validate\PersonAdminV;
