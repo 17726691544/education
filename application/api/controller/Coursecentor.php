@@ -27,7 +27,7 @@ class Coursecentor extends Base
     }
 
     /**
-     * 获取购买中心课程详情
+     * 获取课程中心课程详情
      * @throws \app\common\exception\BusinessBaseException
      */
     public function getCourseCentorDetail()

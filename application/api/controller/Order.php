@@ -15,7 +15,7 @@ class Order extends Base
      * @return \think\response\Json
      * @throws \app\common\exception\BusinessBaseException
      */
-    public function create() {
+        public function create() {
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
         $params = $this->getParams(['name','id_card','course_id','center_id','grade']);

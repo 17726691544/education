@@ -7,7 +7,7 @@ class UserV extends BaseValidate
 {
     protected $rules = [
         'tel' => 'require|mobile',
-        'u_type'=> 'require|integer',
+        'u_type'=> 'require|integer|in:1,2',
         'tel_code'=> 'require|max:6',
         'pass' => 'require|max:32',
         'safe_pass' => 'require|max:32',

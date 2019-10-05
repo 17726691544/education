@@ -6,7 +6,7 @@ namespace app\api\controller;
 use app\api\service\TeacherAdminService;
 use app\common\controller\Base;
 use app\common\validate\PageV;
-use app\common\model\Teacher;
+use app\common\validate\TeacherAdminV;
 
 /**
  * 教师管理controller
@@ -32,11 +32,11 @@ class Teacheradmin extends Base
      */
     public function getStudentList()
     {
-        $params = $this->getParams(['id']);
+        $params = $this->getParams(['id','page','pageNum']);
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-        $studentList = (new TeacherAdminService())->getStudentList($uid, $params['id']);
+        $studentList = (new TeacherAdminService())->getStudentList($uid, $params['id'],$params['page'],$params['pageNum']);
         return $this->jsonBack(0, '成功', $studentList);
     }
 
@@ -45,7 +45,15 @@ class Teacheradmin extends Base
      */
     public function confirm()
     {
-        
+        $params = $this->getParams(['id', 'status']);
+        (new TeacherAdminV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+
+        $confirm = (new TeacherAdminService())->confirm($uid, $params['id'], $params['status']);
+        if (!$confirm) {
+            return $this->jsonBack(1, '确认失败');
+        }
+        return $this->jsonBack('0', '成功');
     }
 
 }
