@@ -10,6 +10,13 @@ class Teacher extends Model
 {
     protected $table = 'teacher';
 
+    public function getTipsAttr($value)
+    {
+        if(!empty($value)){
+            return json_decode($value);
+        }
+    }
+
     public function teachCenters()
     {
         return $this->belongsToMany('teachCenter', 'teacher_center', 'center_id', 'teacher_id');
