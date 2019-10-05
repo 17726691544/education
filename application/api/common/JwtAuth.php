@@ -15,7 +15,7 @@ class JwtAuth
 {
     private static $instance;
     private $secret = 'test';
-    private $expiresAt = 3600;
+    private $expiresAt = 36000;
     private $tokenData;
 
     public static function instance()

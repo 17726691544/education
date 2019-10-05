@@ -11,6 +11,6 @@ class IdV extends BaseValidate
     ];
 
     protected $message = [
-        'id' => 'id错误'
+        'id' => '错误操作'
     ];
 }

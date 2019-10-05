@@ -35,11 +35,11 @@ class Course extends Model
     public function getCourseCentorDetail($id)
     {
         return self::with(['courseItems' => function ($query) {
-            $query->order('sort desc');
+            $query->order('sort desc')->visible(['id','name']);
         }])
             ->where('id', $id)//
             ->where('status', 0)//
-            ->visible(['id','title','cover','tip','courseItems'=>['id','name']])
+            ->visible(['id','title','cover','tip'])
             ->find();
     }
 

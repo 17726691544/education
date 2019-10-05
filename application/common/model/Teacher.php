@@ -10,14 +10,34 @@ class Teacher extends Model
 {
     protected $table = 'teacher';
 
+    public function teachCenters()
+    {
+        return $this->belongsToMany('teachCenter', 'teacher_center', 'center_id', 'teacher_id');
+    }
+
     public static function getTeacherList($page, $pageNum)
     {
         return self::paginate($pageNum, false, [
             'page' => $page
-        ])->hidden(['user_id','ability','create_at','cover']);
+        ])->hidden(['user_id', 'ability', 'create_at', 'cover']);
     }
 
-    public static function getTeacherDetail($teacherId){
+    public static function getTeacherDetail($teacherId)
+    {
         return self::get($teacherId);
+    }
+
+
+    public function getTeachCenterList($uid, $page, $pageNum)
+    {
+        return self::with(['teachCenters' => function ($query) {
+            $query->where('status',1)//
+                ->hidden(['pivot','agent_id','agent_user_id','province_id','city_id','country_id','create_at','status']);
+          }])
+            ->where('user_id', $uid)//
+            ->visible([''])
+            ->paginate($pageNum, false, [
+                'page' => $page
+            ]);
     }
 }

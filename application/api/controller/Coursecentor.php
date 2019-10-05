@@ -3,19 +3,14 @@
 
 namespace app\api\controller;
 
-use app\api\service\CourseordersService;
+use app\api\service\CourseCentorService;
 use app\common\controller\Base;
-use app\common\model\Course as CourseModel;
 use app\common\model\Orders;
+use app\common\validate\CourseCentorV;
 use app\common\validate\IdV;
 use app\common\validate\PageV;
 
-/**
- * 课程订单 controller
- * Class Courseorders
- * @package app\api\controller
- */
-class Courseorders extends Base
+class Coursecentor extends Base
 {
     /**
      * 分页获取课程中心列表
@@ -40,9 +35,25 @@ class Courseorders extends Base
         $params = $this->getParams(['id']);
         (new IdV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
-        $courseCentorDetail = (new CourseordersService())->getCourseCentorDetail($uid, $params['id']);
-        return $this->jsonBack(0,'成功',$courseCentorDetail);
+        $courseCentorDetail = (new CourseCentorService())->getCourseCentorDetail($uid, $params['id']);
+        return $this->jsonBack(0, '成功', $courseCentorDetail);
 
     }
 
+    /**
+     * 课程中心打卡
+     * @throws \app\common\exception\BusinessBaseException
+     */
+    public function sinCourse()
+    {
+        $params = $this->getParams(['id', 'signId']);
+        (new CourseCentorV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+
+        $sinCourse = (new CourseCentorService())->sinCourse($uid, $params['id'], $params['signId']);
+        if (!$sinCourse) {
+            return $this->jsonBack(1, '打卡失败');
+        }
+        return $this->jsonBack(0, '打卡成功');
+    }
 }

@@ -20,10 +20,12 @@ class Orders extends Model
     {
         return self::with('course')
             ->where('user_id', $uid)//
-            ->visible(['course' => ['id', 'title', 'cover'],''])//
+            ->visible(['course' => ['id', 'title', 'cover'], ''])//
             ->where('status', 1)//
-            ->paginate($pageNum,false,[
-                'page'=>$page
+            ->paginate($pageNum, false, [
+                'page' => $page
             ]);
     }
+
+
 }
