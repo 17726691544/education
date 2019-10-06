@@ -6,7 +6,6 @@ namespace app\api\controller;
 use app\api\service\AreaAdminService;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
-use app\common\model\Agent;
 use app\common\validate\AreaAdminV;
 use app\common\validate\BaseValidate;
 
@@ -44,6 +43,6 @@ class Areaadmin extends Base
         if(!$result){
             throw new BusinessBaseException('申请失败');
         }
-        $this->jsonBack(0,'申请成功');
+        $this->jsonBack(0,'申请成功,等待审核');
     }
 }

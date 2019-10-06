@@ -32,13 +32,23 @@ class AreaAdminService extends BaseService
             'agent_id' => $agent->id,
             'agent_user_id' => $uid,
             'name'=>$name,
+            'province_id'=>$agent->province_id,
+            'city_id'=>$agent->city_id,
+            'country_id'=>$agent->country_id,
+            'province'=>$agent->province,
+            'city'=>$agent->city,
+            'country'=>$agent->country,
+            'area'=>$area,
+            'create_at'=>time(),
+            'status'=>0
+
         ]);
         return true;
 
     }
 
 
-    protected function hasPermission($uid)
+    private function hasPermission($uid)
     {
         $user = User::get($uid);
         if (!$user) {

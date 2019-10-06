@@ -7,9 +7,10 @@ namespace app\api\service;
 use app\common\exception\BusinessBaseException;
 use app\common\model\AttendClassRecord;
 use app\common\model\Teacher;
+use app\common\model\User;
 use think\Db;
 
-class TeacherAdminService extends BaseService
+class TeacherAdminService
 {
     private function hasTeacher($uid)
     {
@@ -63,6 +64,17 @@ class TeacherAdminService extends BaseService
             ], ['id' => $attendClassId]);
         }
         return true;
+    }
+
+    private function hasPermission($uid){
+        $user = User::get($uid);
+        if(!$user){
+            throw new BusinessBaseException('错误的操作');
+        }
+        if($user->is_teacher !== 1){
+            throw new BusinessBaseException('你还不是教师！！');
+        }
+        return $user;
     }
 
 }

@@ -34,21 +34,4 @@ class BaseService
 
     }
 
-    /**
-     * 是否有操作权限
-     * @param $uid
-     */
-    protected function hasPermission($uid)
-    {
-        $user = User::get($uid);
-        if(!$user){
-            throw new BusinessBaseException('错误的操作');
-        }
-        $permissionValue = $user->is_qd + $user->is_gd + $user->is_teacher;
-        if((int)$permissionValue < 1){
-            throw new BusinessBaseException('你没有权限做此操作');
-        }
-        return $user;
-
-    }
 }
