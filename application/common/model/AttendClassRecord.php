@@ -24,10 +24,10 @@ class AttendClassRecord extends Model
     {
         return self::with('user')
             ->visible(['id','center_id','course_title',
-                'user' => ['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url'],//
+                'user' => ['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url','id_card','real_name'],//
             ])//
             ->where('center_id', $centerId)//
-            ->where('status', 0)
+            ->where('status', 1)
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);

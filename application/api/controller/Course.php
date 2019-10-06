@@ -4,9 +4,17 @@
 namespace app\api\controller;
 
 use app\common\controller\Base;
+use app\common\validate\BaseValidate;
 use app\common\validate\IdV;
 use app\common\validate\PageV;
 use app\common\model\Course as CourseModel;
+use app\common\model\User;
+
+/**
+ * 购买课程controller
+ * Class Course
+ * @package app\api\controller
+ */
 class Course extends Base
 {
 
@@ -37,6 +45,17 @@ class Course extends Base
 
     }
 
+
+    /**
+     * 获取用户身份证信息
+     * @return array|\PDOStatement|string|\think\Model|null
+     */
+    public function getIdCardInfo()
+    {
+        (new BaseValidate())->tokenChick();
+        $uid = $this->getUid();
+        return User::where('id', $uid)->visible(['id', 'id_card', 'real_name'])->find();
+    }
 
 
 }

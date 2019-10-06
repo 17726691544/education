@@ -73,7 +73,7 @@ class Userset extends Base
      */
     public function editPass()
     {
-        $params = $this->getParams(['pass', 'newpass', 'renewpass']);
+            $params = $this->getParams(['pass', 'newpass', 'renewpass']);
         (new UsersetV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 

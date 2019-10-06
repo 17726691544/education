@@ -11,6 +11,11 @@ use app\common\validate\CourseCentorV;
 use app\common\validate\IdV;
 use app\common\validate\PageV;
 
+/**
+ * 课程中心controller
+ * Class Coursecentor
+ * @package app\api\controller
+ */
 class Coursecentor extends Base
 {
     /**
