@@ -37,5 +37,16 @@ class PersonAdminService extends BaseService
         return (new User())->getVipUserList($user->id, $page, $pageNum);
     }
 
+    protected function hasPermission($uid)
+    {
+        $user = User::get($uid);
+        if(!$user){
+            throw new BusinessBaseException('错误操作');
+        }
+        if($user->is_gd !== 1){
+            throw new BusinessBaseException('你没有权限做此操作');
+        }
+        return $user;
+    }
 
 }

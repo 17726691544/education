@@ -7,4 +7,5 @@ use think\Model;
 class Agent extends Model
 {
     protected $table = 'agent';
+
 }
