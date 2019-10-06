@@ -61,7 +61,7 @@ class Areaadmin extends Base
 
 
     /**
-     * 分页获取教育中心页面
+     * 分页获取教育中心列表
      */
     public function getTeachCenterList()
     {
@@ -69,6 +69,19 @@ class Areaadmin extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $teachCenterList = (new AreaAdminService())->getTeachCenterList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
-        return $this->jsonBack(0,'成功',$teachCenterList);
+        return $this->jsonBack(0, '成功', $teachCenterList);
+    }
+
+    /**
+     * 获取学生列表
+     */
+    public function getStudentList()
+    {
+        $params = $this->getParams(['center_id', 'page', 'pageNum']);
+        (new AreaAdminV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+        $studentList = (new AreaAdminService())->getStudentList($uid, $params['center_id'], $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        return $this->jsonBack(0, '成功', $studentList);
     }
 }
+

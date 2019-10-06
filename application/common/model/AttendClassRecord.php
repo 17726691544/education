@@ -20,14 +20,14 @@ class AttendClassRecord extends Model
 
     }
 
-    public function getUserListByCenterId($centerId,$page,$pageNum)
+    public function getUserListByCenterId($centerId,$status,$page,$pageNum)
     {
         return self::with('user')
-            ->visible(['id','center_id','course_title',
+            ->visible(['id','center_id','course_title','user_id',
                 'user' => ['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url','id_card','real_name'],//
             ])//
-            ->where('center_id', $centerId)//
-            ->where('status', 1)
+            ->where('center_id',$centerId)//
+            ->where('status', $status)
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);

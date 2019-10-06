@@ -42,19 +42,27 @@ class TeacherAdminService
         if (!$teacherCenter) {
             throw new BusinessBaseException('错误的操作');
         }
-        return (new AttendClassRecord())->getUserListByCenterId($teachCenterId, $page, $pageNum);
+        return (new AttendClassRecord())->getUserListByCenterId($teachCenterId,1, $page, $pageNum);
     }
 
-    public function confirm($uid, $attendClassId, $status)
+    public function confirm($uid, $attendClassId,$teachCenterId, $status)
     {
         $this->hasPermission($uid);
         //查找老师
         $teacher = $this->hasTeacher($uid);
+        //判断该老师是否属于该教学中心
+        $teacherCenter = Db::table('teacher_center')
+            ->where('teacher_id', $teacher->id)//
+            ->where('center_id', $teachCenterId)//
+            ->find();
+        if (!$teacherCenter) {
+            throw new BusinessBaseException('错误的操作');
+        }
 
-        $attendClassRecord = AttendClassRecord::where('id', $attendClassId)->where('teacher_id', $teacher->id)->find();
-        //判断该订单是否是属于该老师
+        //获取确认信息
+        $attendClassRecord = AttendClassRecord::where('id', $attendClassId)->find();
         if (!$attendClassRecord) {
-            throw new BusinessBaseException('错误操作');
+            throw new BusinessBaseException('获取确认信息失败');
         }
         //判断订单状态
         $orderStatus = $attendClassRecord->status;
