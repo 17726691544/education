@@ -63,7 +63,7 @@ class Personadmin extends Base
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
         $user = (new PersonAdminService())->getQuota($uid);
-        return $this->jsonBack(0,'成功',$user->quota);
+        return $this->jsonBack(0, '成功', $user->quota);
     }
 
     /**
@@ -76,7 +76,7 @@ class Personadmin extends Base
         (new PersonAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $userInfo = (new PersonAdminService())->getUserInfo($uid, $params['invite_code']);
-        return $this->jsonBack(0,'成功',$userInfo);
+        return $this->jsonBack(0, '成功', $userInfo);
     }
 
     /**
@@ -84,14 +84,25 @@ class Personadmin extends Base
      */
     public function transferQuota()
     {
-        $params = $this->getParams(['id','num']);
+        $params = $this->getParams(['id', 'num']);
         (new PersonAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $transferQuota = (new PersonAdminService())->transferQuota($uid, $params['id'], $params['num']);
-        if(!$transferQuota){
+        if (!$transferQuota) {
             throw  new BusinessBaseException('转出名额失败');
         }
-        return $this->jsonBack(0,'转出成功');
+        return $this->jsonBack(0, '转出成功');
     }
 
+    /**
+     * 分页获取转账记录列表
+     */
+    public function getTransferRecordList()
+    {
+        $params = $this->getParams(['page', 'pageNum']);
+        (new PageV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+        $transferRecordList = (new PersonAdminService())->getTransferRecordList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        return $this->jsonBack(0, '成功', $transferRecordList);
+    }
 }
