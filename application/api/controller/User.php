@@ -79,7 +79,7 @@ class User extends Base
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
         //查询数据库获取用户信息
-        $userInfo = UserModel::get($uid)->find();
+        $userInfo = UserModel::get($uid);
         return $this->jsonBack(0, '成功', $userInfo);
 
     }

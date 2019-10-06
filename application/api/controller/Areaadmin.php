@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 use app\api\service\AreaAdminService;
 use app\common\controller\Base;
+use app\common\exception\BusinessBaseException;
 use app\common\model\Agent;
 use app\common\validate\AreaAdminV;
 use app\common\validate\BaseValidate;
@@ -18,7 +19,7 @@ class Areaadmin extends Base
 {
 
     /**
-     * 获取教学中心区域
+     * 获取教学中心区域地址
      */
     public function getTeachCenterArea()
     {
@@ -35,9 +36,14 @@ class Areaadmin extends Base
      */
     public function applyTeachCenter()
     {
-        $params = $this->getParams(['name', 'province_id', 'city_id', 'country_id', 'area']);
+        $params = $this->getParams(['name','area']);
         (new AreaAdminV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
 
-
+        $result = (new AreaAdminService())->applyTeachCenter($uid, $params['name'], $params['area']);
+        if(!$result){
+            throw new BusinessBaseException('申请失败');
+        }
+        $this->jsonBack(0,'申请成功');
     }
 }
