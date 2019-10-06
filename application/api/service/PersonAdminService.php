@@ -47,4 +47,11 @@ class PersonAdminService extends BaseService
         }
         return $user;
     }
+
+    public function getUserInfo($uid,$inviteCode){
+        //判断是否有权限
+        $this->hasPermission($uid);
+        return User::findByInviteCode($inviteCode);
+
+    }
 }

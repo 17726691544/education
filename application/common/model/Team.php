@@ -10,6 +10,13 @@ class Team extends Model
 {
     protected $table = 'team';
 
+    public function getImagesAttr($value)
+    {
+        if(!empty($value)){
+            return json_decode($value);
+        }
+    }
+
     public static function getTeamList($page, $pageNum)
     {
         return self::paginate($pageNum, false, [

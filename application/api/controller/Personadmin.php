@@ -54,7 +54,7 @@ class Personadmin extends Base
     }
 
     /**
-     * 获取名额
+     * 名额管理中获取名额
      * @return \think\response\Json
      * @throws BusinessBaseException
      */
@@ -67,7 +67,7 @@ class Personadmin extends Base
     }
 
     /**
-     * 通过编号获取用户的基本信息
+     * 转账名额中通过编号获取用户的基本信息
      * @throws BusinessBaseException
      */
     public function getUserInfo()
@@ -75,10 +75,23 @@ class Personadmin extends Base
         $params = $this->getParams(['invite_code']);
         (new PersonAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
-        //TODO
-        
+        $userInfo = (new PersonAdminService())->getUserInfo($uid, $params['invite_code']);
+        return $this->jsonBack(0,'成功',$userInfo);
     }
 
-
+    /**
+     * 转出名额
+     */
+    public function transferQuota()
+    {
+        $params = $this->getParams(['id','num']);
+        (new PersonAdminV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+        $transferQuota = (new PersonAdminService())->transferQuota($uid, $params['id'], $params['num']);
+        if(!$transferQuota){
+            throw  new BusinessBaseException('转出名额失败');
+        }
+        return $this->jsonBack(0,'转出成功');
+    }
 
 }
