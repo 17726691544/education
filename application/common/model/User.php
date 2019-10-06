@@ -56,7 +56,7 @@ class User extends Model
 
     public function editPass($uid, $pass, $newpass, $type)
     {
-        $user = self::get($uid)->find();
+        $user = self::get($uid);
         if (!$user) {
             throw  new BusinessBaseException('用户不存在');
         }
