@@ -54,4 +54,14 @@ class PersonAdminService extends BaseService
         return User::findByInviteCode($inviteCode);
 
     }
+
+    public function transferQuota($uid,$otherId,$num)
+    {
+        //判断是否有权限
+        $user = $this->hasPermission($uid);
+        //判断名额是否充足
+        if($user->quota <(int)$num){
+            throw new BusinessBaseException('可用名额不足');
+        }
+    }
 }

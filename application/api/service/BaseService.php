@@ -45,6 +45,7 @@ class BaseService
         if((int)$permissionValue < 1){
             throw new BusinessBaseException('你没有权限做此操作');
         }
+        return $user;
 
     }
 }

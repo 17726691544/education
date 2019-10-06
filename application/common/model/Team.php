@@ -23,7 +23,7 @@ class Team extends Model
             'page' => $page
         ])->hidden(['create_at','images','detail'])->each(function ($item, $key) {
             try {
-                $item->image = json_decode($item['images'])[0];
+                $item->image = $item['images'][0];
             } catch (\Exception $e) {
                 $item->image = '';
             }
