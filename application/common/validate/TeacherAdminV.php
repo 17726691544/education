@@ -7,7 +7,7 @@ class TeacherAdminV extends BaseValidate
 {
     protected $rules = [
         'id' => 'require|integer|>:0',
-        'status' => 'require|in:1,2'
+        'status' => 'require|in:2,3'
 
     ];
 

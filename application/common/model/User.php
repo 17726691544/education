@@ -46,7 +46,7 @@ class User extends Model
 
     public static function findByInviteCode($inviteCode)
     {
-        return self::where('invite_code', $inviteCode)->visible(['id','nick','head_url','invite_code'])->find();
+        return self::where('invite_code', $inviteCode)->visible(['id', 'nick', 'head_url', 'invite_code'])->find();
     }
 
     public function editByUId($uid, $editVal = [])
@@ -86,7 +86,7 @@ class User extends Model
         }])
             ->where('parent_id', $uid)//
             ->where('is_gd', 1)//
-            ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url', 'totalVip'])
+            ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url', 'id_card', 'real_name', 'totalVip'])
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);
@@ -95,12 +95,12 @@ class User extends Model
     public function getVipUserList($uid, $page, $pageNum)
     {
         return self::with(['attendClassRecords' => function ($query) {
-            $query->visible(['course_title','status']);
+            $query->visible(['course_title', 'status']);
         }])->where('parent_id', $uid)//
         ->where('is_gd', 0)
             ->where('is_qd', 0)
             ->where('is_teacher', 0)
-            ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url'])
+            ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'id_card', 'real_name', 'head_url'])
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);
