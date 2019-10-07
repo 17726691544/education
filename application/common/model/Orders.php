@@ -27,5 +27,14 @@ class Orders extends Model
             ]);
     }
 
+    public function getBuyRecordList($uid, $page, $pageNum)
+    {
+        return self::with(['course' => function ($Query) {
+            $Query->field(['id', 'title', 'cover']);
+        }])->where('user_id', $uid)
+            ->field(['id', 'course_id', 'price', 'pay_type', 'status', 'pay_at', 'create_at'])
+            ->paginate($pageNum, false, ['page' => $page]);
+    }
+
 
 }
