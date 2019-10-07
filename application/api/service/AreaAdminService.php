@@ -9,6 +9,7 @@ use app\common\model\AttendClassRecord;
 use app\common\model\CenterLogs;
 use app\common\model\TeachCenter;
 use app\common\model\User;
+use think\Db;
 
 class AreaAdminService extends BaseService
 {
@@ -98,8 +99,52 @@ class AreaAdminService extends BaseService
             throw new BusinessBaseException('非法操作');
         }
         //查询该代理中心的学生列表
-//        return (new AttendClassRecord())->getUserListByCenterId($centerId, 0, $page, $pageNum);
         return (new AttendClassRecord())->getUserItemListByCenterId($centerId, 0, $page, $pageNum);
+    }
+
+    public function confirm($uid, $ids, $centerId, $status)
+    {
+        //判断权限
+        $this->hasPermission($uid);
+        //判断该区代理是否有代理该学习中心
+        $teachCenter = TeachCenter::where('id', $centerId)
+            ->where('agent_user_id', $uid)
+            ->where('status', 1)
+            ->find();
+        if (!$teachCenter) {
+            throw new BusinessBaseException('非法操作');
+        }
+        //批量修改等待装填
+        Db::startTrans();
+        try {
+            foreach ($ids as $key => $val) {
+                $attendClassRecord = AttendClassRecord::where('id', $val)->find();
+                if (!$attendClassRecord) {
+                    throw new BusinessBaseException('获取确认信息失败');
+                }
+                //修改订单状态
+                $orderStatus = $attendClassRecord->status;
+                if ($orderStatus === 0) {
+                    (new AttendClassRecord())->save([
+                        'status' => $status
+                    ], ['id' => $val]);
+                } elseif ($orderStatus === 1) {
+                    throw new BusinessBaseException('请勿重复提交');
+                } else {
+                    throw new BusinessBaseException('非法操作');
+                }
+            }
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+            if ($e instanceof BusinessBaseException) {
+                throw new BusinessBaseException($e->getMsg());
+            } else {
+                return false;
+            }
+        }
+        return true;
+
     }
 
     /**

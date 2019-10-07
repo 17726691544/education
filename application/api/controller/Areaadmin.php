@@ -81,26 +81,26 @@ class Areaadmin extends Base
         (new AreaAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $studentList = (new AreaAdminService())->getStudentList($uid, $params['center_id'], $params['page'] ?? 1, $params['pageNum'] ?? 5);
-        //对获取到的结果进行处理
-//        if ($studentList) {
-//            $studentListArr = ($studentList->toArray())['data'];
-//            foreach ($studentListArr as $key => $val) {
-//                $user_id = $studentList[$key]['user_id'];
-//                $id = $studentList[$key]['id'];
-//                $resultArr[$user_id]['user'] = $studentList[$key]['user'];
-//                $items['id'] = $id;
-//                $items['center_id'] = $studentList[$key]['center_id'];
-//                $items['course_title'] = $studentList[$key]['course_title'];
-//                $resultArr[$user_id]['items'][] = $items;
-//            }
-//
-//            if (!empty($resultArr)) {
-//                $newResultArr['data'] = array_values($resultArr);
-//            }
-//        }
-
-
         return $this->jsonBack(0, '成功', $studentList);
+    }
+
+    /**
+     * 确认提交
+     */
+    public function confirm()
+    {
+        $ids = $this->request->param('ids/a');
+        $center_id = $this->request->param('center_id');
+        $status = $this->request->param('status');
+
+        (new AreaAdminV())->tokenChick()->goChick(['ids' => $ids, 'center_id' => $center_id, 'status' => $status]);
+        $uid = $this->getUid();
+
+        $confirm = (new AreaAdminService())->confirm($uid, $ids, $center_id, $status);
+        if (!$confirm) {
+            throw new BusinessBaseException('确认提交失败');
+        }
+        return $this->jsonBack(0, '成功');
     }
 }
 

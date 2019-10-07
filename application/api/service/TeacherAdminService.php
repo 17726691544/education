@@ -42,10 +42,10 @@ class TeacherAdminService
         if (!$teacherCenter) {
             throw new BusinessBaseException('错误的操作');
         }
-        return (new AttendClassRecord())->getUserListByCenterId($teachCenterId,1, $page, $pageNum);
+        return (new AttendClassRecord())->getUserListByCenterId($teachCenterId, $page, $pageNum);
     }
 
-    public function confirm($uid, $attendClassId,$teachCenterId, $status)
+    public function confirm($uid, $attendClassId, $teachCenterId, $status)
     {
         $this->hasPermission($uid);
         //查找老师
@@ -64,22 +64,27 @@ class TeacherAdminService
         if (!$attendClassRecord) {
             throw new BusinessBaseException('获取确认信息失败');
         }
-        //判断订单状态
+        //修改订单状态
         $orderStatus = $attendClassRecord->status;
-        if ($orderStatus !== $status) {
+        if ($orderStatus === 0) {
+            throw new BusinessBaseException('非法操作');
+        } elseif ($orderStatus === 1) {
             (new AttendClassRecord())->save([
                 'status' => $status
             ], ['id' => $attendClassId]);
+        } else {
+            throw new BusinessBaseException('请勿重复操作');
         }
         return true;
     }
 
-    private function hasPermission($uid){
+    private function hasPermission($uid)
+    {
         $user = User::get($uid);
-        if(!$user){
+        if (!$user) {
             throw new BusinessBaseException('错误的操作');
         }
-        if($user->is_teacher !== 1){
+        if ($user->is_teacher !== 1) {
             throw new BusinessBaseException('你还不是教师！！');
         }
         return $user;

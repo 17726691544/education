@@ -29,7 +29,7 @@ class Coursecentor extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $courseOrderList = (new Orders())->getCourseOrderList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
-        return $this->jsonBack('0', '成功', $courseOrderList);
+        return $this->jsonBack(0, '成功', $courseOrderList);
     }
 
     /**
