@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>规则设置</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?v=9">
+    <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        .preview-box {
+            width: 235px;
+            height: 120px;
+            position: relative;
+            background: #888888;
+            display: inline-block;
+        }
+        .preview-box img {
+            max-width: 235px;
+            max-height: 120px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+        }
+        .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+        }
+        .close:hover{
+            color: #ff253e;
+            opacity: 1;
+        }
+        .rm-item {
+            margin-left: .5rem;
+        }
+        .rm-item:hover {
+            color: #ff253e;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" id="app" v-cloak>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代加盟规则</label>
+                            <div class="col-sm-10">
+                                <ul style="margin-top: .8rem" v-show="qdRule.length>0">
+                                    <li v-for="(item,index) in qdRule" style="display: flex;align-items: center;margin-bottom: 1rem;">
+                                        <span data-toggle="tooltip" data-placement="top" :title="item" style="max-width: 95%;" class="label label-warning">{{index+1}}、{{item}}</span>
+                                        <span @click="removeQd(index)" class="glyphicon glyphicon-remove rm-item" aria-hidden="true"></span>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <input v-model="qd" type="text" class="form-control" placeholder="输入规则说明" style="display: inline-block;width: 18rem;">
+                                    <button @click="addQd" type="button" class="btn btn-success">添加规则</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">个代加盟规则</label>
+                            <div class="col-sm-10">
+                                <ul style="margin-top: .8rem" v-show="gdRule.length>0">
+                                    <li v-for="(item,index) in gdRule" style="display: flex;align-items: center;margin-bottom: 1rem;">
+                                        <span data-toggle="tooltip" data-placement="top" :title="item" style="max-width: 95%;" class="label label-warning">{{index+1}}、{{item}}</span>
+                                        <span @click="removeGd(index)" class="glyphicon glyphicon-remove rm-item" aria-hidden="true"></span>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <input v-model="gd" type="text" class="form-control" placeholder="输入规则说明" style="display: inline-block;width: 18rem;">
+                                    <button @click="addGd" type="button" class="btn btn-success">添加规则</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" @click.prevent="submit">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el:'#app',
+            data:{
+                qdRule:JSON.parse('{$config.qd_rule|raw}'),
+                gdRule:JSON.parse('{$config.gd_rule|raw}'),
+                qd:'',
+                gd:''
+            },
+            methods:{
+                addQd:function() {
+                    this.qdRule.push(this.qd);
+                    this.qd = '';
+                    this.toolTip();
+                },
+                removeQd:function(index) {
+                    this.qdRule.splice(index,1);
+                },
+                addGd:function() {
+                    this.gdRule.push(this.gd);
+                    this.gd = '';
+                    this.toolTip();
+                },
+                removeGd:function(index) {
+                    this.gdRule.splice(index,1);
+                },
+                submit:function () {
+                    let postData = {
+                        gd_rule: JSON.stringify(this.gdRule),
+                        qd_rule: JSON.stringify(this.qdRule)
+                    };
+
+                    $.post('{:url("rule")}', postData, function (ret) {
+                        layer.msg(ret.msg);
+                    }, 'json');
+                },
+                toolTip:function () {
+                    setTimeout(function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },800);
+                }
+            },
+            mounted:function () {
+                this.toolTip();
+            }
+        });
+
+    </script>
+</body>
+</html>

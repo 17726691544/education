@@ -4,7 +4,7 @@ namespace app\api\controller;
 
 use app\common\controller\Base;
 use app\common\validate\BaseValidate;
-use app\common\model\BankCard as BankCardModel;
+use app\common\model\Bankcard as BankCardModel;
 
 class Bankcard extends Base
 {
@@ -69,5 +69,24 @@ class Bankcard extends Base
 
         BankCardModel::where('id',$params['id'])->where('user_id',$uid)->delete();
         return $this->jsonBack(0,'删除成功');
+    }
+
+    /**
+     * 银行卡列表
+     * @return \think\response\Json
+     * @throws \app\common\exception\BusinessBaseException
+     */
+    public function list() {
+        (new BaseValidate())->tokenChick();
+        $uid = $this->getUid();
+        try {
+            $list = BankCardModel::where('user_id',$uid)
+                ->visible(['id','bank'])
+                ->append(['hide_name','start_card','end_card'])
+                ->select();
+            return $this->jsonBack(0,'',$list->toArray());
+        } catch (\Exception $e) {
+            return $this->jsonBack(1,$e->getMessage());
+        }
     }
 }

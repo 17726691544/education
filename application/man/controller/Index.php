@@ -174,18 +174,17 @@ class Index extends Base
     }
 
     public function test() {
-        $p = Db::name('province')->where('id',22)->find();
-        $citys = Db::name('city')->where('province_id',$p['province_id'])->select();
-        foreach ($citys as $key=>$city) {
+        $p = Db::name('province')->select();
+        $c = Db::name('city')->select();
+        $cn = Db::name('country')->select();
 
-            $child = Db::name('country')->where('city_id',$city['city_id'])
-                ->select();
-            $citys[$key]['child'] = $child;
-        }
+        $data = [
+            'province' => $p,
+            'city' => $c,
+            'country' => $cn
+        ];
 
-        dump($p);
-        dump($citys);
-        dump(time());
+        echo json_encode($data,JSON_UNESCAPED_UNICODE);
 
 
     }

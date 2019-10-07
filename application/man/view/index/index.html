@@ -292,6 +292,15 @@
                                 </a>
                             </li>
                             {/if}
+
+                            {if ($is_su || in_array('setting/rule',$access))}
+                            <li>
+                                <a onclick="xadmin.add_tab('规则说明','{:url("Setting/rule")}')">
+                                <i class="iconfont">&#xe6a7;</i>
+                                <cite>规则说明</cite>
+                                </a>
+                            </li>
+                            {/if}
                         </ul>
                     </li>
                     {/if}

@@ -12,7 +12,7 @@ use app\common\model\QuotaOrders;
 use app\common\validate\BaseValidate;
 use app\common\model\User as UserModel;
 
-class QuotaOrder extends Base
+class Quotaorder extends Base
 {
 
     /**
@@ -47,7 +47,8 @@ class QuotaOrder extends Base
             $province = Province::find($params['province_id']);
             $city = City::find($params['city_id']);
             $country = Country::find($params['country_id']);
-            if (!$province || !$city || !$country) throw $this->createError('错误的区域');
+            if (!$province || !$city || !$country || $country->city_id !== $city->city_id
+                || $city->province_id !== $province->province_id) throw $this->createError('错误的区域');
 
             $agent = Agent::where('province_id', $params['province_id'])
                 ->where('city_id', $params['city_id'])

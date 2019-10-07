@@ -9,6 +9,10 @@ class Setting extends Base
 {
     protected $middleware = ['app\man\middleware\Auth'];
 
+    /**
+     * 平台设置
+     * @return mixed
+     */
     public function index() {
         if ($this->request->isPost()) {
             $params = $this->getParams(['quota_price','qd_quota','qdtjr_rate','gd_quota']);
@@ -41,6 +45,45 @@ class Setting extends Base
             $config = Config::find(1);
             $this->assign('config',$config);
             return $this->fetch('index');
+        }
+    }
+
+    /**
+     * 规则说明
+     * @return mixed
+     */
+    public function rule() {
+        if ($this->request->isPost()) {
+            $params = $this->getParams(['gd_rule','qd_rule']);
+            $rule = [
+                'gd_rule' => 'require|min:1',
+                'qd_rule' => 'require|min:1'
+            ];
+            $msg = [
+                'gd_rule' => '请设置个代加盟规则',
+                'qd_rule' => '请设置区代加盟规则'
+            ];
+            $r = $this->validate($params,$rule,$msg);
+            if (true !== $r) {
+                return $this->jsonBack(1,$r);
+            }
+
+            $gdRule = json_decode($params['gd_rule'],true);
+            $qdRule = json_decode($params['qd_rule'],true);
+            if (!is_array($gdRule) || !is_array($qdRule) || empty($gdRule) || empty($qdRule)) {
+                return $this->jsonBack(2,'请设置加盟规则');
+            }
+
+            Config::update([
+                'gd_rule' => $params['gd_rule'],
+                'qd_rule' => $params['qd_rule']
+            ],['id'=>1]);
+
+            return $this->jsonBack(0,'设置成功');
+        } else {
+            $config = Config::get(1);
+            $this->assign('config',$config);
+            return $this->fetch('rule');
         }
     }
 }
