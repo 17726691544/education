@@ -12,7 +12,7 @@ class Teacher extends Model
 
     public function getTipsAttr($value)
     {
-        if(!empty($value)){
+        if (!empty($value)) {
             return json_decode($value);
         }
     }
@@ -24,9 +24,9 @@ class Teacher extends Model
 
     public static function getTeacherList($page, $pageNum)
     {
-        return self::paginate($pageNum, false, [
+        return self::field(['id', 'name', 'education', 'position', 'tips', 'image'])->paginate($pageNum, false, [
             'page' => $page
-        ])->hidden(['user_id', 'ability', 'create_at', 'cover']);
+        ]);
     }
 
     public static function getTeacherDetail($teacherId)
@@ -38,9 +38,9 @@ class Teacher extends Model
     public function getTeachCenterList($uid, $page, $pageNum)
     {
         return self::with(['teachCenters' => function ($query) {
-            $query->where('status',1)//
-                ->hidden(['pivot','agent_id','agent_user_id','province_id','city_id','country_id','create_at','status']);
-          }])
+            $query->where('status', 1)//
+            ->hidden(['pivot', 'agent_id', 'agent_user_id', 'province_id', 'city_id', 'country_id', 'create_at', 'status']);
+        }])
             ->where('user_id', $uid)//
             ->visible([''])
             ->paginate($pageNum, false, [

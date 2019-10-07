@@ -11,7 +11,7 @@ use app\common\model\Course as CourseModel;
 use app\common\model\User;
 
 /**
- * 购买课程controller
+ * 立即报名controller
  * Class Course
  * @package app\api\controller
  */

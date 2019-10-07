@@ -79,7 +79,7 @@ class AreaAdminService extends BaseService
         return TeachCenter::where('agent_id', $agent->id)
             ->where('agent_user_id', $uid)
             ->where('status', 1)
-            ->visible(['id', 'agent_id', 'name', 'province', 'city', 'country', 'area'])
+            ->field(['id', 'agent_id', 'name', 'province', 'city', 'country', 'area'])
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);

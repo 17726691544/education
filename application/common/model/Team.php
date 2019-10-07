@@ -17,11 +17,11 @@ class Team extends Model
         }
     }
 
-    public static function getTeamList($page, $pageNum)
+    public static function  getTeamList($page, $pageNum)
     {
-        return self::paginate($pageNum, false, [
+        return self::field(['id','name','tip','images'])->paginate($pageNum, false, [
             'page' => $page
-        ])->hidden(['create_at','images','detail'])->each(function ($item, $key) {
+        ])->hidden(['images'])->each(function ($item, $key) {
             try {
                 $item->image = $item['images'][0];
             } catch (\Exception $e) {
