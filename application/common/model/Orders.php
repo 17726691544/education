@@ -18,13 +18,25 @@ class Orders extends Model
 
     public function getCourseOrderList($uid, $page, $pageNum)
     {
-        return self::with('course')
+        return self::with(['course'=>function($query){
+                $query->field(['id', 'title', 'cover']);
+        }])
+            ->field(['course_id'])
             ->where('user_id', $uid)//
-            ->visible(['course' => ['id', 'title', 'cover'], ''])//
+            ->visible([''])//
             ->where('status', 1)//
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);
+    }
+
+    public function getBuyRecordList($uid, $page, $pageNum)
+    {
+        return self::with(['course' => function ($Query) {
+            $Query->field(['id', 'title', 'cover']);
+        }])->where('user_id', $uid)
+            ->field(['id', 'course_id', 'price', 'pay_type', 'status', 'pay_at', 'create_at'])
+            ->paginate($pageNum, false, ['page' => $page]);
     }
 
 

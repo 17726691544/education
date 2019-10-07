@@ -7,7 +7,9 @@ use app\api\service\SmsService;
 use app\api\service\UserService;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
+use app\common\model\Orders;
 use app\common\validate\BaseValidate;
+use app\common\validate\PageV;
 use app\common\validate\UserV;
 use \app\common\model\User as UserModel;
 
@@ -25,10 +27,10 @@ class User extends Base
      */
     public function getCode()
     {
-        $params = $this->getParams(['tel','send_type','code_type']);
+        $params = $this->getParams(['tel', 'send_type', 'code_type']);
         (new UserV())->goChick($params);
 
-        $result = (new SmsService())->getCode($params['tel'],$params['send_type'],$params['code_type']);
+        $result = (new SmsService())->getCode($params['tel'], $params['send_type'], $params['code_type']);
         if (!$result) {
             throw new BusinessBaseException('发送失败');
         }
@@ -82,6 +84,19 @@ class User extends Base
         $userInfo = UserModel::get($uid);
         return $this->jsonBack(0, '成功', $userInfo);
 
+    }
+
+    /**
+     * 分页获取购买记录
+     */
+    public function getBuyRecordList()
+    {
+        $params = $this->getParams(['page', 'pageNum']);
+        (new PageV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+
+        $buyRecordList = (new Orders())->getBuyRecordList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        return $this->jsonBack(0, '成功', $buyRecordList);
     }
 
 }

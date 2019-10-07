@@ -43,8 +43,8 @@ class CourseCentorService
 
         //3:获取观看进度
         $userCourseSin = UserCourseSign::where('user_id', $uid)
+            ->field(['sign'])//
             ->where('course_id', $courseId)//
-            ->visible(['sign'])//
             ->find();
         if ($userCourseSin) {
             $userCourseSin = $userCourseSin->toArray();

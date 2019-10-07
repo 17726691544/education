@@ -18,7 +18,7 @@ class AreaAdminService extends BaseService
     {
         //判断是否有权限
         $this->hasPermission($uid);
-        return Agent::where('user_id', $uid)->visible(['id', 'province', 'city', 'country'])->find();
+        return Agent::where('user_id', $uid)->field(['id', 'province', 'city', 'country'])->find();
     }
 
     public function applyTeachCenter($uid, $name, $area)
@@ -79,7 +79,7 @@ class AreaAdminService extends BaseService
         return TeachCenter::where('agent_id', $agent->id)
             ->where('agent_user_id', $uid)
             ->where('status', 1)
-            ->visible(['id', 'agent_id', 'name', 'province', 'city', 'country', 'area'])
+            ->field(['id', 'agent_id', 'name', 'province', 'city', 'country', 'area'])
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);

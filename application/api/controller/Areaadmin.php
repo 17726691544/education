@@ -27,8 +27,6 @@ class Areaadmin extends Base
         $uid = $this->getUid();
         $teachCenterArea = (new AreaAdminService())->getTeachCenterArea($uid);
         return $this->jsonBack(0, '成功', $teachCenterArea);
-
-
     }
 
     /**

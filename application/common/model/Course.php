@@ -14,7 +14,7 @@ class Course extends Model
     {
         return self::where('status', 0)//
         ->order('create_at', 'desc')//
-        ->visible(['id', 'title', 'cover'])//
+        ->field(['id', 'title', 'cover'])//
         ->paginate($pageNum, false, ['page' => $page]);
 
     }
@@ -28,19 +28,20 @@ class Course extends Model
     {
         return self::where('id', $id)
             ->where('status', 0)//
-            ->visible(['id', 'title', 'cover', 'price', 'tip', 'grades'])
+            ->field(['id', 'title', 'cover', 'price', 'tip', 'grades'])
             ->find();
     }
 
     public function getCourseCentorDetail($id)
     {
         return self::with(['courseItems' => function ($query) {
-            $query->order('sort desc')->visible(['id','name']);
+            $query->order('sort desc')->field(['id','name','course_id']);
         }])
+            ->field(['id','title','cover','tip'])
             ->where('id', $id)//
             ->where('status', 0)//
-            ->visible(['id','title','cover','tip'])
             ->find();
+
     }
 
     /**

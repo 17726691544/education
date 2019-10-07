@@ -24,6 +24,7 @@ class Userset extends Base
     public function uploadHead()
     {
         (new BaseValidate())->tokenChick();
+        $uid = $this->getUid();
 
         $file = request()->file('image');
         if (!$file) {
@@ -31,12 +32,14 @@ class Userset extends Base
         }
 
         $info = $file->getInfo();
-        if ($info['error'] !== 0 || !$file->isValid()) {
-            return $this->jsonBack(1, '上传文件失败');
-        }
-
         if (!$file->check(['ext' => 'jpg,png,jpeg'])) {
             return $this->jsonBack(1, '仅支持jpg，png，jpeg格式');
+        }
+        if (!$file->checkSize(2097152)) {
+            return $this->jsonBack(1, '上传文件,最大为1M');
+        }
+        if ($info['error'] !== 0 || !$file->isValid()) {
+            return $this->jsonBack(1, '上传文件失败');
         }
         $saveName = md5(mt_rand(0, 10000) . time()) . '.' . pathinfo($info['name'], PATHINFO_EXTENSION);
         echo $saveName;
@@ -45,8 +48,11 @@ class Userset extends Base
             return $this->jsonBack(1, '同步到云失败');
         }
         //保存地址到数据库
-
-        return $this->jsonBack(0, '', $r);
+        $result = (new UserModel())->editByUId($uid, ['head_url' => $r]);
+        if (!$result) {
+            throw new BusinessBaseException('修改失败');
+        }
+        return $this->jsonBack(0, '成功', $r);
     }
 
     /**
@@ -73,7 +79,7 @@ class Userset extends Base
      */
     public function editPass()
     {
-            $params = $this->getParams(['pass', 'newpass', 'renewpass']);
+        $params = $this->getParams(['pass', 'newpass', 'renewpass']);
         (new UsersetV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
