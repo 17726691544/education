@@ -6,6 +6,7 @@ namespace app\api\service;
 
 use app\common\exception\BusinessBaseException;
 use app\common\model\User;
+use think\Db;
 
 class PersonAdminService extends BaseService
 {
@@ -46,6 +47,7 @@ class PersonAdminService extends BaseService
         if($user->is_gd !== 1){
             throw new BusinessBaseException('你还没有申请为个代管理!!');
         }
+
         return $user;
     }
 

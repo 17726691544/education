@@ -40,4 +40,10 @@ class Bankcard extends Model
         }
         return '*' . mb_substr($data['name'],-1);
     }
+
+    public static function getBankInfo($uid){
+        return self::where('user_id',$uid)
+            ->field(['id','bank','name','card'])
+            ->select();
+    }
 }
