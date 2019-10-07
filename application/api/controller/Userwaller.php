@@ -9,6 +9,7 @@ use app\common\model\UserLogsCopy;
 use app\common\validate\BaseValidate;
 use app\common\model\User;
 use app\common\validate\PageV;
+use app\common\model\BankCard;
 
 class Userwaller extends Base
 {
@@ -42,6 +43,31 @@ class Userwaller extends Base
         $balanceDetail = UserLogsCopy::getBalanceDetail($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $balanceDetail);
 
+    }
+
+    /**
+     * 提现获取银行卡信息
+     */
+    public function getBankInfo()
+    {
+        (new BaseValidate())->tokenChick();
+        $uid = $this->getUid();
+        $bankInfo = BankCard::getBankInfo($uid);
+
+        return $this->jsonBack(0, '成功', $bankInfo);
+    }
+
+    /**
+     * 分页获取提现记录
+     */
+    public function getWithdrawList()
+    {
+        $params = $this->getParams(['page', 'pageNum']);
+        (new PageV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+
+        $WithdrawList = UserLogsCopy::getWithdrawList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        return $this->jsonBack(0, '成功', $WithdrawList);
     }
 
 }
