@@ -81,6 +81,25 @@ class Areaadmin extends Base
         (new AreaAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $studentList = (new AreaAdminService())->getStudentList($uid, $params['center_id'], $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        //对获取到的结果进行处理
+//        if ($studentList) {
+//            $studentListArr = ($studentList->toArray())['data'];
+//            foreach ($studentListArr as $key => $val) {
+//                $user_id = $studentList[$key]['user_id'];
+//                $id = $studentList[$key]['id'];
+//                $resultArr[$user_id]['user'] = $studentList[$key]['user'];
+//                $items['id'] = $id;
+//                $items['center_id'] = $studentList[$key]['center_id'];
+//                $items['course_title'] = $studentList[$key]['course_title'];
+//                $resultArr[$user_id]['items'][] = $items;
+//            }
+//
+//            if (!empty($resultArr)) {
+//                $newResultArr['data'] = array_values($resultArr);
+//            }
+//        }
+
+
         return $this->jsonBack(0, '成功', $studentList);
     }
 }

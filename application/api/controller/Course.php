@@ -54,7 +54,8 @@ class Course extends Base
     {
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
-        return User::where('id', $uid)->visible(['id', 'id_card', 'real_name'])->find();
+        $idCardInfo = User::where('id', $uid)->visible(['id', 'id_card', 'real_name'])->find();
+        return  $this->jsonBack(0,'成功',$idCardInfo);
     }
 
 

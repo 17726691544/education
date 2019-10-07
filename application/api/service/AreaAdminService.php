@@ -98,7 +98,8 @@ class AreaAdminService extends BaseService
             throw new BusinessBaseException('非法操作');
         }
         //查询该代理中心的学生列表
-        return (new AttendClassRecord())->getUserListByCenterId($centerId, 0, $page, $pageNum);
+//        return (new AttendClassRecord())->getUserListByCenterId($centerId, 0, $page, $pageNum);
+        return (new AttendClassRecord())->getUserItemListByCenterId($centerId, 0, $page, $pageNum);
     }
 
     /**

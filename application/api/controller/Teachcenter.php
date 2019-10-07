@@ -40,6 +40,6 @@ class Teachcenter extends Base
                 $resltArr[] = $item;
             }
         }
-        return $this->jsonBack('0', '成功', $resltArr ?? null);
+        return $this->jsonBack(0, '成功', $resltArr ?? null);
     }
 }
