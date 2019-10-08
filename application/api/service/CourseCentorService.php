@@ -43,7 +43,7 @@ class CourseCentorService
         }
         $courseCentorDetail = $courseCentorDetail->toArray();
         $courseCentorDetail['totalItem'] = count($courseCentorDetail['course_items']);
-
+        $courseCentorDetail['orderId'] = $order->id;
         //3:获取观看进度
         $userCourseSin = UserCourseSign::where('user_id', $uid)
             ->field(['sign'])//
@@ -57,7 +57,7 @@ class CourseCentorService
                 $sign = count(json_decode($userCourseSin['sign']));
             }
             $courseCentorDetail['studyItem'] = $sign;
-            $courseCentorDetail['orderId'] = $order->id;
+
         }
         return $courseCentorDetail;
     }
