@@ -24,7 +24,7 @@ class Personadmin extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $directPersonList = (new PersonAdminService())->getDirectPersonList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
-        return $this->jsonBack('0', '成功', $directPersonList);
+        return $this->jsonBack(0, '成功', $directPersonList);
     }
 
     /**
@@ -38,7 +38,7 @@ class Personadmin extends Base
         $uid = $this->getUid();
 
         $vipUserList = (new PersonAdminService())->getVipUserList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
-        return $this->jsonBack('0', '成功', $vipUserList);
+        return $this->jsonBack(0, '成功', $vipUserList);
     }
 
     /**
@@ -50,7 +50,7 @@ class Personadmin extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $directDetailList = (new PersonAdminService())->getDirectDetailList($uid, $params['id'], $params['page'] ?? 1, $params['pageNum'] ?? 5);
-        return $this->jsonBack('0', '成功', $directDetailList);
+        return $this->jsonBack(0, '成功', $directDetailList);
     }
 
 
