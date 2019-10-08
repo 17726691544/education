@@ -65,6 +65,7 @@ class TeacherAdminService
         if (!$attendClassRecord) {
             throw new BusinessBaseException('获取确认信息失败');
         }
+
         //修改订单状态
         Db::startTrans();
         try {

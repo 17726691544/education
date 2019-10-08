@@ -43,10 +43,11 @@ class CourseCentorService
         }
         $courseCentorDetail = $courseCentorDetail->toArray();
         $courseCentorDetail['totalItem'] = count($courseCentorDetail['course_items']);
-        $courseCentorDetail['orderId'] = $order->id;
+        $courseCentorDetail['orderId'] = $orderId;
         //3:获取观看进度
-        $userCourseSin = UserCourseSign::where('user_id', $uid)
+        $userCourseSin = UserCourseSign::where('order_id', $orderId)
             ->field(['sign'])//
+            ->where('user_id', $uid)
             ->where('course_id', $courseId)//
             ->find();
         if ($userCourseSin) {
@@ -71,13 +72,13 @@ class CourseCentorService
         $courseId = $order->course_id;
         //2:判断该打卡小节是否是正确的
         $courseItem = CourseItem::where('id', $signId)
-            ->where('course_id',$courseId )
+            ->where('course_id', $courseId)
             ->find();
         if (!$courseItem) {
             throw  new BusinessBaseException('错误操作');
         }
         $userCourseSign = UserCourseSign::where('user_id', $uid)
-            ->where('course_id',$courseId)
+            ->where('course_id', $courseId)
             ->where('order_id', $orderId)
             ->find();
         if ($userCourseSign) {
