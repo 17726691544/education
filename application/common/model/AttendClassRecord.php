@@ -41,10 +41,11 @@ class AttendClassRecord extends Model
     public function getUserItemListByCenterId($centerId, $page, $pageNum)
     {
         return self
-            ::with(['user'=>function($query){
+            ::with(['user' => function ($query) {
                 $query->field(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url', 'id_card', 'real_name']);
-            }, 'attendClassRecords'=>function($query){
-                $query->field(['id','agent_id','center_id','user_id','course_id','course_title']);
+            }, 'attendClassRecords' => function ($query) {
+                $query->field(['id', 'agent_id', 'center_id', 'user_id', 'course_id', 'course_title'])
+                    ->where('status', 0);
             }])
             ->field(['user_id'])
             ->where('center_id', $centerId)//
