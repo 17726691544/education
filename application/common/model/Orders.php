@@ -12,7 +12,7 @@ class Orders extends Model
     protected $table = 'orders';
 
     protected $type = [
-        'create_at' =>'timestamp'
+        'create_at' => 'timestamp'
     ];
 
     public function course()
@@ -22,10 +22,10 @@ class Orders extends Model
 
     public function getCourseOrderList($uid, $page, $pageNum)
     {
-        return self::with(['course'=>function($query){
-                $query->field(['id', 'title', 'cover']);
+        return self::with(['course' => function ($query) {
+            $query->field(['id', 'title', 'cover']);
         }])
-            ->field(['id','course_id'])
+            ->field(['id', 'course_id'])
             ->where('user_id', $uid)//
             ->visible(['id'])//
             ->where('status', 1)//
@@ -40,6 +40,7 @@ class Orders extends Model
             $Query->field(['id', 'title', 'cover']);
         }])->where('user_id', $uid)
             ->field(['id', 'course_id', 'price', 'pay_type', 'status', 'pay_at', 'create_at'])
+            ->order('id','desc')
             ->paginate($pageNum, false, ['page' => $page]);
     }
 
@@ -49,7 +50,8 @@ class Orders extends Model
      * @param $data
      * @return int
      */
-    public function getOrderNumberAttr($value,$data) {
+    public function getOrderNumberAttr($value, $data)
+    {
         return $data['id'] + self::START_TRADE_NUM;
     }
 
@@ -58,9 +60,10 @@ class Orders extends Model
      * @param $orderNo
      * @return bool|int|string
      */
-    public static function orderNo2Id($orderNo) {
+    public static function orderNo2Id($orderNo)
+    {
         $pattern = '/^\d{10,}$/';
-        if (!preg_match($pattern,$orderNo)) return false;
+        if (!preg_match($pattern, $orderNo)) return false;
         $id = $orderNo - self::START_TRADE_NUM;
         if ($id <= 0) return false;
         return $id;

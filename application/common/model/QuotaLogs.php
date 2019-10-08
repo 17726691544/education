@@ -27,6 +27,7 @@ class QuotaLogs extends Model
             ->where('from', $uid)//
             ->field(['id', 'num', 'create_at', 'to'])
             ->hidden(['to', 'user.id'])
+            ->order('id','desc')
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);

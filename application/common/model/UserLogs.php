@@ -27,6 +27,7 @@ class UserLogs extends Model
     {
         return self::where('user_id', $uid)
             ->field(['num', 'tip', 'type', 'create_at'])
+            ->order('id','desc')
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);
