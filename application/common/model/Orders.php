@@ -43,5 +43,26 @@ class Orders extends Model
             ->paginate($pageNum, false, ['page' => $page]);
     }
 
+    /**
+     * order_number
+     * @param $value
+     * @param $data
+     * @return int
+     */
+    public function getOrderNumberAttr($value,$data) {
+        return $data['id'] + self::START_TRADE_NUM;
+    }
 
+    /**
+     * 订单编号转ID
+     * @param $orderNo
+     * @return bool|int|string
+     */
+    public static function orderNo2Id($orderNo) {
+        $pattern = '/^\d{10,}$/';
+        if (!preg_match($pattern,$orderNo)) return false;
+        $id = $orderNo - self::START_TRADE_NUM;
+        if ($id <= 0) return false;
+        return $id;
+    }
 }
