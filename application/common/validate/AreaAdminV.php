@@ -10,7 +10,7 @@ class AreaAdminV extends BaseValidate
         'name'=>'require|max:50|min:1',
         'area' => 'require|max:255|min:1',
         'center_id' => 'require|integer|>:0',
-        'ids' => 'require|array|min:1',
+        'ids' => 'require|min:1',
         'status' => 'require|in:1'
 
     ];

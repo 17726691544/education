@@ -87,14 +87,23 @@ class Areaadmin extends Base
      */
     public function confirm()
     {
-        $ids = $this->request->param('ids/a');
+        $ids = $this->request->param('ids');
         $center_id = $this->request->param('center_id');
         $status = $this->request->param('status');
 
         (new AreaAdminV())->tokenChick()->goChick(['ids' => $ids, 'center_id' => $center_id, 'status' => $status]);
+        try {
+            $newIds = json_decode($ids);
+            if (count($newIds) < 1) {
+                throw  new BusinessBaseException('错误操作');
+            }
+        } catch (\Exception $e) {
+            throw new BusinessBaseException('错误操作');
+        }
+
         $uid = $this->getUid();
 
-        $confirm = (new AreaAdminService())->confirm($uid, $ids, $center_id, $status);
+        $confirm = (new AreaAdminService())->confirm($uid, $newIds, $center_id, $status);
         if (!$confirm) {
             throw new BusinessBaseException('确认提交失败');
         }

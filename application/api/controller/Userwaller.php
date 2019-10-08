@@ -58,6 +58,15 @@ class Userwaller extends Base
     }
 
     /**
+     * 提现
+     */
+    public function withdraw()
+    {
+  //      $this->getParams(['bankCard_id',''])
+        
+    }
+    
+    /**
      * 分页获取提现记录
      */
     public function getWithdrawList()
