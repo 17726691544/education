@@ -3,13 +3,17 @@
 
 namespace app\api\controller;
 
+use app\api\service\UserWallerService;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
 use app\common\model\UserLogs;
+use app\common\model\WithdrawLogs;
 use app\common\validate\BaseValidate;
 use app\common\model\User;
 use app\common\validate\PageV;
 use app\common\model\BankCard;
+use app\common\validate\UserWallerV;
+use http\Params;
 
 class Userwaller extends Base
 {
@@ -62,7 +66,15 @@ class Userwaller extends Base
      */
     public function withdraw()
     {
-  //      $this->getParams(['bankCard_id',''])
+        $params = $this->getParams(['bankCard_id', 'moneyNum']);
+        (new UserWallerV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+
+       $result =  (new UserWallerService())->withdraw($uid,$params['bankCard_id'],$params['moneyNum']);
+       if(!$result){
+           throw new BusinessBaseException('提交失败');
+       }
+        return $this->jsonBack(0,'提交成功');
         
     }
     
@@ -75,7 +87,7 @@ class Userwaller extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-        $WithdrawList = UserLogs::getWithdrawList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        $WithdrawList = WithdrawLogs::getWithdrawList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $WithdrawList);
     }
 

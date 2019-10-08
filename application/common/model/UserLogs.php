@@ -33,14 +33,5 @@ class UserLogs extends Model
 
     }
 
-    public static function getWithdrawList($uid, $page, $pageNum)
-    {
 
-        return self::where('user_id', $uid)
-            ->where('type', 1)
-            ->field(['id', 'num', 'tip', 'create_at'])
-            ->paginate($pageNum, false, [
-                'page' => $page
-            ]);
-    }
 }

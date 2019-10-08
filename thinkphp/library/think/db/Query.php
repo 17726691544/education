@@ -46,7 +46,7 @@ class Query
      * 当前数据表名称（不含前缀）
      * @var string
      */
-    protected $name = '';
+    public $name = '';
 
     /**
      * 当前数据表主键
