@@ -50,7 +50,7 @@ class Teacheradmin extends Base
         (new TeacherAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-        $confirm = (new TeacherAdminService())->confirm($uid, $params['id'], $params['center_id'],$params['course_id'],$params['status']);
+        $confirm = (new TeacherAdminService())->confirm($uid, $params['id'], $params['center_id'],$params['status']);
         if (!$confirm) {
             throw new BusinessBaseException('确认失败');
         }

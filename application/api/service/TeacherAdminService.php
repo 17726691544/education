@@ -77,7 +77,7 @@ class TeacherAdminService
                 $result = (new AttendClassRecord())->save([
                     'status' => $status
                 ], ['id' => $attendClassId, 'status' => 1]);
-                if ($result !== 1) {
+                if (!$result) {
                     throw new BusinessBaseException('确认失败');
                 }
                 //解冻资金
@@ -102,12 +102,12 @@ class TeacherAdminService
     {
         //获取冻结执行信息
         $userBalance = UserBalance::where('user_id', $userId)
-            > lock(true)
-                ->where('attend_id', $attendId)
-                ->where('status', 0)
-                ->find();
+            ->lock(true)
+            ->where('attend_id', $attendId)
+            ->where('status', 0)
+            ->find();
         if (!$userBalance) {
-            retrun;
+            return;
         }
         //减少锁定余额 增加可用余额
         $changBalance = $userBalance->lock_balance;
