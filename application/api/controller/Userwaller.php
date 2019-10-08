@@ -5,7 +5,7 @@ namespace app\api\controller;
 
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
-use app\common\model\UserLogsCopy;
+use app\common\model\UserLogs;
 use app\common\validate\BaseValidate;
 use app\common\model\User;
 use app\common\validate\PageV;
@@ -40,7 +40,7 @@ class Userwaller extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-        $balanceDetail = UserLogsCopy::getBalanceDetail($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        $balanceDetail = UserLogs::getBalanceDetail($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $balanceDetail);
 
     }
@@ -66,7 +66,7 @@ class Userwaller extends Base
         (new PageV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-        $WithdrawList = UserLogsCopy::getWithdrawList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        $WithdrawList = UserLogs::getWithdrawList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $WithdrawList);
     }
 

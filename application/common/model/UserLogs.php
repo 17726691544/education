@@ -6,9 +6,9 @@ namespace app\common\model;
 
 use think\Model;
 
-class UserLogsCopy extends Model
+class UserLogs extends Model
 {
-    protected $table = 'user_logs_copy';
+    protected $table = 'user_logs';
 
     protected $type = [
       'create_at' =>'timestamp'

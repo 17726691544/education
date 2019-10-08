@@ -174,17 +174,20 @@ class Index extends Base
     }
 
     public function test() {
-        $p = Db::name('province')->select();
-        $c = Db::name('city')->select();
-        $cn = Db::name('country')->select();
+//        $p = Db::name('province')->select();
+//        $c = Db::name('city')->select();
+//        $cn = Db::name('country')->select();
+//
+//        $data = [
+//            'province' => $p,
+//            'city' => $c,
+//            'country' => $cn
+//        ];
+//
+//        echo json_encode($data,JSON_UNESCAPED_UNICODE);
 
-        $data = [
-            'province' => $p,
-            'city' => $c,
-            'country' => $cn
-        ];
-
-        echo json_encode($data,JSON_UNESCAPED_UNICODE);
+        $s = 'Q1370178326';
+        echo substr($s,1);
 
 
     }
