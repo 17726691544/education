@@ -87,7 +87,7 @@ class CourseCentorService
             (new UserCourseSign())->save([
                 'user_id' => $uid,
                 'course_id' => $courseId,
-                'sign' => $signId
+                'sign' => json_encode([$signId])
             ]);
         }
         return true;

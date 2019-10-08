@@ -9,6 +9,7 @@ use app\common\exception\BusinessBaseException;
 use app\common\validate\BaseValidate;
 use app\common\validate\PageV;
 use app\common\validate\PersonAdminV;
+use http\Params;
 
 /**
  *
@@ -48,10 +49,10 @@ class Quotaadmin extends Base
      */
     public function transferQuota()
     {
-        $params = $this->getParams(['id', 'num']);
+        $params = $this->getParams(['id', 'num','safe_pass']);
         (new PersonAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
-        $transferQuota = (new QuotaadminService())->transferQuota($uid, $params['id'], $params['num']);
+        $transferQuota = (new QuotaadminService())->transferQuota($uid, $params['id'], $params['num'],$params['safe_pass']);
         if (!$transferQuota) {
             throw  new BusinessBaseException('转出名额失败');
         }
@@ -59,7 +60,7 @@ class Quotaadmin extends Base
     }
 
     /**
-     * 分页获取转账记录列表
+     * 分页获取转让记录列表
      */
     public function getTransferRecordList()
     {

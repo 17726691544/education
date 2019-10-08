@@ -30,10 +30,16 @@ class QuotaadminService extends BaseService
 
     }
 
-    public function transferQuota($uid, $otherId, $num)
+    public function transferQuota($uid, $otherId, $num ,$safePass)
     {
         //判断是否有权限
         $user = $this->hasPermission($uid);
+        //判断安全密码是否正确
+        $md5Pass = md5($user->tel . $safePass);
+        if ($md5Pass !== $user->safe_pass) {
+            throw new BusinessBaseException('安全密码错误');
+        }
+
         //判断名额是否充足
         if ($user->quota < (int)$num) {
             throw new BusinessBaseException('可用名额不足');

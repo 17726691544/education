@@ -45,7 +45,7 @@ class TeacherAdminService
         return (new AttendClassRecord())->getUserListByCenterId($teachCenterId, $page, $pageNum);
     }
 
-    public function confirm($uid, $attendClassId, $teachCenterId, $status)
+    public function confirm($uid, $attendClassId, $teachCenterId, $courseId, $status)
     {
         $this->hasPermission($uid);
         //查找老师
@@ -65,18 +65,38 @@ class TeacherAdminService
             throw new BusinessBaseException('获取确认信息失败');
         }
         //修改订单状态
-        $orderStatus = $attendClassRecord->status;
-        if ($orderStatus === 0) {
-            throw new BusinessBaseException('非法操作');
-        } elseif ($orderStatus === 1) {
-            (new AttendClassRecord())->save([
-                'status' => $status
-            ], ['id' => $attendClassId]);
-
-        } else {
-            throw new BusinessBaseException('请勿重复操作');
+        Db::startTrans();
+        try{
+            $orderStatus = $attendClassRecord->status;
+            if ($orderStatus === 0) {
+                throw new BusinessBaseException('非法操作');
+            } elseif ($orderStatus === 1) {
+                $result = (new AttendClassRecord())->save([
+                    'status' => $status
+                ], ['id' => $attendClassId, 'status' => 1]);
+                if ($result !== 1) {
+                    throw new BusinessBaseException('确认失败');
+                }
+                //解冻资金
+                unfreezeBalance($uid,$courseId);
+            } else {
+                throw new BusinessBaseException('请勿重复操作');
+            }
+            Db::commit();
+        }catch (\Exception $e){
+            Db::rollback();
+            throw $e;
         }
         return true;
+    }
+
+    /**
+     * 解冻资金
+     * @param $uid
+     * @param $courseId
+     */
+    private function unfreezeBalance($uid,$courseId){
+
     }
 
     private function hasPermission($uid)
