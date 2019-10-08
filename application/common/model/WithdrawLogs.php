@@ -16,7 +16,7 @@ class WithdrawLogs extends Model
     public function getStatusAttr($value)
     {
         //状态：0、待审核，1、通过，2、拒绝
-        $status = [0=>'审核中',1=>'通过',2=>'审核未通过'];
+        $status = [0=>'审核中',1=>'通过',2=>'审核未通过',3=>'已转账'];
         return $status[$value];
     }
 
