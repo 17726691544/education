@@ -54,7 +54,7 @@ class Teacheradmin extends Base
         if (!$confirm) {
             throw new BusinessBaseException('确认失败');
         }
-        return $this->jsonBack('0', '成功');
+        return $this->jsonBack(0, '成功');
     }
 
 }
