@@ -64,7 +64,13 @@ class AreaAdminService extends BaseService
             ->order('create_at', 'asc')
             ->paginate($pageNum, false, [
                 'page' => $page
-            ]);
+            ])->each(function($item, $key){
+                $date = $item['create_at'];
+                if(!empty($date)){
+                    $item->dateMonth = date('Y年m月',$date);
+                    $item->create_at = date('Y-m-d H:i',$date);
+                }
+            });
     }
 
     public function getTeachCenterList($uid, $page, $pageNum)

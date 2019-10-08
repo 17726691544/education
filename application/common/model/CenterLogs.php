@@ -11,7 +11,9 @@ class CenterLogs extends Model
 
     protected $table = 'center_logs';
 
-    protected $type = [
-        'create_at' => 'timestamp'
-    ];
+//    protected $type = [
+//        'create_at' => 'timestamp'
+//    ];
+
+
 }
