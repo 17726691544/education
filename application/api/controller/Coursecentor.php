@@ -52,11 +52,11 @@ class Coursecentor extends Base
      */
     public function sinCourse()
     {
-        $params = $this->getParams(['id', 'signId']);
+        $params = $this->getParams(['signId','order_id']);
         (new CourseCentorV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-        $sinCourse = (new CourseCentorService())->sinCourse($uid, $params['id'], $params['signId']);
+        $sinCourse = (new CourseCentorService())->sinCourse($uid,$params['signId'],$params['order_id']);
         if (!$sinCourse) {
             throw new BusinessBaseException('打卡失败');
         }

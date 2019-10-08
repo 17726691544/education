@@ -18,21 +18,24 @@ class CourseCentorService
      * @param $courseId
      * @throws BusinessBaseException
      */
-    private function hasCourse($uid, $courseId)
+    private function hasOrder($uid, $orderId)
     {
-        $order = Orders::where('user_id', $uid)
-            ->where('course_id', $courseId)//
+        $order = Orders::where('id', $orderId)
+            ->where('user_id', $uid)//
             ->where('status', 1)//
-            ->select();
+            ->find();
         if (!$order) {
             throw new BusinessBaseException('非法操作');
         }
+        return $order;
     }
 
-    public function getCourseCentorDetail($uid, $courseId)
+    public function getCourseCentorDetail($uid, $orderId)
     {
         //1:判断用户是否具有该课程
-        $this->hasCourse($uid, $courseId);
+        $order = $this->hasOrder($uid, $orderId);
+        //获取课程id
+        $courseId = $order->course_id;
         //2:获取课程详情
         $courseCentorDetail = (new Course())->getCourseCentorDetail($courseId);
         if (!$courseCentorDetail) {
@@ -54,21 +57,29 @@ class CourseCentorService
                 $sign = count(json_decode($userCourseSin['sign']));
             }
             $courseCentorDetail['studyItem'] = $sign;
+            $courseCentorDetail['orderId'] = $order->id;
         }
         return $courseCentorDetail;
     }
 
 
-    public function sinCourse($uid, $courseId, $signId)
+    public function sinCourse($uid, $signId, $orderId)
     {
         //1:判断用户是否具有该课程
-        $this->hasCourse($uid, $courseId);
+        $order = $this->hasOrder($uid, $orderId);
+        //获取课程id
+        $courseId = $order->course_id;
         //2:判断该打卡小节是否是正确的
-        $courseItem = CourseItem::where('id', $signId)->where('course_id', $courseId)->find();
+        $courseItem = CourseItem::where('id', $signId)
+            ->where('course_id',$courseId )
+            ->find();
         if (!$courseItem) {
             throw  new BusinessBaseException('错误操作');
         }
-        $userCourseSign = UserCourseSign::where('user_id', $uid)->where('course_id', $courseId)->find();
+        $userCourseSign = UserCourseSign::where('user_id', $uid)
+            ->where('course_id',$courseId)
+            ->where('order_id', $orderId)
+            ->find();
         if ($userCourseSign) {
             $sign = $userCourseSign['sign'];
             if (!empty($sign)) {
@@ -87,6 +98,7 @@ class CourseCentorService
             (new UserCourseSign())->save([
                 'user_id' => $uid,
                 'course_id' => $courseId,
+                'order_id' => $orderId,
                 'sign' => json_encode([$signId])
             ]);
         }
