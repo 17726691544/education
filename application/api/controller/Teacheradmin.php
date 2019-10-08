@@ -46,7 +46,7 @@ class Teacheradmin extends Base
      */
     public function confirm()
     {
-        $params = $this->getParams(['id','center_id','course_id', 'status']);
+        $params = $this->getParams(['id','center_id', 'status']);
         (new TeacherAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 

@@ -8,6 +8,7 @@ use app\common\exception\BusinessBaseException;
 use app\common\model\AttendClassRecord;
 use app\common\model\Teacher;
 use app\common\model\User;
+use app\common\model\UserBalance;
 use think\Db;
 
 class TeacherAdminService
@@ -45,7 +46,7 @@ class TeacherAdminService
         return (new AttendClassRecord())->getUserListByCenterId($teachCenterId, $page, $pageNum);
     }
 
-    public function confirm($uid, $attendClassId, $teachCenterId, $courseId, $status)
+    public function confirm($uid, $attendClassId, $teachCenterId, $status)
     {
         $this->hasPermission($uid);
         //查找老师
@@ -66,7 +67,7 @@ class TeacherAdminService
         }
         //修改订单状态
         Db::startTrans();
-        try{
+        try {
             $orderStatus = $attendClassRecord->status;
             if ($orderStatus === 0) {
                 throw new BusinessBaseException('非法操作');
@@ -78,12 +79,12 @@ class TeacherAdminService
                     throw new BusinessBaseException('确认失败');
                 }
                 //解冻资金
-                unfreezeBalance($uid,$courseId);
+                $this->unfreezeBalance($uid, $attendClassRecord->course_id);
             } else {
                 throw new BusinessBaseException('请勿重复操作');
             }
             Db::commit();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Db::rollback();
             throw $e;
         }
@@ -95,7 +96,9 @@ class TeacherAdminService
      * @param $uid
      * @param $courseId
      */
-    private function unfreezeBalance($uid,$courseId){
+    private function unfreezeBalance($uid, $courseId)
+    {
+        //获取冻结执行信息
 
     }
 
