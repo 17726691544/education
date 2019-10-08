@@ -61,7 +61,7 @@ class AreaAdminService extends BaseService
         //分页查询用户的收益记录
         return CenterLogs::where('agent_user_id', $uid)
             ->where('agent_id', $agent->id)
-            ->order('create_at', 'asc')
+            ->order('id', 'asc')
             ->paginate($pageNum, false, [
                 'page' => $page
             ])->each(function($item, $key){
