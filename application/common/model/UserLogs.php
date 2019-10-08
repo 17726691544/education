@@ -17,7 +17,7 @@ class UserLogs extends Model
     public function getTypeAttr($value)
     {
         if (!empty($value)) {
-            $types = [1 => '提现', 2 => '推荐区代', 3 => '区代推荐人', 4 => '区代', 5 => '教学中心', 6 => '个代', 7 => '个代推荐人'];
+            $types = [1 => '提现', 2 => '推荐区代', 3 => '区代推荐人', 4 => '区代', 5 => '教学中心', 6 => '个代', 7 => '个代推荐人',8=>'解冻资金'];
             return $types[$value];
         }
 

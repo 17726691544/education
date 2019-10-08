@@ -9,6 +9,7 @@ use app\common\model\AttendClassRecord;
 use app\common\model\Teacher;
 use app\common\model\User;
 use app\common\model\UserBalance;
+use app\common\model\UserLogs;
 use think\Db;
 
 class TeacherAdminService
@@ -80,7 +81,7 @@ class TeacherAdminService
                     throw new BusinessBaseException('确认失败');
                 }
                 //解冻资金
-                $this->unfreezeBalance($uid, $attendClassRecord->course_id);
+                $this->unfreezeBalance($attendClassRecord->user_id, $attendClassRecord->id);
             } else {
                 throw new BusinessBaseException('请勿重复操作');
             }
@@ -97,9 +98,42 @@ class TeacherAdminService
      * @param $uid
      * @param $courseId
      */
-    private function unfreezeBalance($uid, $courseId)
+    private function unfreezeBalance($userId, $attendId)
     {
         //获取冻结执行信息
+        $userBalance = UserBalance::where('user_id', $userId)
+            > lock(true)
+                ->where('attend_id', $attendId)
+                ->where('status', 0)
+                ->find();
+        if (!$userBalance) {
+            retrun;
+        }
+        //减少锁定余额 增加可用余额
+        $changBalance = $userBalance->lock_balance;
+        $decResult = Db::name('user')
+            ->where('id', $userId)
+            ->where('lock_balance', '>=', $changBalance)
+            ->dec('lock_balance', $changBalance)
+            ->inc('balance', $changBalance)
+            ->update();
+        if ($decResult !== 1) {
+            throw new BusinessBaseException('解冻资金失败');
+        }
+        //更改冻结信息状态
+        $update = (new UserBalance())->save(['status', 1], ['id', $userBalance->id]);
+        if ($update !== 1) {
+            throw new BusinessBaseException('解冻资金失败');
+        }
+        //写入解锁资金流水记录
+//        (new UserLogs())->save([
+//            'user_id'=>$userId,
+//            'num'=>$changBalance,
+//            'tip'=>'账户锁定资金解冻',
+//            'type'=>8,
+//            'create_at'=>time()
+//        ]);
+
 
     }
 
