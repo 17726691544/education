@@ -11,6 +11,10 @@ class Orders extends Model
     const START_TRADE_NUM = 1370178326;
     protected $table = 'orders';
 
+    protected $type = [
+        'create_at' =>'timestamp'
+    ];
+
     public function course()
     {
         return $this->belongsTo('Course', 'course_id', 'id');

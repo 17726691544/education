@@ -72,6 +72,7 @@ class TeacherAdminService
             (new AttendClassRecord())->save([
                 'status' => $status
             ], ['id' => $attendClassId]);
+
         } else {
             throw new BusinessBaseException('请勿重复操作');
         }
