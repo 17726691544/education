@@ -61,7 +61,7 @@ class AreaAdminService extends BaseService
         //分页查询用户的收益记录
         return CenterLogs::where('agent_user_id', $uid)
             ->where('agent_id', $agent->id)
-            ->order('id', 'asc')
+            ->order('id', 'desc')
             ->paginate($pageNum, false, [
                 'page' => $page
             ])->each(function($item, $key){
@@ -105,7 +105,7 @@ class AreaAdminService extends BaseService
             throw new BusinessBaseException('非法操作');
         }
         //查询该代理中心的学生列表
-        return (new AttendClassRecord())->getUserItemListByCenterId($centerId, 0, $page, $pageNum);
+        return (new AttendClassRecord())->getUserItemListByCenterId($centerId, $page, $pageNum);
     }
 
     public function confirm($uid, $ids, $centerId, $status)
