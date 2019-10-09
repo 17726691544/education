@@ -19,7 +19,7 @@ class CenterLogs extends Model
     {
         $createAt = $data['create_at'];
         if (!empty($createAt)) {
-            return date('Y-m-d H:i', $createAt);
+            return date('Y-m', $createAt);
         }
     }
 
