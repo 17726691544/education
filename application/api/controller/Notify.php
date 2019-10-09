@@ -55,7 +55,7 @@ class Notify extends Base
 
                 $course = CourseModel::get($order->course_id);
                 $center = TeachCenterModel::get($order->center_id);
-                AttendClassRecord::create([
+                $attend = AttendClassRecord::create([
                     'agent_id' => $center->agent_id,
                     'center_id' => $order->center_id,
                     'user_id' => $order->user_id,
@@ -86,6 +86,7 @@ class Notify extends Base
 
                         UserBalance::create([
                             'user_id' => $user->parent_id,
+                            'attend_id' => $attend->id,
                             'lock_balance' => $course->grdl,
                             'create_at' => $now
                         ]);
@@ -106,6 +107,7 @@ class Notify extends Base
 
                             UserBalance::create([
                                 'user_id' => $uParent->parent_id,
+                                'attend_id' => $attend->id,
                                 'lock_balance' => $course->gdtjr,
                                 'create_at' => $now
                             ]);
@@ -128,6 +130,7 @@ class Notify extends Base
 
                 UserBalance::create([
                     'user_id' => $center->agent_user_id,
+                    'attend_id' => $attend->id,
                     'lock_balance' => $course->qydl,
                     'create_at' => $now
                 ]);
@@ -145,6 +148,7 @@ class Notify extends Base
 
                     UserBalance::create([
                         'user_id' => $uCenter->parent_id,
+                        'attend_id' => $attend->id,
                         'lock_balance' => $course->qdtjr,
                         'create_at' => $now
                     ]);
@@ -163,12 +167,14 @@ class Notify extends Base
 
                 UserBalance::create([
                     'user_id' => $center->agent_user_id,
+                    'attend_id' => $attend->id,
                     'lock_balance' => $course->jxzx,
                     'create_at' => $now
                 ]);
 
                 CenterLogs::create([
                     'center_id' => $center->id,
+                    'center_name' => $center->name,
                     'agent_id' => $center->agent_id,
                     'agent_user_id' => $center->agent_user_id,
                     'num' => $course->jxzx,

@@ -4,8 +4,8 @@ namespace app\man\controller;
 use app\common\controller\Base;
 use app\common\service\OssService;
 use app\man\model\Admin;
-use think\Db;
 use think\Request;
+use app\man\model\User as UserModel;
 
 class Index extends Base
 {
@@ -185,11 +185,48 @@ class Index extends Base
 //        ];
 //
 //        echo json_encode($data,JSON_UNESCAPED_UNICODE);
+    }
 
-        $s = 'Q1370178326';
-        echo substr($s,1);
+    public function init() {
+        $count = 0;
+        $now = time();
+        $start = 13000000001;
+        while (true) {
+            $tel = $start + $count;
+            UserModel::create([
+                'tel' => $tel,
+                'pass' => md5($tel . '123456'),
+                'safe_pass' => md5($tel . '123456'),
+                'nick' => $tel,
+                'parent_id' => 0,
+                'u_type' => 2,
+                'reg_at' => $now
+            ]);
+
+            if (++$count >= 15) {
+                break;
+            }
+        }
 
 
+        while (true) {
+            $tel = $start + $count;
+            UserModel::create([
+                'tel' => $tel,
+                'pass' => md5($tel . '123456'),
+                'safe_pass' => md5($tel . '123456'),
+                'nick' => $tel,
+                'parent_id' => 0,
+                'u_type' => 1,
+                'reg_at' => $now
+            ]);
+
+            if (++$count >= 30) {
+                break;
+            }
+        }
+
+        return 'ok';
     }
 
 }

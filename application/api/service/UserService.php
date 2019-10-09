@@ -59,8 +59,6 @@ class UserService extends BaseService
             Db::rollback();
             return false;
         }
-
-
     }
 
 
