@@ -86,6 +86,7 @@ class User extends Model
         }])
             ->where('parent_id', $uid)//
             ->where('is_gd', 1)//
+            ->order('id', 'desc')
             ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'head_url', 'id_card', 'real_name', 'totalVip'])
             ->paginate($pageNum, false, [
                 'page' => $page
@@ -100,6 +101,7 @@ class User extends Model
         ->where('is_gd', 0)
             ->where('is_qd', 0)
             ->where('is_teacher', 0)
+            ->order('id', 'desc')
             ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'id_card', 'real_name', 'head_url'])
             ->paginate($pageNum, false, [
                 'page' => $page
