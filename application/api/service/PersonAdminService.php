@@ -29,7 +29,6 @@ class PersonAdminService extends BaseService
     {
         //判断是否有权限
         $this->hasPermission($uid);
-
         //1:判断这个用户是否与属于操作用户
         $user = User::get($personUserId);
         if ($user->parent_id !== $uid) {

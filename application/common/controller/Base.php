@@ -48,7 +48,7 @@ class Base extends Controller
         if (!$uid) {
             throw new BusinessBaseException('无效的令牌');
         }
-        return $uid;
+        return $uid->getValue();
     }
 
     /**

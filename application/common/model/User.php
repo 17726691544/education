@@ -79,9 +79,9 @@ class User extends Model
     public function getDirectPersonList($uid, $page, $pageNum)
     {
         return self::withCount(['user' => function ($query) {
-            $query->where('is_gd', 0)
-                ->where('is_qd', 0)
-                ->where('is_teacher', 0);
+//            $query->where('is_gd', 0)
+//                ->where('is_qd', 0)
+//                ->where('is_teacher', 0);
             return 'totalVip';
         }])
             ->where('parent_id', $uid)//
@@ -95,14 +95,16 @@ class User extends Model
 
     public function getVipUserList($uid, $page, $pageNum)
     {
-        return self::with(['attendClassRecords' => function ($query) {
+        return self
+            ::with(['attendClassRecords' => function ($query) {
             $query->visible(['course_title', 'status']);
-        }])->where('parent_id', $uid)//
-        ->where('is_gd', 0)
-            ->where('is_qd', 0)
-            ->where('is_teacher', 0)
+        }])
+        ->where('parent_id', $uid)//
+//        ->where('is_gd', 0)
+//            ->where('is_qd', 0)
+//            ->where('is_teacher', 0)
             ->order('id', 'desc')
-            ->visible(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'id_card', 'real_name', 'head_url'])
+            ->field(['id', 'nick', 'is_qd', 'is_gd', 'is_teacher', 'invite_code', 'id_card', 'real_name', 'head_url'])
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);

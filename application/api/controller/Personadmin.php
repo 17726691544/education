@@ -47,7 +47,7 @@ class Personadmin extends Base
     public function getDirectDetailList()
     {
         $params = $this->getParams(['id', 'page', 'pageNum']);
-        (new PageV())->tokenChick()->goChick($params);
+        (new PersonAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
         $directDetailList = (new PersonAdminService())->getDirectDetailList($uid, $params['id'], $params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $directDetailList);
