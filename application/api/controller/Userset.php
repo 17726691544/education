@@ -42,7 +42,6 @@ class Userset extends Base
             return $this->jsonBack(1, '上传文件失败');
         }
         $saveName = md5(mt_rand(0, 10000) . time()) . '.' . pathinfo($info['name'], PATHINFO_EXTENSION);
-        echo $saveName;
         $r = OssService::uploadFile($info['tmp_name'], $saveName, 'images');
         if (false === $r) {
             return $this->jsonBack(1, '同步到云失败');
