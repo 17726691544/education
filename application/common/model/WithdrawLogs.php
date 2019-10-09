@@ -21,8 +21,11 @@ class WithdrawLogs extends Model
         }
     }
 
-    public function getStatusAttr($value)
+
+
+    public function getStatus2Attr($value,$data)
     {
+        $value = $data['status'];
         $status = [0 => '审核中', 1 => '通过', 2 => '审核未通过', 3 => '已转账'];
         return $status[$value];
     }
@@ -30,7 +33,7 @@ class WithdrawLogs extends Model
     public static function getWithdrawList($uid, $page, $pageNum)
     {
         return self::where('user_id', $uid)
-            ->append(['date_month'])
+            ->append(['date_month','status2'])
             ->order('id', 'desc')
             ->paginate($pageNum, false, [
                 'page' => $page

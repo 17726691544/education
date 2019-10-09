@@ -50,7 +50,7 @@ class AreaAdminService extends BaseService
 
     }
 
-    public function getEarningList($uid, $page, $pageNum)
+    public function getEarningList($uid, $centerId, $page, $pageNum)
     {
         $this->hasPermission($uid);
         //获取当前用户的区域id
@@ -59,18 +59,12 @@ class AreaAdminService extends BaseService
             throw new BusinessBaseException('获取区域信息失败');
         }
         //分页查询用户的收益记录
-        return CenterLogs::where('agent_user_id', $uid)
-            ->where('agent_id', $agent->id)
-            ->order('id', 'desc')
-            ->paginate($pageNum, false, [
-                'page' => $page
-            ])->each(function($item, $key){
-                $date = $item['create_at'];
-                if(!empty($date)){
-                    $item->dateMonth = date('Y年m月',$date);
-                    $item->create_at = date('Y-m-d H:i',$date);
-                }
-            });
+        if (!empty($centerId)) {
+            return CenterLogs::getCenterEarningList($uid, $agent->id, $centerId, $page, $pageNum);
+        }
+        return CenterLogs::getEarningList($uid, $agent->id, $page, $pageNum);
+
+
     }
 
     public function getTeachCenterList($uid, $page, $pageNum)

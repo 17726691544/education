@@ -50,10 +50,10 @@ class Areaadmin extends Base
      */
     public function getEarningList()
     {
-        $params = $this->getParams(['page', 'pageNum']);
-        (new PageV())->tokenChick()->goChick($params);
+        $params = $this->getParams(['center_id_e','page', 'pageNum']);
+        (new AreaAdminV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
-        $earningList = (new AreaAdminService())->getEarningList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        $earningList = (new AreaAdminService())->getEarningList($uid, $params['center_id_e'],$params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $earningList);
     }
 
