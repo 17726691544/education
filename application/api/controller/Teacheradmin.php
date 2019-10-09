@@ -32,7 +32,6 @@ class Teacheradmin extends Base
                 if (array_key_exists('teach_centers', $dataArr)) {
                     $data = $dataArr['teach_centers'];
                 }
-
                 $toArray['data'] = $data;
             }
         }

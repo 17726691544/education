@@ -28,14 +28,14 @@ class UserWallerService
             throw  new BusinessBaseException('用户不存在');
         }
         $newMoneyNum = floor($moneyNum * 100) / 100;
+        //从配置表中获取最小提现金额
+        $config = Config::where('id', 1)->field('tixian_less')->find();
+        if ($newMoneyNum < ($config->tixian_less)) {
+            throw new BusinessBaseException('小于了最小提现金额');
+        }
         //判断用户的可用余额是否充足
         if ($user->balance < $newMoneyNum) {
             throw  new BusinessBaseException('余额不足');
-        }
-        //从配置表中获取最小提现金额
-        $config = Config::where('id', 1)->field('tixian_less')->find();
-        if ($newMoneyNum < $config->tixian_less) {
-            throw new BusinessBaseException('小于了最小提现金额');
         }
         //获取用户银行卡信息
         $bankCard = Bankcard::where('id', $bankCard_id)

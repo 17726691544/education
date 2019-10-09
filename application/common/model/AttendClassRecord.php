@@ -25,7 +25,7 @@ class AttendClassRecord extends Model
         return $this->hasMany('AttendClassRecord', 'user_id', 'user_id');
     }
 
-    public function getUserListByCenterId($centerId, $page, $pageNum)
+    public function  getUserListByCenterId($centerId, $page, $pageNum)
     {
         return self::with('user')
             ->visible(['id', 'center_id', 'course_title', 'user_id',
