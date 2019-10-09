@@ -90,7 +90,7 @@ class QuotaadminService extends BaseService
         if(!$user){
             throw new BusinessBaseException('错误操作');
         }
-        if($user->is_gd !== 1 || $user->is_qd !==1 ){
+        if($user->is_gd !== 1 && $user->is_qd !==1 ){
             throw new BusinessBaseException('你没有权限做此操作');
         }
         return $user;
