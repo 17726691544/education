@@ -27,8 +27,14 @@ class Teacheradmin extends Base
         $teachCenterList = (new TeacherAdminService())->getTeachCenterList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
         if ($teachCenterList) {
             $toArray = $teachCenterList->toArray();
-            $data = ($toArray['data'])[0]['teach_centers'];
-            $toArray['data'] = $data;
+            if (!empty($toArray['data'])) {
+                $dataArr = ($toArray['data'])[0];
+                if (array_key_exists('teach_centers', $dataArr)) {
+                    $data = $dataArr['teach_centers'];
+                }
+
+                $toArray['data'] = $data;
+            }
         }
         return $this->jsonBack(0, '成功', $toArray ?? null);
     }
