@@ -54,7 +54,7 @@ class UserWallerService
             if ($userResult !== 1) {
                 throw new BusinessBaseException('提交失败');
             }
-            //查询流失记录
+            //插入流失记录
             (new WithdrawLogs())->save([
                 'user_id' => $uid,
                 'num' => $newMoneyNum,
