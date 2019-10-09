@@ -6,6 +6,7 @@ namespace app\api\service;
 
 use app\common\exception\BusinessBaseException;
 use app\common\model\Bankcard;
+use app\common\model\Config;
 use app\common\model\User;
 use app\common\model\WithdrawLogs;
 use think\Db;
@@ -31,6 +32,11 @@ class UserWallerService
         if ($user->balance < $newMoneyNum) {
             throw  new BusinessBaseException('余额不足');
         }
+        //从配置表中获取最小提现金额
+        $config = Config::where('id', 1)->field('tixian_less')->find();
+        if ($newMoneyNum < $config->tixian_less) {
+            throw new BusinessBaseException('小于了最小提现金额');
+        }
         //获取用户银行卡信息
         $bankCard = Bankcard::where('id', $bankCard_id)
             ->where('user_id', $uid)->find();
@@ -40,22 +46,22 @@ class UserWallerService
         Db::startTrans();
         try {
             //减少用户的可用余额
-           $userResult = Db::table('user')
-                ->where('id',$uid)
-                ->where('balance','>=',$newMoneyNum)
-                ->dec('balance',$newMoneyNum)
+            $userResult = Db::table('user')
+                ->where('id', $uid)
+                ->where('balance', '>=', $newMoneyNum)
+                ->dec('balance', $newMoneyNum)
                 ->update();
-           if($userResult !== 1){
-               throw new BusinessBaseException('提交失败');
-           }
-           //查询流失记录
+            if ($userResult !== 1) {
+                throw new BusinessBaseException('提交失败');
+            }
+            //查询流失记录
             (new WithdrawLogs())->save([
-                'user_id'=>$uid,
-                'num'=>$newMoneyNum,
-                'bank'=>$bankCard->bank,
-                'name'=>$bankCard->name,
-                'card'=>$bankCard->card,
-                'create_at'=>time()
+                'user_id' => $uid,
+                'num' => $newMoneyNum,
+                'bank' => $bankCard->bank,
+                'name' => $bankCard->name,
+                'card' => $bankCard->card,
+                'create_at' => time()
             ]);
 
             Db::commit();
