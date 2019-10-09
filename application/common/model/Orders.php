@@ -39,8 +39,9 @@ class Orders extends Model
         return self::with(['course' => function ($Query) {
             $Query->field(['id', 'title', 'cover']);
         }])->where('user_id', $uid)
+            ->where('status',1)
             ->field(['id', 'course_id', 'price', 'pay_type', 'status', 'pay_at', 'create_at'])
-            ->order('id','desc')
+            ->order('id', 'desc')
             ->paginate($pageNum, false, ['page' => $page]);
     }
 
