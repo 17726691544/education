@@ -41,18 +41,17 @@ class UserService extends BaseService
             $user = new User();
             $user->save([
                 'tel' => $tel,
-                'pass' => md5($tel . $params['pass']),
-                'safe_pass' => md5($tel . $params['safe_pass']),
+                'pass' => md5($now . $params['pass']),
+                'safe_pass' => md5($now . $params['safe_pass']),
                 'parent_id' => $parentId ? $parentId : 0,
                 'u_type' => $uType,
-                'reg_at' => $now,
-                'invite_code' =>$tel
+                'reg_at' => $now
             ]);
             //根据保存邀请码
-//            $code = $this->createCode($user->id);
-//            (new User())->save([
-//                'invite_code' => $code
-//            ], ['id' => $user->id]);
+            $code = $this->createCode($user->id);
+            (new User())->save([
+                'invite_code' => $code
+            ], ['id' => $user->id]);
             Db::commit();
             return true;
         } catch (\Exception $e) {
@@ -74,7 +73,7 @@ class UserService extends BaseService
             throw new BusinessBaseException('用户不存在');
         }
         //判断密码
-        $inputPass = md5($user->tel . $pass);
+        $inputPass = md5($user->reg_at . $pass);
         if ($inputPass !== $user->pass) {
             throw new BusinessBaseException('用户名或密码错误');
         }
