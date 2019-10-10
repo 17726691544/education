@@ -28,7 +28,7 @@ class UserWallerService
             throw  new BusinessBaseException('用户不存在');
         }
         //判断安全密码是否正确
-        $md5Pass = md5($user->tel . $safePass);
+        $md5Pass = md5($user->getData('reg_at') . $safePass);
         if ($md5Pass !== $user->safe_pass) {
             throw new BusinessBaseException('安全密码错误');
         }
