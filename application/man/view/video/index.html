@@ -56,6 +56,11 @@
                                             </td>
                                             <td class="text-center">{$item.create_at_str}</td>
                                             <td class="text-center">
+                                                {if ($item.is_show === 0)}
+                                                <a href="{:url('show',['id'=>$item.id,'is_show'=>1])}" type="button" class="btn btn-success">首页展示</a>
+                                                {else/}
+                                                <a href="{:url('show',['id'=>$item.id,'is_show'=>0])}" type="button" class="btn btn-default">取消展示</a>
+                                                {/if}
                                                 <a href="{:url('edit',['id'=>$item.id])}" type="button" class="btn btn-primary">编辑</a>
                                                 <a href="{:url('del',['id'=>$item.id])}" type="button" class="btn btn-danger">删除</a>
                                             </td>

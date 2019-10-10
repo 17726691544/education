@@ -25,4 +25,14 @@ class Teacher extends Model
     public function user() {
         return $this->belongsTo('User','user_id','id');
     }
+
+    /**
+     * video_arr
+     * @param $value
+     * @param $data
+     * @return string
+     */
+    public function getVideoArrAttr($value,$data) {
+        return json_decode($data['videos']);
+    }
 }

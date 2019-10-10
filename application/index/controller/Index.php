@@ -6,19 +6,23 @@ class Index
 {
     public function index()
     {
-        //$params = $this->getParams(['tel', 'u_type', 'tel_code', 'pass', 'safe_pass', 'invite_code']);
-//       for ($i =10; $i<20;$i++){
-//           $params =[
-//               'tel'=>'177266915'.$i,
-//               'u_type'=>1,
-//               'tel_code'=>$i,
-//               'pass'=>'123456',
-//               'safe_pass'=>'123456',
-//               'invite_code'=>'177266915'.$i,
-//           ];
-//           (new UserService())->register($params);
-//       }
 
+        /*$tel = 13000000002;
+        $pwd = '123456';
+        $now = time();
+        User::create(
+            [
+                'tel' => $tel,
+                'pass' => md5($now . $pwd),
+                'safe_pass' => md5($now . $pwd),
+                'parent_id' => 0,
+                'u_type' => 2,
+                'reg_at' => $now,
+                'invite_code'=>$tel
+            ]
+        );*/
+
+        return 'ok';
     }
 
 

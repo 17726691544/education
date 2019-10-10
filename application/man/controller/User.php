@@ -5,6 +5,7 @@ use app\common\controller\Base;
 use app\man\model\User as UserModel;
 use app\man\model\UserLogs;
 use app\man\model\WithdrawLogs;
+use think\Db;
 
 class User extends Base
 {
@@ -36,7 +37,7 @@ class User extends Base
         if ($params['type'] > 0) $map[] = ['u_type','=',$params['type']];
 
         if ($params['code']) {
-            $user_id = UserModel::where('invite_code',$params['code'])->value('id');
+            $user_id = UserModel::where('tel',$params['code'])->value('id');
             if (!$user_id) {
                 $this->error('用户不存在');
             }
@@ -74,7 +75,7 @@ class User extends Base
         if ($params['status'] >= 0) $map[] = ['status','=',$params['status']];
 
         if ($params['code']) {
-            $user_id = UserModel::where('invite_code',$params['code'])->value('id');
+            $user_id = UserModel::where('tel',$params['code'])->value('id');
             if (!$user_id) {
                 $this->error('用户不存在');
             }
@@ -115,7 +116,20 @@ class User extends Base
         if (true !== $r) {
             $this->error($r);
         }
-        WithdrawLogs::update(['status'=>$params['status']],['id'=>$params['id']]);
+
+        Db::startTrans();
+        try {
+            $with = WithdrawLogs::get($params['id']);
+            $with->status = $params['status'];
+            $with->save();
+            if ($params['status'] === '2') {
+                UserModel::where('id',$with->user_id)->setInc('balance',$with->num);
+            }
+            Db::commit();
+        }catch (\Exception $e) {
+            $this->error($e->getMessage());
+            Db::rollback();
+        }
         $this->success('操作成功');
     }
 
@@ -146,7 +160,7 @@ class User extends Base
         }
 
         if ($params['code']) {
-            $user_id = UserModel::where('invite_code',$params['code'])->value('id');
+            $user_id = UserModel::where('tel',$params['code'])->value('id');
             if (!$user_id) {
                 $this->error('用户不存在');
             }

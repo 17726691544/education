@@ -66,18 +66,20 @@ class Notify extends Base
                 ]);
 
                 $user = UserModel::get($order->user_id);
-                //个代
+
+
                 if ($user->parent_id !== 0) {
+                    //个代
                     $uParent = UserModel::get($user->parent_id);
                     while (true) {
-                        if ($uParent->is_gd === 1) break;
+                        if ($uParent->is_gd === 1 || $uParent->is_qd === 1) break;
                         if ($uParent->parent_id === 0) break;
                         $uParent = UserModel::get($uParent->parent_id);
                     }
 
-                    if ($uParent->is_gd === 1) {
+                    if ( ($uParent->is_gd === 1 || $uParent->is_qd === 1) && $uParent->quota > 0) {
                         UserLogs::create([
-                            'user_id' => $user->parent_id,
+                            'user_id' => $uParent->id,
                             'num' => $course->grdl,
                             'tip' => "用户[{$user->invite_code}]购买课程",
                             'type' => 6,
@@ -85,20 +87,28 @@ class Notify extends Base
                         ]);
 
                         UserBalance::create([
-                            'user_id' => $user->parent_id,
+                            'user_id' => $uParent->id,
                             'attend_id' => $attend->id,
                             'lock_balance' => $course->grdl,
                             'create_at' => $now
                         ]);
 
-                        UserModel::where('id',$user->parent_id)->setInc('lock_balance',$course->grdl);
+                        UserModel::where('id',$uParent->id)->setInc('lock_balance',$course->grdl);
+                        UserModel::where('id',$uParent->id)->setDec('quota',1);
+                    }
 
-                        //个代推荐人
-                        if ($uParent->parent_id !== 0) {
-                            //$u2Parent = UserModel::get($uParent->parent_id);
+                    //个代推荐人
+                    if (($uParent->is_gd === 1 || $uParent->is_qd === 1) && $uParent->parent_id !== 0) {
+                        $u2Parent = UserModel::get($uParent->parent_id);
+                        while (true) {
+                            if ($u2Parent->is_gd === 1 || $u2Parent->is_qd === 1) break;
+                            if ($u2Parent->parent_id === 0) break;
+                            $u2Parent = UserModel::get($u2Parent->parent_id);
+                        }
 
+                        if ($u2Parent->is_gd === 1 || $u2Parent->is_qd === 1) {
                             UserLogs::create([
-                                'user_id' => $uParent->parent_id,
+                                'user_id' => $u2Parent->id,
                                 'num' => $course->gdtjr,
                                 'tip' => "用户[{$user->invite_code}]购买课程",
                                 'type' => 7,
@@ -106,13 +116,13 @@ class Notify extends Base
                             ]);
 
                             UserBalance::create([
-                                'user_id' => $uParent->parent_id,
+                                'user_id' => $u2Parent->id,
                                 'attend_id' => $attend->id,
                                 'lock_balance' => $course->gdtjr,
                                 'create_at' => $now
                             ]);
 
-                            UserModel::where('id',$uParent->parent_id)->setInc('lock_balance',$course->gdtjr);
+                            UserModel::where('id',$u2Parent->id)->setInc('lock_balance',$course->gdtjr);
                         }
                     }
                 }
@@ -138,22 +148,26 @@ class Notify extends Base
                 UserModel::where('id',$center->agent_user_id)->setInc('lock_balance',$course->qydl);
                 //区代推荐人
                 if ($uCenter->parent_id !== 0) {
-                    UserLogs::create([
-                        'user_id' => $uCenter->parent_id,
-                        'num' => $course->qdtjr,
-                        'tip' => "用户[{$user->invite_code}]购买课程",
-                        'type' => 3,
-                        'create_at' => $now
-                    ]);
+                    $centerParent = UserModel::get($uCenter->parent_id);
 
-                    UserBalance::create([
-                        'user_id' => $uCenter->parent_id,
-                        'attend_id' => $attend->id,
-                        'lock_balance' => $course->qdtjr,
-                        'create_at' => $now
-                    ]);
+                    if ($centerParent->is_gd === 1 || $centerParent->is_qd === 1) {
+                        UserLogs::create([
+                            'user_id' => $centerParent->id,
+                            'num' => $course->qdtjr,
+                            'tip' => "用户[{$user->invite_code}]购买课程",
+                            'type' => 3,
+                            'create_at' => $now
+                        ]);
 
-                    UserModel::where('id',$uCenter->parent_id)->setInc('lock_balance',$course->qdtjr);
+                        UserBalance::create([
+                            'user_id' => $centerParent->id,
+                            'attend_id' => $attend->id,
+                            'lock_balance' => $course->qdtjr,
+                            'create_at' => $now
+                        ]);
+
+                        UserModel::where('id',$centerParent->id)->setInc('lock_balance',$course->qdtjr);
+                    }
                 }
 
                 //教学中心
@@ -218,15 +232,18 @@ class Notify extends Base
 
                     if ($user->parent_id !== 0) {
                         $config = ConfigModel::get(1);
-                        $rewardNum = round($order->total * $config->qdtjr_rate / 100,2);
-                        UserLogs::create([
-                            'user_id' => $user->parent_id,
-                            'num' => $rewardNum,
-                            'tip' => "用户[{$user->invite_code}]成为区域代理",
-                            'type' => 2,
-                            'create_at' => $now
-                        ]);
-                        UserModel::where('id',$order->user_id)->setInc('balance',$rewardNum);
+                        $qudaParent = UserModel::get($user->parent_id);
+                        if ($qudaParent->is_qd === 1 || $qudaParent->is_gd === 1) {
+                            $rewardNum = round($order->total * $config->qdtjr_rate / 100,2);
+                            UserLogs::create([
+                                'user_id' => $user->parent_id,
+                                'num' => $rewardNum,
+                                'tip' => "用户[{$user->invite_code}]成为区域代理",
+                                'type' => 2,
+                                'create_at' => $now
+                            ]);
+                            UserModel::where('id',$order->user_id)->setInc('balance',$rewardNum);
+                        }
                     }
 
                     $area = explode(',',$order->pcc);

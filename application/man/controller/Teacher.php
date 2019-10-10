@@ -6,6 +6,7 @@ use app\man\model\TeacherCenter;
 use app\man\model\User as UserModel;
 use app\man\model\TeachCenter as TeachCenterModel;
 use app\man\model\Teacher as TeacherModel;
+use app\man\model\Video as VideoModel;
 use think\Db;
 use think\facade\Validate;
 
@@ -58,7 +59,7 @@ class Teacher extends Base
      */
     public function add() {
         if ($this->request->isPost()) {
-            $params = $this->getParams(['user_id','name','education','position', 'ability','image','cover','tips','centers']);
+            $params = $this->getParams(['user_id','name','education','position', 'ability','image','cover','tips','centers','videos']);
             $rule = [
                 'user_id' => 'require|integer|>:0',
                 'name' => 'require|length:1,30',
@@ -92,7 +93,7 @@ class Teacher extends Base
                 return $this->jsonBack(3,'请指定教学中心');
             }
 
-            Db::startTrans();;
+            Db::startTrans();
             try {
                 $user = UserModel::find($params['user_id']);
                 if ($user->is_teacher === 1) throw new \Exception('该用户已经是教师了');
@@ -111,6 +112,7 @@ class Teacher extends Base
                     'tips' => $params['tips'],
                     'image' => $params['image'],
                     'cover' => $params['cover'],
+                    'videos' => $params['videos'],
                     'create_at' => $now
                 ]);
 
@@ -142,7 +144,7 @@ class Teacher extends Base
      */
     public function edit() {
         if ($this->request->isPost()) {
-            $params = $this->getParams(['id','name','education','position', 'ability','image','cover','tips','centers']);
+            $params = $this->getParams(['id','name','education','position', 'ability','image','cover','tips','centers','videos']);
             $rule = [
                 'id' => 'require|integer|>:0',
                 'name' => 'require|length:1,30',
@@ -194,7 +196,8 @@ class Teacher extends Base
                     'ability' => $params['ability'],
                     'tips' => $params['tips'],
                     'image' => $params['image'],
-                    'cover' => $params['cover']
+                    'cover' => $params['cover'],
+                    'videos' => $params['videos']
                 ]);
 
                 $middle = TeacherCenter::where('teacher_id',$params['id'])->select();
@@ -247,6 +250,11 @@ class Teacher extends Base
                 $this->error('教师不存在或已经删除');
             }
 
+            $map = [];
+            foreach ($teacher->video_arr as $key) {
+                $map[$key] = $key;
+            }
+
             try {
                 $middle = TeacherCenter::with('center')->where('teacher_id',$params['id'])->select();
                 $centers = [];
@@ -254,6 +262,7 @@ class Teacher extends Base
                     $centers[] = $item->center;
                 }
                 $this->assign('centers',$centers);
+                $this->assign('map',$map);
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
             }
@@ -291,6 +300,28 @@ class Teacher extends Base
             Db::rollback();
             $this->error($e->getMessage());
         }
+        $this->success('操作成功');
+    }
+
+    /**
+     * 展示控制
+     */
+    public function show() {
+        $params = $this->getParams(['id','is_show']);
+        $rule = [
+            'id' => 'require|integer|>=:1',
+            'is_show' => 'require|integer|in:0,1',
+        ];
+        $msg = [
+            'id' => '错误的操作',
+            'is_show' => '错误的操作'
+        ];
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            $this->error($r);
+        }
+
+        TeacherModel::update(['is_show' => $params['is_show']], ['id' => $params['id']]);
         $this->success('操作成功');
     }
 
@@ -334,6 +365,19 @@ class Teacher extends Base
     public function getCenters() {
         try {
             $list = TeachCenterModel::where('status',1)->select();
+            return $this->jsonBack(0,'',$list);
+        } catch (\Exception $e) {
+            return $this->jsonBack(1,$e->getMessage());
+        }
+    }
+
+    /**
+     * 取得视频列表
+     * @return \think\response\Json
+     */
+    public function getVideos() {
+        try {
+            $list = VideoModel::where('status',0)->select();
             return $this->jsonBack(0,'',$list);
         } catch (\Exception $e) {
             return $this->jsonBack(1,$e->getMessage());

@@ -129,4 +129,26 @@ class Video extends Base
         VideoModel::update(['status'=>1],['id'=>$params['id']]);
         $this->success('操作成功');
     }
+
+    /**
+     * 展示控制
+     */
+    public function show() {
+        $params = $this->getParams(['id','is_show']);
+        $rule = [
+            'id' => 'require|integer|>=:1',
+            'is_show' => 'require|integer|in:0,1',
+        ];
+        $msg = [
+            'id' => '错误的操作',
+            'is_show' => '错误的操作'
+        ];
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            $this->error($r);
+        }
+
+        VideoModel::update(['is_show' => $params['is_show']], ['id' => $params['id']]);
+        $this->success('操作成功');
+    }
 }
