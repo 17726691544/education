@@ -73,7 +73,7 @@ class UserService extends BaseService
             throw new BusinessBaseException('用户不存在');
         }
         //判断密码
-        $inputPass = md5($user->reg_at . $pass);
+        $inputPass = md5($user->getData('reg_at') . $pass);
         if ($inputPass !== $user->pass) {
             throw new BusinessBaseException('用户名或密码错误');
         }
