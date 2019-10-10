@@ -66,11 +66,11 @@ class Userwaller extends Base
      */
     public function withdraw()
     {
-        $params = $this->getParams(['bankCard_id', 'moneyNum']);
+        $params = $this->getParams(['bankCard_id', 'moneyNum','salePass']);
         (new UserWallerV())->tokenChick()->goChick($params);
         $uid = $this->getUid();
 
-       $result =  (new UserWallerService())->withdraw($uid,$params['bankCard_id'],$params['moneyNum']);
+       $result =  (new UserWallerService())->withdraw($uid,$params['bankCard_id'],$params['moneyNum'],$params['salePass']);
        if(!$result){
            throw new BusinessBaseException('提交失败');
        }

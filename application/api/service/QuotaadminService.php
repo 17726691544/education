@@ -35,7 +35,7 @@ class QuotaadminService extends BaseService
         //判断是否有权限
         $user = $this->hasPermission($uid);
         //判断安全密码是否正确
-        $md5Pass = md5($user->tel . $safePass);
+        $md5Pass = md5($user->reg_at . $safePass);
         if ($md5Pass !== $user->safe_pass) {
             throw new BusinessBaseException('安全密码错误');
         }

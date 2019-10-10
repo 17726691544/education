@@ -20,13 +20,20 @@ class UserWallerService
      * @param $bankCard_id
      * @param $moneyNum
      */
-    public function withdraw($uid, $bankCard_id, $moneyNum)
+    public function withdraw($uid, $bankCard_id, $moneyNum,$safePass)
     {
         //获取用户信息
         $user = User::get($uid);
         if (!$user) {
             throw  new BusinessBaseException('用户不存在');
         }
+        //判断安全密码是否正确
+        $md5Pass = md5($user->reg_at . $safePass);
+        if ($md5Pass !== $user->safe_pass) {
+            throw new BusinessBaseException('安全密码错误');
+        }
+
+
         $newMoneyNum = floor($moneyNum * 100) / 100;
         //从配置表中获取最小提现金额
         $config = Config::where('id', 1)->field('tixian_less')->find();
