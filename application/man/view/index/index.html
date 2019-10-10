@@ -71,6 +71,24 @@
                                         </a>
                                     </li>
                                 {/if}
+
+                                {if ($is_su || in_array('user/withdraw',$access))}
+                                <li>
+                                    <a onclick="xadmin.add_tab('提现申请','{:url("User/withdraw")}')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>提现申请</cite>
+                                    </a>
+                                </li>
+                                {/if}
+
+                                {if ($is_su || in_array('user/log',$access))}
+                                <li>
+                                    <a onclick="xadmin.add_tab('用户流水','{:url("User/log")}')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>用户流水</cite>
+                                    </a>
+                                </li>
+                                {/if}
                             </ul>
                         </li>
                     {/if}
@@ -324,7 +342,7 @@
                 </div>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <iframe src="{:url('TeachCenter/index')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                        <iframe src="{:url('User/index')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
                     </div>
                 </div>
                 <div id="tab_show"></div>

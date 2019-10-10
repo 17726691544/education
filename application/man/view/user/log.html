@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>收益记录</title>
+    <title>用户流水</title>
     <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
     <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
     <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
@@ -23,6 +23,28 @@
 
                     <form class="form-inline" method="post">
                         <div class="form-group">
+                            <label class="sr-only">类型</label>
+                            <select name="type" class="form-control">
+                                <option value="0" {if ($params.type === '0')}selected{/if}>全部</option>
+                                <option value="1" {if ($params.type === '1')}selected{/if}>提现</option>
+                                <option value="2" {if ($params.type === '2')}selected{/if}>推荐区代</option>
+                                <option value="3" {if ($params.type === '3')}selected{/if}>区代推荐人</option>
+                                <option value="4" {if ($params.type === '4')}selected{/if}>区代</option>
+                                <option value="5" {if ($params.type === '5')}selected{/if}>教学中心</option>
+                                <option value="6" {if ($params.type === '6')}selected{/if}>个代</option>
+                                <option value="7" {if ($params.type === '7')}selected{/if}>个代推荐人</option>
+                                <option value="8" {if ($params.type === '8')}selected{/if}>解冻资金</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">开始时间</label>
+                            <input id="start" name="start" value="{$params.start}" type="text" class="form-control" placeholder="开始时间">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">结束时间</label>
+                            <input id="end" name="end" value="{$params.end}" type="text" class="form-control" placeholder="结束时间">
+                        </div>
+                        <div class="form-group">
                             <label class="sr-only">用户编号</label>
                             <input name="code" value="{$params.code}" type="text" class="form-control" placeholder="用户编号">
                         </div>
@@ -33,14 +55,13 @@
                         <table class="table table-bordered table-hover">
                             <caption class="tip-box">
                                 <span class="label label-info">共计 {$list->total()} 条记录</span>
-                                <span class="label label-warning">总金额 {$total}</span>
+                                {if ($total>0)}<span class="label label-warning">总金额 {$total}</span>{/if}
                             </caption>
                             <thead>
                                 <tr>
                                     <th class="text-center">ID</th>
-                                    <th class="text-center">用户编号</th>
-                                    <th class="text-center">用户昵称</th>
-                                    <th class="text-center">用户头像</th>
+                                    <th class="text-center">手机</th>
+                                    <th class="text-center">编号</th>
                                     <th class="text-center">金额</th>
                                     <th class="text-center">类型</th>
                                     <th class="text-center">说明</th>
@@ -51,20 +72,17 @@
 
                                 {if ($list->count() === 0)}
                                     <tr>
-                                        <td class="text-center" colspan="8">暂无数据</td>
+                                        <td class="text-center" colspan="7">暂无数据</td>
                                     </tr>
                                 {else/}
                                     {foreach $list as $item}
                                         <tr>
                                             <td class="text-center">{$item.id}</td>
-                                            <td class="text-center">{$item.user.ivt_code}</td>
-                                            <td class="text-center">{$item.user.nick}</td>
-                                            <td class="text-center">
-                                                <img src="{$item.user.head_url}" alt="头像" style="width: 100px;height: 100px;" class="img-rounded">
-                                            </td>
+                                            <td class="text-center">{$item.user.tel}</td>
+                                            <td class="text-center">{$item.user.invite_code}</td>
                                             <td class="text-center">{$item.num}</td>
                                             <td class="text-center">{$item.type_str}</td>
-                                            <td class="text-center">{$item.intro}</td>
+                                            <td class="text-center">{$item.tip}</td>
                                             <td class="text-center">{$item.create_at_str}</td>
                                         </tr>
                                     {/foreach}
@@ -81,5 +99,16 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="__STATIC__/lib/laydate/laydate.js"></script><script></script>
+    <script>
+        laydate.render({
+            elem: '#start'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#end'
+            ,type: 'datetime'
+        });
+    </script>
 </body>
 </html>
