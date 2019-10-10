@@ -62,7 +62,7 @@ class TeacherAdminService
         }
 
         //获取确认信息
-        $attendClassRecord = AttendClassRecord::where('id', $attendClassId)->find();
+        $attendClassRecord = AttendClassRecord::where('id', $attendClassId)->lock(true)->find();
         if (!$attendClassRecord) {
             throw new BusinessBaseException('获取确认信息失败');
         }
@@ -81,7 +81,7 @@ class TeacherAdminService
                     throw new BusinessBaseException('确认失败');
                 }
                 //解冻资金
-                $this->unfreezeBalance($attendClassRecord->user_id, $attendClassRecord->id);
+                $this->unfreezeBalance($attendClassId);
             } else {
                 throw new BusinessBaseException('请勿重复操作');
             }
@@ -98,33 +98,38 @@ class TeacherAdminService
      * @param $uid
      * @param $courseId
      */
-    private function unfreezeBalance($userId, $attendId)
+    private function unfreezeBalance($attendClassId)
     {
         //获取冻结执行信息
-        $userBalance = UserBalance::where('user_id', $userId)
-            ->lock(true)
-            ->where('attend_id', $attendId)
+        $userBalanceList = UserBalance
+            ::field(['id', 'user_id','sum(lock_balance)'=>'totalLockBalance'])
+            ->where('attend_id', $attendClassId)
             ->where('status', 0)
-            ->find();
-        if (!$userBalance) {
+            ->group(['id', 'user_id'])
+            ->select();
+        if (!$userBalanceList) {
             return;
         }
-        //减少锁定余额 增加可用余额
-        $changBalance = $userBalance->lock_balance;
-        $decResult = Db::name('user')
-            ->where('id', $userId)
-            ->where('lock_balance', '>=', $changBalance)
-            ->dec('lock_balance', $changBalance)
-            ->inc('balance', $changBalance)
-            ->update();
-        if ($decResult !== 1) {
-            throw new BusinessBaseException('解冻资金失败');
+        foreach ($userBalanceList as $item) {
+            //减少锁定余额 增加可用余额
+            $changBalance = $item->totalLockBalance;
+            $decResult = Db::name('user')
+                ->where('id', $item->user_id)
+                ->where('lock_balance', '>=', $changBalance)
+                ->dec('lock_balance', $changBalance)
+                ->inc('balance', $changBalance)
+                ->update();
+            if ($decResult !== 1) {
+                throw new BusinessBaseException('解冻资金失败');
+            }
+            //更改冻结信息状态
+            $ee = $item->id;
+            $update = (new UserBalance())->save(['status' => 1], ['id' => $item->id]);
+            if (!$update) {
+                throw new BusinessBaseException('解冻资金失败');
+            }
         }
-        //更改冻结信息状态
-        $update = (new UserBalance())->save(['status', 1], ['id', $userBalance->id]);
-        if ($update !== 1) {
-            throw new BusinessBaseException('解冻资金失败');
-        }
+
         //写入解锁资金流水记录
 //        (new UserLogs())->save([
 //            'user_id'=>$userId,

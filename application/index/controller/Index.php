@@ -1,26 +1,25 @@
 <?php
 namespace app\index\controller;
 
+use app\common\model\User;
 class Index
 {
     public function index()
     {
-        $code = $this->createCode(2501);
-        return $code;
+        //$params = $this->getParams(['tel', 'u_type', 'tel_code', 'pass', 'safe_pass', 'invite_code']);
+//       for ($i =10; $i<20;$i++){
+//           $params =[
+//               'tel'=>'177266915'.$i,
+//               'u_type'=>1,
+//               'tel_code'=>$i,
+//               'pass'=>'123456',
+//               'safe_pass'=>'123456',
+//               'invite_code'=>'177266915'.$i,
+//           ];
+//           (new UserService())->register($params);
+//       }
+
     }
 
-    private function createCode($userId)
-    {
-        static $source_string = 'E5FCDG3HQA4B1NOPIJ2RSTUV67MWX89KLYZ';
-        $num = $userId;
-        $code = '';
-        while ($num > 0) {
-            $mod = $num % 35;
-            $num = ($num - $mod) / 35;
-            $code = $source_string[$mod] . $code;
-        }
-        if (empty($code[3]))
-            $code = str_pad($code, 4, '0', STR_PAD_LEFT);
-        return $code;
-    }
+
 }
