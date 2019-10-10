@@ -14,8 +14,8 @@ use think\Exception;
 class JwtAuth
 {
     private static $instance;
-    private $secret = 'test';
-    private $expiresAt = 36000;
+    private $secret = 'Aa123123456';
+    private $expiresAt = 86400;
     private $tokenData;
 
     public static function instance()
