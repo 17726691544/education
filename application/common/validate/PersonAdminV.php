@@ -7,7 +7,7 @@ namespace app\common\validate;
 class PersonAdminV extends BaseValidate
 {
     protected $rules = [
-        'invite_code' => 'require|max:10',
+        'invite_code' => 'require|mobile',
         'id' => 'require|integer|>:0',
         'num'=> 'require|integer|>:0',
         'safe_pass' => 'require|max:32',

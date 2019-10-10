@@ -38,7 +38,7 @@ class UserWallerService
         //从配置表中获取最小提现金额
         $config = Config::where('id', 1)->field('tixian_less')->find();
         if ($newMoneyNum < ($config->tixian_less)) {
-            throw new BusinessBaseException('最小提现金额为：' + $config->tixian_less);
+            throw new BusinessBaseException('最小提现金额为：'.$config->tixian_less);
         }
         //判断用户的可用余额是否充足
         if ($user->balance < $newMoneyNum) {
