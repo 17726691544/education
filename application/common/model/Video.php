@@ -13,9 +13,10 @@ class Video extends Model
     public static function getVideoList($page, $pageNum)
     {
         return self::where('status', 0)//
-        ->hidden(['create_at'])//
-        ->order('create_at', 'desc')//
-        ->paginate($pageNum, false, ['page' => $page]);
+        ->where('is_show', 1)
+            ->hidden(['create_at'])//
+            ->order('create_at', 'desc')//
+            ->paginate($pageNum, false, ['page' => $page]);
     }
 
     public static function getVideoListByNum($num = 10)
