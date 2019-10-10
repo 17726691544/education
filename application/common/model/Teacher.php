@@ -24,7 +24,9 @@ class Teacher extends Model
 
     public static function getTeacherList($page, $pageNum)
     {
-        return self::field(['id', 'name', 'education', 'position', 'tips', 'image'])->paginate($pageNum, false, [
+        return self::field(['id', 'name', 'education', 'position', 'tips', 'image'])
+            ->where('is_show',1)
+            ->paginate($pageNum, false, [
             'page' => $page
         ]);
     }

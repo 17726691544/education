@@ -39,9 +39,15 @@ class Teacher extends Base
         $teacherDetail = $teacherDetail ? $teacherDetail->toArray() : null;
 
         if ($teacherDetail) {
-            //获取最新的10条视频
-            $videoList = Video::getVideoListByNum(10);
-            $teacherDetail['videoList'] = $videoList ? $videoList->toArray() : null;
+            //获取视频
+            $ids = $teacherDetail['videos'];
+            if (!empty($ids)) {
+                $ids = json_decode($ids);
+                if (count($ids) > 0) {
+                    $videoList = Video::getVideoListByNum($ids);
+                    $teacherDetail['videoList'] = $videoList ? $videoList->toArray() : null;
+                }
+            }
         }
         return $this->jsonBack(0, '成功', $teacherDetail);
     }
