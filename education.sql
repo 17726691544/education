@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50727
 File Encoding         : 65001
 
-Date: 2019-10-10 11:15:20
+Date: 2019-10-10 18:57:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,12 +25,12 @@ CREATE TABLE `access` (
   `action` varchar(1042) NOT NULL COMMENT '权限操作',
   `create_at` int(255) unsigned NOT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of access
 -- ----------------------------
-INSERT INTO `access` VALUES ('1', '教师管理', 'teacher/index,teacher/add,teacher/edit,teacher/del,teacher/getuser,teacher/getcenters', '1570172867');
+INSERT INTO `access` VALUES ('1', '教师管理', 'teacher/index,teacher/add,teacher/edit,teacher/del,teacher/getuser,teacher/getcenters,teacher/getvideos', '1570172867');
 INSERT INTO `access` VALUES ('2', '轮播管理', 'banner/index,banner/add,banner/setsort,banner/del', '1570173234');
 INSERT INTO `access` VALUES ('3', '课程案例管理', 'video/index,video/add,video/edit,video/del', '1570173297');
 INSERT INTO `access` VALUES ('4', '团队管理', 'team/index,team/add,team/edit,team/del', '1570173344');
@@ -38,6 +38,9 @@ INSERT INTO `access` VALUES ('5', '课程管理', 'course/index,course/add,cours
 INSERT INTO `access` VALUES ('6', '教学中心管理', 'teachcenter/index,teachcenter/deal', '1570173510');
 INSERT INTO `access` VALUES ('7', '权限管理', 'auth/user,auth/adduser,auth/deluser,auth/access,auth/addaccess,auth/delaccess,auth/assignaccess', '1570173582');
 INSERT INTO `access` VALUES ('8', '设置', 'setting/index,setting/rule', '1570175611');
+INSERT INTO `access` VALUES ('9', '用户列表', 'user/index', '1570683076');
+INSERT INTO `access` VALUES ('10', '提现处理', 'user/withdraw,user/dealwithdraw', '1570683114');
+INSERT INTO `access` VALUES ('11', '用户流水', 'user/log', '1570683138');
 
 -- ----------------------------
 -- Table structure for admin
@@ -92,12 +95,11 @@ CREATE TABLE `agent` (
   `country` varchar(255) NOT NULL COMMENT '区',
   `create_at` int(10) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='代理区域表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='代理区域表';
 
 -- ----------------------------
 -- Records of agent
 -- ----------------------------
-INSERT INTO `agent` VALUES ('1', '1', '22', '237', '2345', '重庆市', '市辖区', '綦江区', '1570586276');
 
 -- ----------------------------
 -- Table structure for attend_class_record
@@ -114,19 +116,11 @@ CREATE TABLE `attend_class_record` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '上课记录状态 0:未提交 1:已提交 2：确认上课 3：未上课',
   `create_at` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='上课记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='上课记录表';
 
 -- ----------------------------
 -- Records of attend_class_record
 -- ----------------------------
-INSERT INTO `attend_class_record` VALUES ('1', '1', '1', '23', '1', '化妆速成', '高三', '3', '1570586822');
-INSERT INTO `attend_class_record` VALUES ('2', '1', '1', '24', '1', '化妆速成', '高三', '2', '1570586865');
-INSERT INTO `attend_class_record` VALUES ('3', '1', '1', '25', '1', '化妆速成', '高三', '1', '1570586947');
-INSERT INTO `attend_class_record` VALUES ('4', '1', '1', '26', '1', '化妆速成', '高三', '3', '1570587000');
-INSERT INTO `attend_class_record` VALUES ('5', '1', '1', '27', '1', '化妆速成', '高三', '1', '1570587115');
-INSERT INTO `attend_class_record` VALUES ('6', '1', '1', '28', '1', '化妆速成', '高二', '0', '1570587162');
-INSERT INTO `attend_class_record` VALUES ('7', '1', '1', '29', '1', '化妆速成', '高三', '2', '1570587226');
-INSERT INTO `attend_class_record` VALUES ('8', '1', '1', '30', '1', '化妆速成', '高三', '0', '1570587285');
 
 -- ----------------------------
 -- Table structure for bank_card
@@ -140,14 +134,11 @@ CREATE TABLE `bank_card` (
   `card` varchar(255) NOT NULL COMMENT '卡号',
   `create_at` int(255) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户银行卡表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户银行卡表';
 
 -- ----------------------------
 -- Records of bank_card
 -- ----------------------------
-INSERT INTO `bank_card` VALUES ('1', '1', '中国银行', '王二小', '6520999966663321', '1570592501');
-INSERT INTO `bank_card` VALUES ('2', '31', '邮局', '张三丰', '123456789012336', '1570605257');
-INSERT INTO `bank_card` VALUES ('3', '31', '中国建行', '张三丰', '1258946699499', '1570605299');
 
 -- ----------------------------
 -- Table structure for banner
@@ -159,17 +150,11 @@ CREATE TABLE `banner` (
   `sort` tinyint(3) unsigned NOT NULL COMMENT '排序：1-100，越大越靠前',
   `create_at` int(10) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='banner管理表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='banner管理表';
 
 -- ----------------------------
 -- Records of banner
 -- ----------------------------
-INSERT INTO `banner` VALUES ('1', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/d63c3667a70054f58fa1980480cf5913.png', '80', '1569923779');
-INSERT INTO `banner` VALUES ('3', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/13cb27428b668167d786158b1ea3cd33.png', '90', '1569982925');
-INSERT INTO `banner` VALUES ('4', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/aa19ef1d861add58f9cc7c6142c7aeda.png', '30', '1569983998');
-INSERT INTO `banner` VALUES ('5', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/b9bc2ce4f3bb1602860f4e199b0d4737.png', '60', '1569984043');
-INSERT INTO `banner` VALUES ('6', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/0e83b0a7d8d74ad808ef4563f3e14a89.png', '30', '1569984145');
-INSERT INTO `banner` VALUES ('7', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/87b2459b6ea07f3e6f6c4778685baf6a.png', '0', '1570091409');
 
 -- ----------------------------
 -- Table structure for center_logs
@@ -185,21 +170,11 @@ CREATE TABLE `center_logs` (
   `tip` varchar(255) NOT NULL COMMENT '说明',
   `create_at` int(255) unsigned NOT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='教学中心流水记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教学中心流水记录';
 
 -- ----------------------------
 -- Records of center_logs
 -- ----------------------------
-INSERT INTO `center_logs` VALUES ('1', '1', '测试教学中心', '1', '1', '1400.00', '用户[23]购买课程', '1570586822');
-INSERT INTO `center_logs` VALUES ('2', '1', '测试教学中心', '1', '1', '1400.00', '用户[24]购买课程', '1570586865');
-INSERT INTO `center_logs` VALUES ('3', '1', '测试教学中心', '1', '1', '1400.00', '用户[25]购买课程', '1570586947');
-INSERT INTO `center_logs` VALUES ('4', '1', '测试教学中心', '1', '1', '1400.00', '用户[26]购买课程', '1570587000');
-INSERT INTO `center_logs` VALUES ('5', '1', '测试教学中心', '1', '1', '1400.00', '用户[27]购买课程', '1570587115');
-INSERT INTO `center_logs` VALUES ('6', '1', '测试教学中心', '1', '1', '1400.00', '用户[28]购买课程', '1570587162');
-INSERT INTO `center_logs` VALUES ('7', '1', '测试教学中心', '1', '1', '1400.00', '用户[29]购买课程', '1570587226');
-INSERT INTO `center_logs` VALUES ('8', '1', '测试教学中心', '1', '1', '1400.00', '用户[30]购买课程', '1570587285');
-INSERT INTO `center_logs` VALUES ('9', '1', '测试教学中心', '1', '1', '1400.00', '用户[30]购买课程', '1569813071');
-INSERT INTO `center_logs` VALUES ('10', '1', '测试教学中心', '1', '1', '1400.00', '用户[30]购买课程', '1569813071');
 
 -- ----------------------------
 -- Table structure for city
@@ -575,15 +550,11 @@ CREATE TABLE `code_cahe` (
   `count_day` tinyint(5) unsigned NOT NULL DEFAULT '1' COMMENT '当前发送次数',
   `send_at` int(255) unsigned NOT NULL DEFAULT '0' COMMENT '发送时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='验证码缓存';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='验证码缓存';
 
 -- ----------------------------
 -- Records of code_cahe
 -- ----------------------------
-INSERT INTO `code_cahe` VALUES ('3', '1', '17726691544', '1', '435635', '1570603360', '60', '1', '1570603060');
-INSERT INTO `code_cahe` VALUES ('4', '1', '17726691544', '2', '141916', '1570603964', '60', '2', '1570603664');
-INSERT INTO `code_cahe` VALUES ('5', '1', '17782004586', '1', '145891', '1570513668', '60', '1', '1570513368');
-INSERT INTO `code_cahe` VALUES ('6', '1', '17782004586', '2', '940721', '1570603694', '60', '1', '1570603394');
 
 -- ----------------------------
 -- Table structure for config
@@ -3928,7 +3899,7 @@ CREATE TABLE `course` (
 -- ----------------------------
 -- Records of course
 -- ----------------------------
-INSERT INTO `course` VALUES ('1', '化妆速成', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/3a5f9b781a6db56777db8bd1469595df.jpg', '6000.00', '化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成', '1570586769', '600.00', '200.00', '1400.00', '2700.00', '200.00', '[\"高一\",\"高二\",\"高三\"]', '0');
+INSERT INTO `course` VALUES ('1', '化妆速成', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/3a5f9b781a6db56777db8bd1469595df.jpg', '6800.00', '化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成化妆速成', '1570586769', '600.00', '200.00', '1400.00', '2700.00', '200.00', '[\"高一\",\"高二\",\"高三\"]', '0');
 INSERT INTO `course` VALUES ('2', '商务英语', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/38d92039bae5cfc655b636eb3591e600.png', '7000.00', '商务英语商务英语商务英语商务英语商务英语商务英语商务英语商务英语商务英语商务英语商务英语商务英语', '1570587384', '600.00', '200.00', '1600.00', '2700.00', '200.00', '[\"一年级\",\"二年级\",\"三年级\",\"四年级\",\"五年级\",\"六年级\"]', '0');
 
 -- ----------------------------
@@ -3976,24 +3947,11 @@ CREATE TABLE `orders` (
   `pay_at` int(255) unsigned NOT NULL DEFAULT '0' COMMENT '支付时间',
   `create_at` int(255) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='课程订单表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='课程订单表';
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES ('1', '23', '1', '1', '张三', '500222199202100011', '高三', '6000.00', '1', '1', '1570586822', '1570586818');
-INSERT INTO `orders` VALUES ('2', '24', '1', '1', '心都', '500222199202100044', '高三', '6000.00', '1', '1', '1570586865', '1570586862');
-INSERT INTO `orders` VALUES ('3', '25', '1', '1', '提交', '500222199202100088', '高三', '6000.00', '1', '1', '1570586947', '1570586944');
-INSERT INTO `orders` VALUES ('4', '26', '1', '1', '模仿', '500222199202100068', '高三', '6000.00', '1', '1', '1570587000', '1570586995');
-INSERT INTO `orders` VALUES ('5', '27', '1', '1', '哦婆婆我', '500222199202100043', '高三', '6000.00', '1', '1', '1570587115', '1570587112');
-INSERT INTO `orders` VALUES ('6', '28', '1', '1', '哦哦哦哦', '500222199202100011', '高二', '6000.00', '1', '1', '1570587162', '1570587158');
-INSERT INTO `orders` VALUES ('7', '29', '1', '1', '哦工作', '500222199202100011', '高三', '6000.00', '1', '1', '1570587226', '1570587223');
-INSERT INTO `orders` VALUES ('8', '30', '1', '1', '他喽', '500222199602100077', '高三', '6000.00', '1', '1', '1570587285', '1570587277');
-INSERT INTO `orders` VALUES ('9', '31', '2', '2', '张三丰', '500234199307068523', '一年级', '7000.00', '1', '1', '0', '1570608689');
-INSERT INTO `orders` VALUES ('10', '31', '2', '2', '张三丰', '500234199307068523', '二年级', '7000.00', '1', '1', '0', '1570608899');
-INSERT INTO `orders` VALUES ('11', '31', '1', '2', '张三丰', '500234199307068523', '高二', '6000.00', '1', '1', '0', '1570613008');
-INSERT INTO `orders` VALUES ('12', '31', '1', '2', '张三丰', '500234199307068523', '高二', '6000.00', '1', '1', '0', '1570613009');
-INSERT INTO `orders` VALUES ('13', '31', '2', '2', '张三丰', '500234199307068523', '五年级', '7000.00', '1', '1', '0', '1570671934');
 
 -- ----------------------------
 -- Table structure for province
@@ -4075,41 +4033,11 @@ CREATE TABLE `quota_orders` (
   `status` tinyint(255) unsigned NOT NULL DEFAULT '0' COMMENT '订单状态：0、待支付，1、已支付',
   `create_at` int(255) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COMMENT='名额购买订单表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='名额购买订单表';
 
 -- ----------------------------
 -- Records of quota_orders
 -- ----------------------------
-INSERT INTO `quota_orders` VALUES ('1', '1', '600.00', '100', '60000.00', '2', '22,237,2345', '1', '1570586276', '1', '1570586261');
-INSERT INTO `quota_orders` VALUES ('2', '1', '600.00', '3', '1800.00', '1', '', '1', '1570586298', '1', '1570586296');
-INSERT INTO `quota_orders` VALUES ('3', '2', '600.00', '3', '1800.00', '1', '', '1', '1570586578', '1', '1570586330');
-INSERT INTO `quota_orders` VALUES ('6', '31', '600.00', '3', '1800.00', '1', '', '0', '0', '0', '1570671793');
-INSERT INTO `quota_orders` VALUES ('7', '31', '600.00', '3', '1800.00', '1', '', '0', '0', '0', '1570671794');
-INSERT INTO `quota_orders` VALUES ('8', '31', '600.00', '3', '1800.00', '1', '', '0', '0', '0', '1570671799');
-INSERT INTO `quota_orders` VALUES ('9', '31', '600.00', '3', '1800.00', '1', '', '0', '0', '0', '1570671801');
-INSERT INTO `quota_orders` VALUES ('10', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671818');
-INSERT INTO `quota_orders` VALUES ('11', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671820');
-INSERT INTO `quota_orders` VALUES ('12', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671821');
-INSERT INTO `quota_orders` VALUES ('13', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671822');
-INSERT INTO `quota_orders` VALUES ('14', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671822');
-INSERT INTO `quota_orders` VALUES ('15', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671822');
-INSERT INTO `quota_orders` VALUES ('16', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671822');
-INSERT INTO `quota_orders` VALUES ('17', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671822');
-INSERT INTO `quota_orders` VALUES ('18', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671823');
-INSERT INTO `quota_orders` VALUES ('19', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671823');
-INSERT INTO `quota_orders` VALUES ('20', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671823');
-INSERT INTO `quota_orders` VALUES ('21', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671823');
-INSERT INTO `quota_orders` VALUES ('22', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671823');
-INSERT INTO `quota_orders` VALUES ('23', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671824');
-INSERT INTO `quota_orders` VALUES ('24', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671824');
-INSERT INTO `quota_orders` VALUES ('25', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671824');
-INSERT INTO `quota_orders` VALUES ('26', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671824');
-INSERT INTO `quota_orders` VALUES ('27', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671825');
-INSERT INTO `quota_orders` VALUES ('28', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671825');
-INSERT INTO `quota_orders` VALUES ('29', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671825');
-INSERT INTO `quota_orders` VALUES ('30', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671825');
-INSERT INTO `quota_orders` VALUES ('31', '31', '600.00', '100', '60000.00', '2', '1,1,1', '0', '0', '0', '1570671825');
-INSERT INTO `quota_orders` VALUES ('32', '31', '600.00', '3', '1800.00', '1', '', '0', '0', '0', '1570672111');
 
 -- ----------------------------
 -- Table structure for teach_center
@@ -4130,13 +4058,11 @@ CREATE TABLE `teach_center` (
   `create_at` int(255) unsigned NOT NULL COMMENT '创建时间',
   `status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0、等待审核，1、审核通过，2、审核被拒，3、删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='教学中心表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教学中心表';
 
 -- ----------------------------
 -- Records of teach_center
 -- ----------------------------
-INSERT INTO `teach_center` VALUES ('1', '1', '1', '测试教学中心', '22', '237', '2345', '重庆市', '市辖区', '綦江区', '马路边', '1570586487', '1');
-INSERT INTO `teach_center` VALUES ('2', '1', '1', '小马哥教学中心', '22', '237', '2345', '重庆市', '市辖区', '綦江区', '开发区123号5楼11-34', '1570593782', '1');
 
 -- ----------------------------
 -- Table structure for teacher
@@ -4153,13 +4079,14 @@ CREATE TABLE `teacher` (
   `image` varchar(1024) NOT NULL COMMENT '首页展示图片',
   `cover` varchar(1024) NOT NULL COMMENT '详情展示图片',
   `create_at` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `videos` varchar(2048) NOT NULL COMMENT '教师相关视频ID集合，JSON数组',
+  `is_show` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '是否首页展示',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='教师表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师表';
 
 -- ----------------------------
 -- Records of teacher
 -- ----------------------------
-INSERT INTO `teacher` VALUES ('1', '1', '马云', '博士后', '教授', '能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力能力', '[\"成就成就成就\",\"成就成就成就成就成就\",\"成就成就成就\"]', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/f690734b77c3a695a909a7236b82e4eb.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/5d691fca9618ac965f078f7510171538.png', '1570586549');
 
 -- ----------------------------
 -- Table structure for teacher_center
@@ -4170,13 +4097,11 @@ CREATE TABLE `teacher_center` (
   `teacher_id` int(10) unsigned NOT NULL COMMENT '教师ID',
   `center_id` int(10) unsigned NOT NULL COMMENT '教学中心ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='教师-教学中心表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师-教学中心表';
 
 -- ----------------------------
 -- Records of teacher_center
 -- ----------------------------
-INSERT INTO `teacher_center` VALUES ('1', '1', '1');
-INSERT INTO `teacher_center` VALUES ('2', '1', '2');
 
 -- ----------------------------
 -- Table structure for team
@@ -4223,42 +4148,12 @@ CREATE TABLE `user` (
   `reg_at` int(255) unsigned NOT NULL DEFAULT '0' COMMENT '注册时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `tel` (`tel`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', '17782004586', '635e6fcb4b40b089e954f97f8e35c9b2', 'fa5d0d43d88e1b3605b5c8cebfb06308', '13000000001', '', '', '1', '1', '1', '103', '1', '0', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/e4d11b9d4c2459a24ca43f73d4a12e44.jpg', '2', '294.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('2', '13000000002', '7fda2703d758fa3cd347004ea58ac627', '7fda2703d758fa3cd347004ea58ac627', '13000000002', '', '', '0', '1', '1', '3', '2', '1', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/ca724a2d3711f02838e5a96a17212f63.jpg', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('3', '13000000003', '54713a8991f02b8687995e5acdabfa33', '54713a8991f02b8687995e5acdabfa33', '13000000003', '', '', '0', '0', '0', '0', '3', '1', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('4', '13000000004', '46b9c0b32e32b5b4949122d005ff1825', '46b9c0b32e32b5b4949122d005ff1825', '13000000004', '', '', '0', '0', '0', '0', '4', '1', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('5', '13000000005', 'b2c08808dbd1cdfa312d9cc559707baa', 'b2c08808dbd1cdfa312d9cc559707baa', '13000000005', '', '', '0', '0', '0', '0', '5', '1', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('6', '13000000006', '83e4d8ca4ff01b0e4024c610ee376b8d', '83e4d8ca4ff01b0e4024c610ee376b8d', '13000000006', '', '', '0', '0', '0', '0', '6', '2', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('7', '13000000007', 'a6f98e72ea9e0e030da9a00d50b045bd', 'a6f98e72ea9e0e030da9a00d50b045bd', '13000000007', '', '', '0', '0', '0', '0', '7', '2', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('8', '13000000008', 'a4af016875bdd460f4a976785182d76d', 'a4af016875bdd460f4a976785182d76d', '13000000008', '', '', '0', '0', '0', '0', '8', '2', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('9', '13000000009', 'da32f25e29a74db4c8abd7dd2239589b', 'da32f25e29a74db4c8abd7dd2239589b', '13000000009', '', '', '0', '0', '0', '0', '9', '6', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('10', '13000000010', '6f48713271ea6b3cf2d49277421c3a9b', '6f48713271ea6b3cf2d49277421c3a9b', '13000000010', '', '', '0', '0', '0', '0', '10', '6', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('11', '13000000011', '1d2286e2e64f34e7c4c521dfecc97975', '1d2286e2e64f34e7c4c521dfecc97975', '13000000011', '', '', '0', '0', '0', '0', '11', '6', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('12', '13000000012', 'a6317e583b29de34af379f0b0f3e7835', 'a6317e583b29de34af379f0b0f3e7835', '13000000012', '', '', '0', '0', '0', '0', '12', '6', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('13', '13000000013', '3b088dd201567da86e934b89674a083d', '3b088dd201567da86e934b89674a083d', '13000000013', '', '', '0', '0', '0', '0', '13', '12', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('14', '13000000014', '484051064ea16f3c123a1ba126881da8', '484051064ea16f3c123a1ba126881da8', '13000000014', '', '', '0', '0', '0', '0', '14', '13', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('15', '13000000015', 'ee1698accadfbc4038c2e2e5f1100f22', 'ee1698accadfbc4038c2e2e5f1100f22', '13000000015', '', '', '0', '0', '0', '0', '15', '14', '', '2', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('16', '13000000016', '6b0ee758b795efe3d5f1f65b014d409d', '6b0ee758b795efe3d5f1f65b014d409d', '13000000016', '', '', '0', '0', '0', '0', '16', '15', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('17', '13000000017', '5c240aa14547bfb6474e7856e3cb9f95', '5c240aa14547bfb6474e7856e3cb9f95', '13000000017', '', '', '0', '0', '0', '0', '17', '16', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('18', '13000000018', 'ac078c992f73aa65f79f5ba60357a147', 'ac078c992f73aa65f79f5ba60357a147', '13000000018', '', '', '0', '0', '0', '0', '18', '17', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('19', '13000000019', '77e7d75733bef7123778389cb010c726', '77e7d75733bef7123778389cb010c726', '13000000019', '', '', '0', '0', '0', '0', '19', '18', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('20', '13000000020', 'a72c33b951da720b4c5c58c436990aa0', 'a72c33b951da720b4c5c58c436990aa0', '13000000020', '', '', '0', '0', '0', '0', '20', '19', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('21', '13000000021', 'd8bdcc1f81f01a0a60fc66760bb109bf', 'd8bdcc1f81f01a0a60fc66760bb109bf', '13000000021', '', '', '0', '0', '0', '0', '21', '20', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('22', '13000000022', '80755e2362b267a6a0174b5ac6192bfe', '80755e2362b267a6a0174b5ac6192bfe', '13000000022', '', '', '0', '0', '0', '0', '22', '9', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('23', '13000000023', '4bbe09f3e02956102323264777f6465f', '4bbe09f3e02956102323264777f6465f', '13000000023', '500222199202100011', '张三', '0', '1', '0', '0', '23', '2', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('24', '13000000024', 'f52244d2c80d22e974c599f599f53915', 'f52244d2c80d22e974c599f599f53915', '13000000024', '500222199202100044', '心都', '0', '1', '0', '0', '24', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('25', '13000000025', '056c1722b8dcd271b2ffd730fcc8c5c6', '056c1722b8dcd271b2ffd730fcc8c5c6', '13000000025', '500222199202100088', '提交', '0', '1', '0', '0', '25', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('26', '13000000026', 'b142ec34a0dff18de586a8f7242b9f69', 'b142ec34a0dff18de586a8f7242b9f69', '13000000026', '500222199202100068', '模仿', '0', '1', '0', '0', '26', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('27', '13000000027', '25c7ac21809f247a19432bae9a80d83e', '25c7ac21809f247a19432bae9a80d83e', '13000000027', '500222199202100043', '哦婆婆我', '0', '1', '0', '0', '27', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('28', '13000000028', '4fcc758df15be0f1218399202bcfe18b', '4fcc758df15be0f1218399202bcfe18b', '13000000028', '500222199202100011', '哦哦哦哦', '0', '1', '0', '0', '28', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('29', '13000000029', '96c31ad531e05fdcf40055a77b2dc17b', '96c31ad531e05fdcf40055a77b2dc17b', '13000000029', '500222199202100011', '哦工作', '0', '1', '0', '0', '29', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('30', '13000000030', 'ebab822f8d16b4a9cf733e9fc0905738', 'ebab822f8d16b4a9cf733e9fc0905738', '13000000030', '500222199602100077', '他喽', '0', '1', '0', '0', '30', '1', '', '1', '0.00', '0.00', '1570585548');
-INSERT INTO `user` VALUES ('31', '17726691544', '0a44627068cedbeba038c1c0dcb059ff', '0a44627068cedbeba038c1c0dcb059ff', '17726691544', '500234199307068523', '张三丰', '1', '1', '1', '0', '000K', '1', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/ff714409849914a59617c9b72dce4cf4.jpg', '1', '0.00', '0.00', '1570603135');
+INSERT INTO `user` VALUES ('1', '13000000001', 'fa094797021298d0b3c7d288f2d27f70', 'fa094797021298d0b3c7d288f2d27f70', '', '', '', '0', '0', '0', '0', '13000000002', '0', '', '2', '0.00', '0.00', '1570704945');
 
 -- ----------------------------
 -- Table structure for user_balance
@@ -4272,39 +4167,11 @@ CREATE TABLE `user_balance` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0 冻结 1：解冻',
   `create_at` int(11) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='用户冻结资金表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户冻结资金表';
 
 -- ----------------------------
 -- Records of user_balance
 -- ----------------------------
-INSERT INTO `user_balance` VALUES ('1', '2', '1', '2700.00', '0', '1570586822');
-INSERT INTO `user_balance` VALUES ('2', '1', '1', '200.00', '0', '1570586822');
-INSERT INTO `user_balance` VALUES ('3', '1', '1', '600.00', '0', '1570586822');
-INSERT INTO `user_balance` VALUES ('4', '1', '1', '1400.00', '0', '1570586822');
-INSERT INTO `user_balance` VALUES ('5', '2', '2', '2700.00', '0', '1570586865');
-INSERT INTO `user_balance` VALUES ('6', '1', '2', '200.00', '0', '1570586865');
-INSERT INTO `user_balance` VALUES ('7', '1', '2', '600.00', '0', '1570586865');
-INSERT INTO `user_balance` VALUES ('8', '1', '2', '1400.00', '0', '1570586865');
-INSERT INTO `user_balance` VALUES ('9', '2', '3', '2700.00', '0', '1570586947');
-INSERT INTO `user_balance` VALUES ('10', '1', '3', '200.00', '0', '1570586947');
-INSERT INTO `user_balance` VALUES ('11', '1', '3', '600.00', '0', '1570586947');
-INSERT INTO `user_balance` VALUES ('12', '1', '3', '1400.00', '0', '1570586947');
-INSERT INTO `user_balance` VALUES ('13', '2', '4', '2700.00', '0', '1570587000');
-INSERT INTO `user_balance` VALUES ('14', '1', '4', '200.00', '0', '1570587000');
-INSERT INTO `user_balance` VALUES ('15', '1', '4', '600.00', '0', '1570587000');
-INSERT INTO `user_balance` VALUES ('16', '1', '4', '1400.00', '0', '1570587000');
-INSERT INTO `user_balance` VALUES ('17', '1', '5', '2700.00', '0', '1570587115');
-INSERT INTO `user_balance` VALUES ('18', '1', '5', '600.00', '0', '1570587115');
-INSERT INTO `user_balance` VALUES ('19', '1', '5', '1400.00', '0', '1570587115');
-INSERT INTO `user_balance` VALUES ('20', '1', '6', '2700.00', '0', '1570587162');
-INSERT INTO `user_balance` VALUES ('21', '1', '6', '600.00', '0', '1570587162');
-INSERT INTO `user_balance` VALUES ('22', '1', '6', '1400.00', '0', '1570587162');
-INSERT INTO `user_balance` VALUES ('23', '1', '7', '2700.00', '0', '1570587226');
-INSERT INTO `user_balance` VALUES ('24', '1', '7', '600.00', '0', '1570587226');
-INSERT INTO `user_balance` VALUES ('25', '1', '7', '1400.00', '0', '1570587226');
-INSERT INTO `user_balance` VALUES ('26', '1', '8', '2700.00', '0', '1570587285');
-INSERT INTO `user_balance` VALUES ('27', '1', '8', '600.00', '0', '1570587285');
-INSERT INTO `user_balance` VALUES ('28', '1', '8', '1400.00', '0', '1570587285');
 
 -- ----------------------------
 -- Table structure for user_course_sign
@@ -4317,15 +4184,11 @@ CREATE TABLE `user_course_sign` (
   `order_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '课程订单id',
   `sign` varchar(2048) NOT NULL COMMENT '已打卡课程小节ID集合，JSON数组：[id1,id2,id3]',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户课程小节打卡表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户课程小节打卡表';
 
 -- ----------------------------
 -- Records of user_course_sign
 -- ----------------------------
-INSERT INTO `user_course_sign` VALUES ('1', '31', '2', '9', '[\"7\",\"8\",\"9\",\"10\"]');
-INSERT INTO `user_course_sign` VALUES ('2', '31', '2', '10', '[\"7\",\"8\",\"9\",\"10\"]');
-INSERT INTO `user_course_sign` VALUES ('3', '31', '1', '11', '[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\"]');
-INSERT INTO `user_course_sign` VALUES ('4', '31', '1', '12', '[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\"]');
 
 -- ----------------------------
 -- Table structure for user_logs
@@ -4356,21 +4219,13 @@ CREATE TABLE `video` (
   `video` varchar(1024) NOT NULL COMMENT '视频地址',
   `status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0、正常，1、删除',
   `create_at` int(255) unsigned NOT NULL COMMENT '创建时间',
+  `is_show` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否在首页展示',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='视频表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='视频表';
 
 -- ----------------------------
 -- Records of video
 -- ----------------------------
-INSERT INTO `video` VALUES ('1', '初中历史初中历史初中历史初中历史初中历史初中历史初中历史初中历史初中历史', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/a8fda2ceecd497fd8e12aefbd6aae87f.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569987372');
-INSERT INTO `video` VALUES ('2', '初中化学初中化学初中化学初中化学初中化学初中化学初中化学', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/d17af64644b7b678aef84bf71756a9b6.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/b36d5746e86b65a27303c5768e68b0fa.mp4', '0', '1569987543');
-INSERT INTO `video` VALUES ('3', '初中美食初中美食初中美食初中美食初中美食初中美食', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
-INSERT INTO `video` VALUES ('4', '初中生物初中化学初中化学', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
-INSERT INTO `video` VALUES ('5', '初中体育', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
-INSERT INTO `video` VALUES ('6', '初中体育111', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
-INSERT INTO `video` VALUES ('7', '初中体育222', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
-INSERT INTO `video` VALUES ('8', '初中体育333', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
-INSERT INTO `video` VALUES ('9', '初中体育444', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/images/416f7782cabba7d967c406c118112a88.png', 'https://musongtest.oss-cn-shanghai.aliyuncs.com/education/videos/4e17749a553d18ecc40ce23e1b1ddd14.mp4', '0', '1569988631');
 
 -- ----------------------------
 -- Table structure for withdraw_logs
@@ -4386,19 +4241,8 @@ CREATE TABLE `withdraw_logs` (
   `card` varchar(255) NOT NULL DEFAULT '' COMMENT '卡号',
   `create_at` int(255) unsigned NOT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='提现记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='提现记录表';
 
 -- ----------------------------
 -- Records of withdraw_logs
 -- ----------------------------
-INSERT INTO `withdraw_logs` VALUES ('1', '1', '2.00', '中国银行', '2', '王二小', '6520999966663321', '1570593271');
-INSERT INTO `withdraw_logs` VALUES ('2', '1', '2.00', '中国银行', '1', '王二小', '6520999966663321', '1570593326');
-INSERT INTO `withdraw_logs` VALUES ('3', '1', '2.00', '中国银行', '2', '王二小', '6520999966663321', '1570593431');
-INSERT INTO `withdraw_logs` VALUES ('4', '1', '2.00', '中国银行', '0', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('5', '1', '2.00', '中国银行', '1', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('6', '1', '2.00', '中国银行', '2', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('7', '1', '2.00', '中国银行', '0', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('8', '1', '2.00', '中国银行', '1', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('9', '1', '2.00', '中国银行', '1', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('10', '1', '2.00', '中国银行', '2', '王二小', '6520999966663321', '1569813071');
-INSERT INTO `withdraw_logs` VALUES ('11', '1', '2.00', '中国银行', '1', '王二小', '6520999966663321', '1569813071');
