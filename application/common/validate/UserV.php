@@ -12,7 +12,8 @@ class UserV extends BaseValidate
         'pass' => 'require|max:32',
         'safe_pass' => 'require|max:32',
         'send_type' => 'require|in:1',
-        'code_type' => 'require|in:1,2'
+        'code_type' => 'require|in:1,2',
+        'invite_code' => 'require|mobile',
     ];
 
     protected $message = [
@@ -26,6 +27,7 @@ class UserV extends BaseValidate
         'send_type.require' => '请选择发送方式',
         'send_type.in' => '暂不支持该种方式发送',
         'code_type.require' => '请选择验证码类型',
-        'code_type.in' => '暂不支持该种验证码类型'
+        'code_type.in' => '暂不支持该种验证码类型',
+        'invite_code' => '请填写正确的邀请码'
     ];
 }

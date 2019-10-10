@@ -60,7 +60,7 @@ class User extends Model
         if (!$user) {
             throw  new BusinessBaseException('用户不存在');
         }
-        $md5Pass = md5($user->reg_at . $pass);
+        $md5Pass = md5($user->tel . $pass);
         if ($type === 1) {
             $dbPass = $user->pass;
         } else {
@@ -70,9 +70,9 @@ class User extends Model
             throw new BusinessBaseException('原始密码错误');
         }
         if ($type === 1) {
-            return $this->editByUId($uid, ['pass' => md5($user->reg_at . $newpass)]);
+            return $this->editByUId($uid, ['pass' => md5($user->tel . $newpass)]);
         } else {
-            return $this->editByUId($uid, ['safe_pass' => md5($user->reg_at . $newpass)]);
+            return $this->editByUId($uid, ['safe_pass' => md5($user->tel . $newpass)]);
         }
     }
 
