@@ -4,7 +4,6 @@ namespace app\man\controller;
 use app\common\controller\Base;
 use app\common\service\OssService;
 use app\man\model\Admin;
-use think\Db;
 use think\Request;
 
 class Index extends Base
@@ -172,24 +171,4 @@ class Index extends Base
 
         return $this->jsonBack(0, '', $r);
     }
-
-    public function test() {
-//        $p = Db::name('province')->select();
-//        $c = Db::name('city')->select();
-//        $cn = Db::name('country')->select();
-//
-//        $data = [
-//            'province' => $p,
-//            'city' => $c,
-//            'country' => $cn
-//        ];
-//
-//        echo json_encode($data,JSON_UNESCAPED_UNICODE);
-
-        $s = 'Q1370178326';
-        echo substr($s,1);
-
-
-    }
-
 }

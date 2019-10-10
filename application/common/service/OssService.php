@@ -6,11 +6,11 @@ use OSS\OssClient;
 use OSS\Core\OssException;
 class OssService
 {
-    const ACCESS_KEY_ID = 'LTAIeYRciWnQkwz1';
-    const ACCESS_KEY_SECRET = 'kZ1ao8U4byg2mfb4SC7JqSClHPqFbm';
-    const ENDPOINT = 'https://oss-cn-shanghai.aliyuncs.com/';
-    const VISIT_DOMAIN = 'https://musongtest.oss-cn-shanghai.aliyuncs.com/';
-    const BUCKET = 'musongtest';
+    const ACCESS_KEY_ID = 'LTAIt7lW0rdZzEvT';
+    const ACCESS_KEY_SECRET = 'Pm4jWGGeLPkjZnWuXywdQEnaP3DOBi';
+    const ENDPOINT = 'https://oss-cn-chengdu.aliyuncs.com/';
+    const VISIT_DOMAIN = 'https://jiaoyu2019.oss-cn-chengdu.aliyuncs.com/';
+    const BUCKET = 'jiaoyu2019';
     const PROJECT = 'education';
 
     public static function uploadFile($localPath,$saveName,$dir = '') {

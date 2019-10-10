@@ -16,7 +16,7 @@ class Auth
 
             if ($_auth['is_su'] !== 1) {
                 $_defaultAccess = [
-                    'index/index','index/pwd','index/logout'
+                    'index/index','index/pwd','index/logout','index/uploadimage','index/uploadvideo'
                 ];
                 try {
                     $_admin = Admin::with('access')->find($_auth['id']);

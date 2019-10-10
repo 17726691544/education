@@ -7,6 +7,7 @@ use app\common\model\Orders;
 use app\common\validate\BaseValidate;
 use app\common\model\Course as CourseModel;
 use app\common\model\TeachCenter as TeachCenterModel;
+use app\common\model\User as UserModel;
 
 class Order extends Base
 {
@@ -61,6 +62,14 @@ class Order extends Base
                 'price' => $course->price,
                 'create_at' => time()
             ]);
+
+            $user = UserModel::get($uid);
+            if ($user->id_card === '' || $user->real_name === '') {
+                $user->id_card = $params['id_card'];
+                $user->real_name = $params['name'];
+                $user->save();
+            }
+
 
             return $this->jsonBack(0,'创建成功');
         } catch (\Exception $e) {

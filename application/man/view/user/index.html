@@ -20,15 +20,39 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <form class="form-inline" method="post">
                         <div class="form-group">
-                            <label class="sr-only">等级</label>
-                            <select name="level" class="form-control">
-                                <option value="0">普通会员</option>
-                                <option value="1">LV1</option>
-                                <option value="2">LV2</option>
-                                <option value="3">LV3</option>
+                            <label class="sr-only">是否区代</label>
+                            <select name="is_qd" class="form-control">
+                                <option value="-1" {if($params.is_qd==='-1')}selected{/if}>是否区代</option>
+                                <option value="0" {if($params.is_qd==='0')}selected{/if}>否</option>
+                                <option value="1" {if($params.is_qd==='1')}selected{/if}>是</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="sr-only">是否个代</label>
+                            <select name="is_gd" class="form-control">
+                                <option value="-1" {if($params.is_gd==='-1')}selected{/if}>是否个代</option>
+                                <option value="0" {if($params.is_gd==='0')}selected{/if}>否</option>
+                                <option value="1" {if($params.is_gd==='1')}selected{/if}>是</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="sr-only">是否教师</label>
+                            <select name="is_teacher" class="form-control">
+                                <option value="-1" {if($params.is_teacher==='-1')}selected{/if}>是否教师</option>
+                                <option value="0" {if($params.is_teacher==='0')}selected{/if}>否</option>
+                                <option value="1" {if($params.is_teacher==='1')}selected{/if}>是</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <select name="type" class="form-control">
+                                <option value="0" {if($params.type==='0')}selected{/if}>账号类型</option>
+                                <option value="1" {if($params.type==='1')}selected{/if}>学员类型</option>
+                                <option value="2" {if($params.type==='2')}selected{/if}>教师类型</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -46,40 +70,66 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">ID</th>
-                                    <th class="text-center">编号</th>
-                                    <th class="text-center">昵称</th>
-                                    <th class="text-center">头像</th>
-                                    <th class="text-center">等级</th>
-                                    <th class="text-center">余额</th>
                                     <th class="text-center">手机</th>
+                                    <th class="text-center">编号</th>
+                                    <th class="text-center">区代</th>
+                                    <th class="text-center">个代</th>
+                                    <th class="text-center">教师</th>
+                                    <th class="text-center">名额</th>
+                                    <th class="text-center">可用余额</th>
+                                    <th class="text-center">冻结余额</th>
                                     <th class="text-center">推荐人编号</th>
+                                    <th class="text-center">账户类型</th>
                                     <th class="text-center">注册时间</th>
-                                    <th class="text-center">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 {if ($list->count() === 0)}
                                     <tr>
-                                        <td class="text-center" colspan="10">暂无数据</td>
+                                        <td class="text-center" colspan="12">暂无数据</td>
                                     </tr>
                                 {else/}
                                     {foreach $list as $item}
                                         <tr>
                                             <td class="text-center">{$item.id}</td>
-                                            <td class="text-center">{$item.ivt_code}</td>
-                                            <td class="text-center">{$item.nick}</td>
+                                            <td class="text-center">{$item.tel}</td>
+                                            <td class="text-center">{$item.invite_code}</td>
                                             <td class="text-center">
-                                                <img src="{$item.head_url}" alt="头像" style="width: 100px;height: 100px;" class="img-rounded">
+                                                {if ($item.is_qd)}
+                                                <span class="label label-success">是</span>
+                                                {else}
+                                                <span class="label label-danger">否</span>
+                                                {/if}
                                             </td>
-                                            <td class="text-center">{$item.level_str}</td>
+                                            <td class="text-center">
+                                                {if ($item.is_gd)}
+                                                <span class="label label-success">是</span>
+                                                {else}
+                                                <span class="label label-danger">否</span>
+                                                {/if}
+                                            </td>
+                                            <td class="text-center">
+                                                {if ($item.is_teacher)}
+                                                <span class="label label-success">是</span>
+                                                {else}
+                                                <span class="label label-danger">否</span>
+                                                {/if}
+                                            </td>
+                                            <td class="text-center">{$item.quota}</td>
                                             <td class="text-center">{$item.balance}</td>
-                                            <td class="text-center">{$item.tel_tip}</td>
-                                            <td class="text-center">{$item.inviter_code}</td>
-                                            <td class="text-center">{$item.reg_at_str}</td>
+                                            <td class="text-center">{$item.lock_balance}</td>
                                             <td class="text-center">
-                                                <a href="{:url('recommend',['id'=>$item.id])}" type="button" class="btn btn-primary">推荐人</a>
+                                                {if ($item.inviter)}{$item.inviter.invite_code}{else/}无{/if}
                                             </td>
+                                            <td class="text-center">
+                                                {if ($item.u_type===1)}
+                                                <span class="label label-info">学员</span>
+                                                {else}
+                                                <span class="label label-warning">教师</span>
+                                                {/if}
+                                            </td>
+                                            <td class="text-center">{$item.reg_at_str}</td>
                                         </tr>
                                     {/foreach}
                                 {/if}
