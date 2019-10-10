@@ -110,7 +110,7 @@ class UserService extends BaseService
     private function createCode($userId)
     {
         static $source_string = 'E5FCDG3HQA4B1NOPIJ2RSTUV67MWX89KLYZ';
-        $num = $userId;
+        $num = $userId + 2500;
         $code = '';
         while ($num > 0) {
             $mod = $num % 35;
