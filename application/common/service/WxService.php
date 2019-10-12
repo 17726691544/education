@@ -6,8 +6,8 @@ use think\facade\Cache;
 
 class WxService
 {
-    const APP_ID = 'wxd90cb1ea6f277822';//小程序ID
-    const APP_SECRET = 'd852aba3692b3ff91ae71fedb1e2c026';//小程序secret
+    const APP_ID = 'wxe920f09fdbf0dd02';//小程序ID
+    const APP_SECRET = '6398551a686d3d6c7631643fe73a6d75';//小程序secret
     const MCH_ID = '1551669691';//微信支付分配的商户号
     const MCH_KEY = 'a6a7ad087b9b59a37aaf62c5e89821d5';//微信支付分配的商户号
     //const NOTIFY_URL = 'http://118.24.73.45/index.php/notify/wx';//异步接收微信支付结果通知的回调地址

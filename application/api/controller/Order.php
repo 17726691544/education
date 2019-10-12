@@ -76,4 +76,46 @@ class Order extends Base
             return $this->jsonBack(2,$e->getMessage());
         }
     }
+
+    /**
+     * 订单支付
+     * @return \think\response\Json
+     * @throws \app\common\exception\BusinessBaseException
+     */
+    public function pay() {
+        (new BaseValidate())->tokenChick();
+        $uid = $this->getUid();
+        $params = $this->getParams(['order_id', 'type']);
+        $rule = [
+            'order_id' => 'require|integer|>:0',
+            'type' => 'require|integer|in:1,2'
+        ];
+        $msg = [
+            'order_id' => '错误的操作',
+            'type' => '错误的支付方式'
+        ];
+
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        if ($params['type'] == 1) {
+            //微信
+            return $this->wxPay($params['order_id'],$uid);
+        } else {
+            //支付宝
+            return $this->aliPay($params['order_id'],$uid);
+        }
+
+
+    }
+
+    private function wxPay($order_id, $uid) {
+        return $this->jsonBack(11, '');
+    }
+
+    private function aliPay($order_id, $uid) {
+        return $this->jsonBack(21, '');
+    }
 }
