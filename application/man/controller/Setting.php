@@ -17,7 +17,7 @@ class Setting extends Base
         if ($this->request->isPost()) {
             $params = $this->getParams(['quota_price','qd_quota','qdtjr_rate','gd_quota','tixian_less']);
             $rule = [
-                'quota_price' => 'require|float|>:0.01',
+                'quota_price' => 'require|float|>=:0.01',
                 'qd_quota' => 'require|integer|>=:1',
                 'qdtjr_rate' => 'require|integer|between:0,100',
                 'gd_quota' => 'require|integer|>=:1',

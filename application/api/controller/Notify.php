@@ -18,22 +18,40 @@ use app\common\model\UserBalance;
 use app\common\model\UserLogs;
 use app\common\model\Course as CourseModel;
 use app\common\model\TeachCenter as TeachCenterModel;
+use app\common\service\WxService;
 use think\Db;
 
 class Notify extends Base
 {
+    /**
+     * 微信支付回调
+     * @return string
+     */
     public function wx() {
-        $orders = Orders::where('status',0)->select();
-        foreach ($orders as $order) {
-            $this->dealOrder($order->order_number,1);
+        $input = file_get_contents("php://input");
+        $service = new WxService();
+        $info = $service->xml2array($input);
+        //$info = '{"out_trade_no":"F2875331572","appid":"wxd90cb1ea6f277822","bank_type":"CFT","cash_fee":"1","fee_type":"CNY","is_subscribe":"N","mch_id":"1551669691","nonce_str":"1HkCscuOferj6Le2KMhFHLQvzk2gfkVA","openid":"o2YH74ltilkSx7YItGcc9G3vvGjg","result_code":"SUCCESS","return_code":"SUCCESS","sign":"0563C0CCD962A10C6736BA153292E8A9","time_end":"20190823140257","total_fee":"1","trade_type":"JSAPI","transaction_id":"4200000345201908236847096049"}';
+        if (!is_array($info)) {
+            return $service->wxFail();
+        }
+        //验证签名
+        $preSign = $info['sign'];
+        unset($info['sign']);
+        $sign = $service->sign($info);
+        if ($preSign !== $sign) {
+            dump('验证签名失败');
+            return $service->wxFail();
         }
 
-        $orders = QuotaOrders::where('status',0)->select();
-        foreach ($orders as $order) {
-            $this->dealOrder($order->order_number,1);
+        $r = $this->dealOrder($info['out_trade_no'],1);
+
+        if (true !== $r) {
+            file_put_contents('wx.log',"{$info['openid']}---{{$info['out_trade_no']}}---{$r}" . PHP_EOL,FILE_APPEND);
+            return $service->wxFail();
         }
 
-        return 'ok';
+        return $service->wxSuccess();
     }
 
     public function ali() {

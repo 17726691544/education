@@ -34,7 +34,7 @@ class Course extends Base
             $rule = [
                 'title' => 'require|length:1,50',
                 'cover' => 'require|min:1',
-                'price' => 'require|float|>:0.01',
+                'price' => 'require|float|>=:0.01',
                 'tip' => 'require|length:1,255',
                 'qydl' => 'require|float|>=:0',
                 'qdtjr' => 'require|float|>=:0',
@@ -117,7 +117,7 @@ class Course extends Base
                 'id' => 'require|integer|>=:1',
                 'title' => 'require|length:1,50',
                 'cover' => 'require|min:1',
-                'price' => 'require|float|>:0.01',
+                'price' => 'require|float|>=:0.01',
                 'tip' => 'require|length:1,255',
                 'qydl' => 'require|float|>=:0',
                 'qdtjr' => 'require|float|>=:0',

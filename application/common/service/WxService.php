@@ -8,11 +8,13 @@ class WxService
 {
     const APP_ID = 'wxe920f09fdbf0dd02';//小程序ID
     const APP_SECRET = '6398551a686d3d6c7631643fe73a6d75';//小程序secret
-    const MCH_ID = '1551669691';//微信支付分配的商户号
-    const MCH_KEY = 'a6a7ad087b9b59a37aaf62c5e89821d5';//微信支付分配的商户号
+    const MCH_ID = '1557987211';//微信支付分配的商户号
+    const MCH_KEY = '39ba59a4cf10b1c71daa2ee084421a66';//微信支付分配的商户号
     //const NOTIFY_URL = 'http://118.24.73.45/index.php/notify/wx';//异步接收微信支付结果通知的回调地址
-    const NOTIFY_URL = 'https://wap.q520.com.cn/index.php/notify/wx';//异步接收微信支付结果通知的回调地址
-    const TRADE_TYPE = 'JSAPI';//交易类型,小程序取值如下：JSAPI
+    //const NOTIFY_URL = 'http://47.108.80.79/index.php/api/notify/wx';//异步接收微信支付结果通知的回调地址
+    const NOTIFY_URL = 'http://jiaoyu.cqallx.com/index.php/api/notify/wx';//异步接收微信支付结果通知的回调地址
+    //const TRADE_TYPE = 'JSAPI';//交易类型,小程序取值如下：JSAPI
+    const TRADE_TYPE = 'APP';//交易类型,小程序取值如下：JSAPI
 
     /**
      * get请求
@@ -139,6 +141,25 @@ class WxService
         $data['paySign'] = $sign;
         unset($data['appId']);
 
+        return $data;
+    }
+
+    /**
+     * app支付
+     * @param $result
+     * @return array
+     */
+    public function appPay($result) {
+        $data = [
+            'appid' => self::APP_ID,
+            'partnerid' => self::MCH_ID,
+            'prepayid' => $result['prepay_id'],
+            'noncestr' => $result['nonce_str'],
+            'timestamp' => time() . '',
+            'package' => 'Sign=WXPay'
+        ];
+        $sign = $this->sign($data);
+        $data['sign'] = $sign;
         return $data;
     }
 

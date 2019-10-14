@@ -9,8 +9,10 @@ use app\common\model\Config;
 use app\common\model\Country;
 use app\common\model\Province;
 use app\common\model\QuotaOrders;
+use app\common\service\WxService;
 use app\common\validate\BaseValidate;
 use app\common\model\User as UserModel;
+use think\Db;
 
 class Quotaorder extends Base
 {
@@ -59,7 +61,7 @@ class Quotaorder extends Base
 
             $config = Config::find(1);
 
-            QuotaOrders::create([
+            $order = QuotaOrders::create([
                 'user_id' => $uid,
                 'quota_price' => $config->quota_price,
                 'quota_num' => $config->qd_quota,
@@ -69,7 +71,7 @@ class Quotaorder extends Base
                 'create_at' => time()
             ]);
 
-            return $this->jsonBack(0,'创建成功');
+            return $this->jsonBack(0,'创建成功',$order->id);
         } catch (\Exception $e) {
             return $this->jsonBack(2,$e->getMessage());
         }
@@ -87,7 +89,7 @@ class Quotaorder extends Base
         if ($user->is_gd === 1) return $this->jsonBack(1,'你已经是个人代理了');
 
         $config = Config::find(1);
-        QuotaOrders::create([
+        $order = QuotaOrders::create([
             'user_id' => $uid,
             'quota_price' => $config->quota_price,
             'quota_num' => $config->gd_quota,
@@ -96,7 +98,7 @@ class Quotaorder extends Base
             'create_at' => time()
         ]);
 
-        return $this->jsonBack(0,'创建成功');
+        return $this->jsonBack(0,'创建成功',$order->id);
     }
 
     /**
@@ -121,7 +123,7 @@ class Quotaorder extends Base
         }
 
         $config = Config::find(1);
-        QuotaOrders::create([
+        $order = QuotaOrders::create([
             'user_id' => $uid,
             'quota_price' => $config->quota_price,
             'quota_num' => $params['num'],
@@ -130,7 +132,98 @@ class Quotaorder extends Base
             'create_at' => time()
         ]);
 
-        return $this->jsonBack(0,'创建成功');
+        return $this->jsonBack(0,'创建成功',$order->id);
+    }
+
+    /**
+     * 订单支付
+     * @return \Exception|\think\response\Json
+     * @throws \app\common\exception\BusinessBaseException
+     */
+    public function pay() {
+        (new BaseValidate())->tokenChick();
+        $uid = $this->getUid();
+        $params = $this->getParams(['order_id', 'type']);
+        $rule = [
+            'order_id' => 'require|integer|>:0',
+            'type' => 'require|integer|in:1,2'
+        ];
+        $msg = [
+            'order_id' => '错误的操作',
+            'type' => '错误的支付方式'
+        ];
+
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        if ($params['type'] == 1) {
+            //微信
+            return $this->wxPay($params['order_id'],$uid);
+        } else {
+            //支付宝
+            return $this->aliPay($params['order_id'],$uid);
+        }
+    }
+
+    /**
+     * 微信支付
+     * @param $order_id
+     * @param $uid
+     * @return \Exception|\think\response\Json
+     */
+    private function wxPay($order_id, $uid) {
+        Db::startTrans();
+        try {
+            $order = QuotaOrders::where('id',$order_id)->lock(true)->find();
+            if (!$order || $order->user_id !== $uid || $order->status !== 0) return $this->createError('订单不存在或已支付');
+            $service = new WxService();
+
+            if ($order->type === 0) {
+                $title = '名学汇-购买名额';
+            } elseif ($order->type === 1) {
+                $title = '名学汇-个代加盟';
+            } else {
+                $title = '名学汇-区代加盟';
+            }
+
+            $r = $service->unifiedOrder($title,$order->order_number,$order->total);
+            if (false === $r) throw $this->createError('统一下单失败');
+            Db::commit();
+            return $this->jsonBack(0,'',$service->appPay($r));
+        } catch (\Exception $e) {
+            Db::rollback();
+            return $this->jsonBack(11,$e->getMessage());
+        }
+    }
+
+
+    private function aliPay($order_id, $uid) {
+        return $this->jsonBack(21, '');
+    }
+
+    /**
+     * 订单支付状态查询
+     * @return \think\response\Json
+     */
+    public function isPay() {
+        $params = $this->getParams(['order_id']);
+        $rule = [
+            'order_id' => 'require|integer|>:0'
+        ];
+        $msg = [
+            'order_id' => '错误的操作'
+        ];
+
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        $order = QuotaOrders::get($params['order_id']);
+        if (!$order) return $this->jsonBack(2,'订单不存在');
+        return $this->jsonBack(0,'',$order->status === 1);
     }
 
 }

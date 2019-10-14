@@ -4,10 +4,12 @@ namespace app\api\controller;
 
 use app\common\controller\Base;
 use app\common\model\Orders;
+use app\common\service\WxService;
 use app\common\validate\BaseValidate;
 use app\common\model\Course as CourseModel;
 use app\common\model\TeachCenter as TeachCenterModel;
 use app\common\model\User as UserModel;
+use think\Db;
 
 class Order extends Base
 {
@@ -52,7 +54,7 @@ class Order extends Base
             if (!$center) throw $this->createError('教学中心不存在或已经删除');
             if (!in_array($params['grade'],$course->grades_arr)) throw $this->createError('不支持的年级');
 
-            Orders::create([
+            $order = Orders::create([
                 'user_id' => $uid,
                 'course_id' => $params['course_id'],
                 'center_id' => $params['center_id'],
@@ -70,8 +72,7 @@ class Order extends Base
                 $user->save();
             }
 
-
-            return $this->jsonBack(0,'创建成功');
+            return $this->jsonBack(0,'创建成功',$order->id);
         } catch (\Exception $e) {
             return $this->jsonBack(2,$e->getMessage());
         }
@@ -111,11 +112,52 @@ class Order extends Base
 
     }
 
+    /**
+     * 微信支付
+     * @param $order_id
+     * @param $uid
+     * @return \Exception|\think\response\Json
+     */
     private function wxPay($order_id, $uid) {
-        return $this->jsonBack(11, '');
+        Db::startTrans();
+        try {
+            $order = Orders::where('id',$order_id)->lock(true)->find();
+            if (!$order || $order->user_id !== $uid || $order->status !== 0) return $this->createError('订单不存在或已支付');
+            $service = new WxService();
+            $r = $service->unifiedOrder('名学汇-购买课程',$order->order_number,$order->price);
+            if (false === $r) throw $this->createError('统一下单失败');
+            Db::commit();
+            return $this->jsonBack(0,'',$service->appPay($r));
+        } catch (\Exception $e) {
+            Db::rollback();
+            return $this->jsonBack(11,$e->getMessage());
+        }
     }
 
     private function aliPay($order_id, $uid) {
         return $this->jsonBack(21, '');
+    }
+
+    /**
+     * 订单支付状态查询
+     * @return \think\response\Json
+     */
+    public function isPay() {
+        $params = $this->getParams(['order_id']);
+        $rule = [
+            'order_id' => 'require|integer|>:0'
+        ];
+        $msg = [
+            'order_id' => '错误的操作'
+        ];
+
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        $order = Orders::get($params['order_id']);
+        if (!$order) return $this->jsonBack(2,'订单不存在');
+        return $this->jsonBack(0,'',$order->status === 1);
     }
 }
