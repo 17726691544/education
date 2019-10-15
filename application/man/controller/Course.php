@@ -143,6 +143,7 @@ class Course extends Base
             }
 
             $items = json_decode($params['items'],true);
+
             if (!is_array($items) || empty($items)) {
                 return $this->jsonBack(2,'请添加课程小节');
             }
@@ -158,7 +159,7 @@ class Course extends Base
                     'title' => $params['title'],
                     'cover' => $params['cover'],
                     'price' => $params['price'],
-                    'tip' => $params['tip'],
+                    'tip' => htmlspecialchars($params['tip']),
                     'qydl' => $params['qydl'],
                     'qdtjr' => $params['qdtjr'],
                     'jxzx' => $params['jxzx'],
@@ -206,8 +207,7 @@ class Course extends Base
             if (!$course) {
                 $this->error('课程不存在或已经删除');
             }
-
-            $this->assign('items',$course->items);
+            $this->assign('items',json_encode($course->items,JSON_UNESCAPED_UNICODE));
             $this->assign('course',$course);
             return $this->fetch('edit');
         }

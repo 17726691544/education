@@ -196,12 +196,12 @@
                 jxzx: '{$course.jxzx}',
                 grdl: '{$course.grdl}',
                 gdtjr: '{$course.gdtjr}',
-                items: JSON.parse('{:json_encode($items)}'),
+                items: JSON.parse('{$items|raw}'),
                 itemName: '',
                 tempIndex: -1,
                 tempName: '',
                 tempSort: '',
-                grades:JSON.parse('{$course.grades|raw}'),
+                grades:JSON.parse('{$course.grades|raw|htmlspecialchars_decode}'),
                 gradeName:''
             },
             computed:{
