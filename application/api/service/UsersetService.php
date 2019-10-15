@@ -20,7 +20,7 @@ class UsersetService extends BaseService
         if (!$user) {
             throw new BusinessBaseException('用户不存在');
         }
-        //重置密码
-        return (new User())->editByUId($user->id, ['pass' => md5($user->tel . $newpass)]);
+         //重置密码
+        return (new User())->editByUId($user->id, ['pass' => md5($user->getData('reg_at') . $newpass)]);
     }
 }
