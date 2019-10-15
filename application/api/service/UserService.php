@@ -36,6 +36,9 @@ class UserService extends BaseService
         $now = time();
         //保存用户
         $parentId = $this->findParentId($invitedCode);
+      	if(empty($parentId)){
+            throw new BusinessBaseException('邀请码不存在');
+        }
         Db::startTrans();
         try {
             $user = new User();
