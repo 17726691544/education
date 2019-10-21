@@ -93,7 +93,7 @@ class Areaadmin extends Base
 
         (new AreaAdminV())->tokenChick()->goChick(['ids' => $ids, 'center_id' => $center_id, 'status' => $status]);
         try {
-            $newIds = json_decode($ids);
+            $newIds = json_decode(htmlspecialchars_decode($ids));
             if (count($newIds) < 1) {
                 throw  new BusinessBaseException('错误操作');
             }
