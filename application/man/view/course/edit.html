@@ -187,9 +187,9 @@
             el:'#app',
             data:{
                 id: '{$course.id}',
-                title: '{$course.title}',
+                title: '{$course.title|addslashes}',
                 price: '{$course.price}',
-                tip: '{$course.tip}',
+                tip: '{$course.tip|addslashes}',
                 cover: '{$course.cover}',
                 qydl: '{$course.qydl}',
                 qdtjr: '{$course.qdtjr}',
@@ -201,7 +201,7 @@
                 tempIndex: -1,
                 tempName: '',
                 tempSort: '',
-                grades:JSON.parse('{$course.grades|raw|htmlspecialchars_decode}'),
+                grades:JSON.parse('{$course.grades|raw|addslashes}'),
                 gradeName:''
             },
             computed:{

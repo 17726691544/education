@@ -58,12 +58,12 @@ class Course extends Base
                 return $this->jsonBack(1,$r);
             }
 
-            $items = json_decode($params['items'],true);
+            $items = json_decode(htmlspecialchars_decode($params['items']),true);
             if (!is_array($items) || empty($items)) {
                 return $this->jsonBack(2,'请添加课程小节');
             }
 
-            $grades = json_decode($params['grades'],true);
+            $grades = json_decode(htmlspecialchars_decode($params['grades']),true);
             if (!is_array($grades) || empty($grades)) {
                 return $this->jsonBack(3,'请添加可选年级');
             }
@@ -81,7 +81,7 @@ class Course extends Base
                     'jxzx' => $params['jxzx'],
                     'grdl' => $params['grdl'],
                     'gdtjr' => $params['gdtjr'],
-                    'grades' => $params['grades'],
+                    'grades' => htmlspecialchars_decode($params['grades']),
                     'create_at' => $now
                 ]);
 
@@ -142,13 +142,13 @@ class Course extends Base
                 return $this->jsonBack(1,$r);
             }
 
-            $items = json_decode($params['items'],true);
+            $items = json_decode(htmlspecialchars_decode($params['items']),true);
 
             if (!is_array($items) || empty($items)) {
                 return $this->jsonBack(2,'请添加课程小节');
             }
 
-            $grades = json_decode($params['grades'],true);
+            $grades = json_decode(htmlspecialchars_decode($params['grades']),true);
             if (!is_array($grades) || empty($grades)) {
                 return $this->jsonBack(3,'请添加可选年级');
             }
@@ -165,7 +165,7 @@ class Course extends Base
                     'jxzx' => $params['jxzx'],
                     'grdl' => $params['grdl'],
                     'gdtjr' => $params['gdtjr'],
-                    'grades' => $params['grades']
+                    'grades' => htmlspecialchars_decode($params['grades'])
                 ],['id'=>$params['id']]);
 
                 $now = time();

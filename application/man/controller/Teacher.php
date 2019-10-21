@@ -83,12 +83,12 @@ class Teacher extends Base
                 return $this->jsonBack(1,$r);
             }
 
-            $tips = json_decode($params['tips'],true);
+            $tips = json_decode(htmlspecialchars_decode($params['tips']),true);
             if (!is_array($tips) || empty($tips)) {
                 return $this->jsonBack(2,'请添加履历成就');
             }
 
-            $centers = json_decode($params['centers'],true);
+            $centers = json_decode(htmlspecialchars_decode($params['centers']),true);
             if (!is_array($centers) || empty($centers)) {
                 return $this->jsonBack(3,'请指定教学中心');
             }
@@ -109,10 +109,10 @@ class Teacher extends Base
                     'education' => $params['education'],
                     'position' => $params['position'],
                     'ability' => $params['ability'],
-                    'tips' => $params['tips'],
+                    'tips' => htmlspecialchars_decode($params['tips']),
                     'image' => $params['image'],
                     'cover' => $params['cover'],
-                    'videos' => $params['videos'],
+                    'videos' => htmlspecialchars_decode($params['videos']),
                     'create_at' => $now
                 ]);
 
@@ -168,12 +168,12 @@ class Teacher extends Base
                 return $this->jsonBack(1,$r);
             }
 
-            $tips = json_decode($params['tips'],true);
+            $tips = json_decode(htmlspecialchars_decode($params['tips']),true);
             if (!is_array($tips) || empty($tips)) {
                 return $this->jsonBack(2,'请添加履历成就');
             }
 
-            $centers = json_decode($params['centers'],true);
+            $centers = json_decode(htmlspecialchars_decode($params['centers']),true);
             if (!is_array($centers) || empty($centers)) {
                 return $this->jsonBack(3,'请指定教学中心');
             }
@@ -194,10 +194,10 @@ class Teacher extends Base
                     'education' => $params['education'],
                     'position' => $params['position'],
                     'ability' => $params['ability'],
-                    'tips' => $params['tips'],
+                    'tips' => htmlspecialchars_decode($params['tips']),
                     'image' => $params['image'],
                     'cover' => $params['cover'],
-                    'videos' => $params['videos']
+                    'videos' => htmlspecialchars_decode($params['videos'])
                 ]);
 
                 $middle = TeacherCenter::where('teacher_id',$params['id'])->select();
@@ -217,7 +217,6 @@ class Teacher extends Base
                         ];
                     }
                 }
-
                 if (!empty($data)) (new TeacherCenter())->saveAll($data);
                 $delIds = [];
                 foreach ($middleMap as $id => $flag) {
