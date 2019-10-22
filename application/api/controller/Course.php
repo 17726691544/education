@@ -4,14 +4,16 @@
 namespace app\api\controller;
 
 use app\common\controller\Base;
+use app\common\model\Agent;
 use app\common\validate\BaseValidate;
+use app\common\validate\CourseV;
 use app\common\validate\IdV;
 use app\common\validate\PageV;
 use app\common\model\Course as CourseModel;
 use app\common\model\User;
 
 /**
- * 立即报名controller
+ * 产品controller
  * Class Course
  * @package app\api\controller
  */
@@ -47,6 +49,29 @@ class Course extends Base
 
 
     /**
+     * 判断区域是否已经代理了
+     */
+    public function hasAgent()
+    {
+        $params = $this->getParams(['province_id', 'city_id', 'country_id']);
+        (new CourseV())->goChick($params);
+
+        $where = [
+            'province_id' => $params['province_id'],
+            'city_id' => $params['city_id'],
+            'country_id' => $params['country_id']
+        ];
+        $result = Agent::where($where)->select();
+
+        if (empty($result->toArray())) {
+            return $this->jsonBack(0, '成功', true);
+        }
+        return $this->jsonBack(0, '成功', false);
+
+    }
+
+
+    /**
      * 获取用户身份证信息
      * @return array|\PDOStatement|string|\think\Model|null
      */
@@ -57,6 +82,5 @@ class Course extends Base
         $idCardInfo = User::where('id', $uid)->field(['id', 'id_card', 'real_name'])->find();
         return $this->jsonBack(0, '成功', $idCardInfo);
     }
-
 
 }

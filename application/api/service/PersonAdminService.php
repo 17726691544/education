@@ -16,6 +16,7 @@ class PersonAdminService extends BaseService
         //判断是否有权限
         $this->hasPermission($uid);
         return (new User())->getDirectPersonList($uid, $page, $pageNum);
+
     }
 
     public function getVipUserList($uid, $page, $pageNum)
