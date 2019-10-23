@@ -4,14 +4,16 @@
 namespace app\api\controller;
 
 use app\common\controller\Base;
+use app\common\model\Agent;
 use app\common\validate\BaseValidate;
+use app\common\validate\CourseV;
 use app\common\validate\IdV;
 use app\common\validate\PageV;
 use app\common\model\Course as CourseModel;
 use app\common\model\User;
 
 /**
- * 立即报名controller
+ * 产品controller
  * Class Course
  * @package app\api\controller
  */
@@ -45,7 +47,6 @@ class Course extends Base
 
     }
 
-
     /**
      * 获取用户身份证信息
      * @return array|\PDOStatement|string|\think\Model|null
@@ -54,9 +55,8 @@ class Course extends Base
     {
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
-        $idCardInfo = User::where('id', $uid)->field(['id', 'id_card', 'real_name'])->find();
+        $idCardInfo = User::where('id', $uid)->field(['id', 'id_card', 'real_name','is_ej_qd','is_ej_gd'])->find();
         return $this->jsonBack(0, '成功', $idCardInfo);
     }
-
 
 }

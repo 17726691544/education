@@ -99,4 +99,6 @@ class User extends Base
         return $this->jsonBack(0, '成功', $buyRecordList);
     }
 
+
+
 }

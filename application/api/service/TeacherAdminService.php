@@ -138,8 +138,6 @@ class TeacherAdminService
 //            'type'=>8,
 //            'create_at'=>time()
 //        ]);
-
-
     }
 
     private function hasPermission($uid)
