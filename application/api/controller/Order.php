@@ -282,4 +282,28 @@ class Order extends Base
         if (!$order) return $this->jsonBack(2, '订单不存在');
         return $this->jsonBack(0, '', $order->status === 1);
     }
+
+    /**
+     * 订单支付状态查询
+     * @return \think\response\Json
+     */
+    public function isOhterPay()
+    {
+        $params = $this->getParams(['order_id']);
+        $rule = [
+            'order_id' => 'require|integer|>:0'
+        ];
+        $msg = [
+            'order_id' => '错误的操作'
+        ];
+
+        $r = $this->validate($params, $rule, $msg);
+        if (true !== $r) {
+            return $this->jsonBack(1, $r);
+        }
+
+        $order = OrdersOther::get($params['order_id']);
+        if (!$order) return $this->jsonBack(2, '订单不存在');
+        return $this->jsonBack(0, '', $order->status === 1);
+    }
 }
