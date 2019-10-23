@@ -116,9 +116,7 @@ class Order extends Base
             //数量大于等于区代限制数量
             if ($num >= ($course->qd_num)) {
                 //判断代理区域信息
-                if (!(isset($params['dl_province_id'])
-                    && isset($params['dl_city_id'])
-                    && isset($params['dl_country_id']))) {
+                if (!($params['dl_province_id'] && $params['dl_city_id'] && $params['dl_country_id'])) {
                     throw new BusinessBaseException('请选择代理区域信息');
                 }
                 //判断该代理区域是否已经被代理
