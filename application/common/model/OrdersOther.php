@@ -62,12 +62,25 @@ class OrdersOther extends Model
         return self::with(['course' => function ($query) {
             $query->field(['id', 'title', 'cover']);
         }])
-            ->field(['id', 'course_id','total_price','status'])
-            ->append(['status_desc'])
             ->where('user_id', $uid)//
-            ->visible(['id'])//
+            ->field(['id', 'course_id', 'total_price', 'status'])
+            ->visible(['id', 'total_price', 'status'])//
+            ->append(['status_desc'])
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);
+    }
+
+    public function getBuyOtherRecordDetail($uid, $orderId)
+    {
+        return self::with(['course' => function ($query) {
+            $query->field(['id', 'title', 'cover']);
+        }])
+            ->where('id', $orderId)//
+            ->where('user_id', $uid)//
+            ->field(['id', 'course_id', 'name', 'tel', 'price', 'total_price'
+                , 'num', 'pay_type', 'status', 'address', 'pay_at', 'create_at'])
+            ->append(['status_desc'])
+            ->find();
     }
 }

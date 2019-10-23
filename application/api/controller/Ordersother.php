@@ -28,6 +28,20 @@ class Ordersother extends Base
     }
 
     /**
+     * 订单详情
+     */
+    public function getBuyOtherRecordDetail()
+    {
+        $params = $this->getParams(['id']);
+        (new IdV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+
+        $buyOtherRecordDetail = (new OrdersOtherModel())->getBuyOtherRecordDetail($uid, $params['id']);
+
+        return $this->jsonBack(0,'成功',$buyOtherRecordDetail);
+    }
+
+    /**
      * 确认收货
      */
     public function confirmSign()
