@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加商品</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?v=9">
+    <link rel="stylesheet" href="__STATIC__/lib/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+    <style>
+        .preview-box {
+            width: 235px;
+            height: 120px;
+            position: relative;
+            background: #888888;
+            display: inline-block;
+        }
+        .preview-box img {
+            max-width: 235px;
+            max-height: 120px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+        }
+        .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+        }
+        .close:hover{
+            color: #ff253e;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" id="app" v-cloak>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">商品名称</label>
+                            <div class="col-sm-10">
+                                <input v-model="title" placeholder="商品名称" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">商品说明</label>
+                            <div class="col-sm-10">
+                                <textarea v-model="tip" placeholder="商品说明" style="resize: none;" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">商品零售价格</label>
+                            <div class="col-sm-10">
+                                <input v-model="price" placeholder="商品零售价格" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代购买数量</label>
+                            <div class="col-sm-10">
+                                <input v-model="qd_num" placeholder="区代购买数量" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">区代价格</label>
+                            <div class="col-sm-10">
+                                <input v-model="qd_price" placeholder="区代价格" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">个代购买数量</label>
+                            <div class="col-sm-10">
+                                <input v-model="gd_num" placeholder="个代购买数量" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">个代价格</label>
+                            <div class="col-sm-10">
+                                <input v-model="gd_price" placeholder="个代价格" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">商品图片</label>
+                            <div class="col-sm-10">
+                                <button v-show="cover===null" id="up-button" type="button" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;上传图片
+                                </button>
+                                <span class="preview-box" v-show="cover!==null">
+                                    <img :src="cover">
+                                    <span @click="clear" class="glyphicon glyphicon-remove close" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" @click.prevent="submit">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script>
+        let uploader,layer;
+        layui.use('layer', function(){
+            layer = layui.layer;
+        });
+        
+        const app = new Vue({
+            el:'#app',
+            data:{
+                title:'',
+                price:'',
+                tip:'',
+                cover:null,
+                qd_price:'',
+                qd_num:'',
+                gd_price:'',
+                gd_num:''
+            },
+            methods:{
+                bindUploader:function () {
+                    uploader.render({
+                        elem: '#up-button', //绑定元素
+                        url: '{:url("Index/uploadImage")}', //上传接口
+                        field: 'image',
+                        accept: 'images',
+                        before:function() {
+                            layer.load(2, {
+                                shade: [0.6,'#000']
+                            });
+                        },
+                        done: function(ret){
+                            layer.closeAll('loading');
+                            //上传完毕回调
+                            if (ret.code === 0) {
+                                app.cover = ret.data;
+                            } else {
+                                layer.msg(ret.msg);
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                            layer.closeAll('loading');
+                            layer.msg('上传错误');
+                        }
+                    });
+                },
+                clear:function () {
+                    this.cover = null;
+                },
+                submit:function () {
+                    let postData = {
+                        title: this.title,
+                        cover: this.cover,
+                        price: this.price,
+                        tip: this.tip,
+                        qd_price: this.qd_price,
+                        qd_num: this.qd_num,
+                        gd_price: this.gd_price,
+                        gd_num: this.gd_num
+                    };
+
+                    $.post('{:url("add")}', postData, function (ret) {
+                        layer.msg(ret.msg);
+                        if (ret.code === 0) {
+                            setTimeout(function () {
+                                app.cover = null;
+                                app.items = [];
+                                app.title = app.price = app.tip = app.qydl = app.qdtjr = app.jxzx = app.grdl = app.gdtjr = '';
+                            }, 800);
+                        }
+                    }, 'json');
+                }
+            },
+            mounted:function () {
+                layui.use('upload', function() {
+                    uploader = layui.upload;
+                    app.bindUploader();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

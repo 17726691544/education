@@ -3,17 +3,15 @@ namespace app\index\controller;
 //require_once __DIR__ . '/../../../extend/alipay/AopSdk.php';
 //require_once __DIR__ . '/../../../extend/alipay/aop/AopClient.php';
 //require_once __DIR__ . '/../../../extend/alipay/aop/request/AlipayTradeAppPayRequest.php';
-use AopClient;
-use AlipayTradeAppPayRequest;
-use app\common\service\WxService;
-use think\Controller;
-use think\Request;
+//use AopClient;
+//use AlipayTradeAppPayRequest;
+//use app\common\service\WxService;
 
-class Index extends Controller
+class Index
 {
     public function index() {
         return 'ok';
-       // $serive = new WxService();
+        //$serive = new WxService();
         //$serive->unifiedOrder('测试', 't' . time(),1);
 
 

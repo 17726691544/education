@@ -168,6 +168,34 @@
                     </li>
                     {/if}
 
+                    {if ($is_su || in_array('goods',$plate))}
+                    <li>
+                        <a href="javascript:;">
+                            <i class="iconfont left-nav-li" lay-tips="商品管理">&#xe6cb;</i>
+                            <cite>商品管理</cite>
+                            <i class="iconfont nav_right">&#xe697;</i></a>
+                        <ul class="sub-menu">
+                            {if ($is_su || in_array('goods/index',$access))}
+                            <li>
+                                <a onclick="xadmin.add_tab('商品列表','{:url("Goods/index")}')">
+                                <i class="iconfont">&#xe6a7;</i>
+                                <cite>商品列表</cite>
+                                </a>
+                            </li>
+                            {/if}
+
+                            {if ($is_su || in_array('goods/add',$access))}
+                            <li>
+                                <a onclick="xadmin.add_tab('添加商品','{:url("Goods/add")}')">
+                                <i class="iconfont">&#xe6a7;</i>
+                                <cite>添加商品</cite>
+                                </a>
+                            </li>
+                            {/if}
+                        </ul>
+                    </li>
+                    {/if}
+
                     {if ($is_su || in_array('team',$plate))}
                     <li>
                         <a href="javascript:;">
