@@ -186,7 +186,7 @@ class Order extends Base
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
         $params = $this->getParams(['order_id', 'type']);
-        $order_type = $this->request->param('order_type') ?? 0;
+        $order_type = $this->request->param('order_type') ?? '0';
         $rule = [
             'order_id' => 'require|integer|>:0',
             'type' => 'require|integer|in:1,2'
@@ -200,7 +200,7 @@ class Order extends Base
         if (true !== $r) {
             return $this->jsonBack(1, $r);
         }
-        if ($order_type !== 1 || $order_type !== 0) {
+        if (!($order_type === '1' || $order_type === '0')) {
             return $this->jsonBack(1, '错误操作');
         }
 
@@ -225,7 +225,7 @@ class Order extends Base
         Db::startTrans();
         try {
             $service = new WxService();
-            if ($order_type === 1) {
+            if ($order_type === '1') {
                 $order = OrdersOther::where('id', $order_id)->lock(true)->find();
                 if (!$order || $order->user_id !== $uid || $order->status !== 0) return $this->createError('订单不存在或已支付');
 
