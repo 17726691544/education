@@ -354,6 +354,8 @@ class Notify extends Base
                             'lock_balance' => $awardBalance,
                             'create_at' => $now
                         ]);
+                        //增加当前用户锁定余额
+                        UserModel::where('id', $uParent->id)->setInc('lock_balance', $awardBalance);
                     } else {
                         //奖励流失,插入流失记录
                         OrdersOtherLoss::create([
@@ -399,6 +401,8 @@ class Notify extends Base
                             'lock_balance' => $gdAwardBalance,
                             'create_at' => $now
                         ]);
+                        //增加当前用户锁定余额
+                        UserModel::where('id',$gdUParent->id)->setInc('lock_balance', $gdAwardBalance);
                     }else{
                         $lossBalance += $gdAwardBalance;
                     }
@@ -411,6 +415,8 @@ class Notify extends Base
                             'lock_balance' => $qdAwardBalance,
                             'create_at' => $now
                         ]);
+                        //增加当前用户锁定余额
+                        UserModel::where('id',$qdUParent->id)->setInc('lock_balance', $qdAwardBalance);
                     }else{
                         $lossBalance += $qdAwardBalance;
                     }
