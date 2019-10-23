@@ -8,6 +8,7 @@ use app\api\service\UserService;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
 use app\common\model\Orders;
+use app\common\model\OrdersOther;
 use app\common\validate\BaseValidate;
 use app\common\validate\PageV;
 use app\common\validate\UserV;
@@ -96,6 +97,18 @@ class User extends Base
         $uid = $this->getUid();
 
         $buyRecordList = (new Orders())->getBuyRecordList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
+        return $this->jsonBack(0, '成功', $buyRecordList);
+    }
+
+    /**
+     * 分页获取购买耳机记录
+     */
+    public function getBuyOtherRecordList()
+    {
+        $params = $this->getParams(['page', 'pageNum']);
+        (new PageV())->tokenChick()->goChick($params);
+        $uid = $this->getUid();
+        $buyRecordList = (new OrdersOther())->getBuyOtherRecordList($uid, $params['page'] ?? 1, $params['pageNum'] ?? 5);
         return $this->jsonBack(0, '成功', $buyRecordList);
     }
 

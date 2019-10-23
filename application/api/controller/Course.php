@@ -47,30 +47,6 @@ class Course extends Base
 
     }
 
-
-    /**
-     * 判断区域是否已经代理了
-     */
-    public function hasAgent()
-    {
-        $params = $this->getParams(['province_id', 'city_id', 'country_id']);
-        (new CourseV())->goChick($params);
-
-        $where = [
-            'province_id' => $params['province_id'],
-            'city_id' => $params['city_id'],
-            'country_id' => $params['country_id']
-        ];
-        $result = Agent::where($where)->select();
-
-        if (empty($result->toArray())) {
-            return $this->jsonBack(0, '成功', true);
-        }
-        return $this->jsonBack(0, '成功', false);
-
-    }
-
-
     /**
      * 获取用户身份证信息
      * @return array|\PDOStatement|string|\think\Model|null
@@ -79,7 +55,7 @@ class Course extends Base
     {
         (new BaseValidate())->tokenChick();
         $uid = $this->getUid();
-        $idCardInfo = User::where('id', $uid)->field(['id', 'id_card', 'real_name'])->find();
+        $idCardInfo = User::where('id', $uid)->field(['id', 'id_card', 'real_name','is_ej_qd','is_ej_gd'])->find();
         return $this->jsonBack(0, '成功', $idCardInfo);
     }
 
