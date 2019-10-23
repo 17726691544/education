@@ -6,7 +6,6 @@ namespace app\api\service;
 
 use app\common\exception\BusinessBaseException;
 use app\common\model\OrdersOther;
-use app\common\model\UserBalance;
 use app\common\model\UserBalanceOther;
 use think\Db;
 
