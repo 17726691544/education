@@ -80,7 +80,7 @@ class OrdersOther extends Model
             ->where('user_id', $uid)//
             ->field(['id', 'course_id', 'name', 'tel', 'price', 'total_price'
                 , 'num', 'pay_type', 'status', 'address', 'pay_at', 'create_at'])
-            ->append(['status_desc'])
+            ->append(['status_desc','order_number'])
             ->find();
     }
 }
