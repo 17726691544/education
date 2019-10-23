@@ -11,6 +11,10 @@ class OrdersOther extends Model
     const START_TRADE_NUM = 1370178326;
     protected $table = 'orders_other';
 
+    protected $type = [
+        'create_at' => 'timestamp'
+    ];
+
     public function getStatusDescAttr($value, $data)
     {
         $statusDescArr = [
@@ -55,13 +59,15 @@ class OrdersOther extends Model
 
     public function getBuyOtherRecordList($uid, $page, $pageNum)
     {
-        return self::with(['course' => function ($Query) {
-            $Query->field(['id', 'title', 'cover']);
-        }])->where('user_id', $uid)
-            ->field(['id', 'course_id', 'name', 'tel', 'price', 'total_price',
-                'num', 'pay_type', 'status', 'address', 'pay_at', 'create_at'])
+        return self::with(['course' => function ($query) {
+            $query->field(['id', 'title', 'cover']);
+        }])
+            ->field(['id', 'course_id','total_price','status'])
             ->append(['status_desc'])
-            ->order('id', 'desc')
-            ->paginate($pageNum, false, ['page' => $page]);
+            ->where('user_id', $uid)//
+            ->visible(['id'])//
+            ->paginate($pageNum, false, [
+                'page' => $page
+            ]);
     }
 }

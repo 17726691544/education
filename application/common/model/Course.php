@@ -14,7 +14,7 @@ class Course extends Model
     {
         return self::where('status', 0)//
         ->order('create_at', 'desc')//
-        ->field(['id', 'title', 'cover'])//
+        ->field(['id', 'title', 'cover','type'])//
         ->paginate($pageNum, false, ['page' => $page]);
 
     }

@@ -17,7 +17,7 @@ class Ordersother extends Base
     /**
      * 分页获取购买耳机记录
      */
-    public function getBuyOtherRecordList()
+        public function getBuyOtherRecordList()
     {
         $params = $this->getParams(['page', 'pageNum']);
         (new PageV())->tokenChick()->goChick($params);
