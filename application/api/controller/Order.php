@@ -5,8 +5,11 @@ namespace app\api\controller;
 use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
 use app\common\model\AgentOther;
+use app\common\model\City;
+use app\common\model\Country;
 use app\common\model\Orders;
 use app\common\model\OrdersOther;
+use app\common\model\Province;
 use app\common\service\WxService;
 use app\common\validate\BaseValidate;
 use app\common\model\Course as CourseModel;
@@ -102,6 +105,23 @@ class Order extends Base
             throw new BusinessBaseException('商品不存在或已删除了');
         }
 
+
+        //获取区域名字信息
+        $province = Province::get($params['province_id']);
+        if (!$province) {
+            throw new BusinessBaseException('错误的区域信息');
+        }
+        $city = City::get($params['city_id']);
+        if (!$city) {
+            throw new BusinessBaseException('错误的区域信息');
+        }
+        $country = Country::get($params['country_id']);
+        if (!$country) {
+            throw new BusinessBaseException('错误的区域信息');
+        }
+        $pcc = $params['province_id'] . ',' . $params['city_id'] . ',' . $params['country_id'];
+
+
         $num = $params['num'];
         $dlPcc = '';
         $price = $course->price;
@@ -140,8 +160,6 @@ class Order extends Base
         }
 
         //创建订单
-        $pcc = $params['province_id'] . ',' . $params['city_id'] . ',' . $params['country_id'];
-
         $order = OrdersOther::create([
             'user_id' => $uid,
             'course_id' => $params['course_id'],
@@ -155,6 +173,9 @@ class Order extends Base
             'address' => $params['address'],
             'create_at' => time(),
             'apply_status' => $applyStatus,
+            'province_name' => $province->name,
+            'city_name' => $city->name,
+            'country_name' => $country->name
         ]);
         return $this->jsonBack(0, '创建成功', $order->id);
 

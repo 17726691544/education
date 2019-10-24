@@ -67,8 +67,8 @@ class Notify extends Base
     public function testDealOrder()
     {
         $orderNo = $this->request->param('orderId');
-        $orderNo = 'E'.($orderNo+1370178326);
-        $this->dealOrder($orderNo,1);
+        $orderNo = 'E' . ($orderNo + 1370178326);
+        $this->dealOrder($orderNo, 1);
 
     }
 
@@ -346,14 +346,15 @@ class Notify extends Base
                 $course = CourseModel::get($order->course_id);
                 if ($user->is_ej_gd === 1) {
                     //寻找父级第一个区代
-                    $uParent =  UserModel::get($user->parent_id);
+                    $uParent = UserModel::get($user->parent_id);
                     while (true) {
+                        if (!$uParent) break;
                         if ($uParent->is_ej_qd === 1) break;
                         if ($uParent->parent_id === 0) break;
                         $uParent = UserModel::get($uParent->parent_id);
                     }
                     //奖励
-                    $awardBalance = ($order->price - ($course->qd_price))*($order->num);
+                    $awardBalance = ($order->price - ($course->qd_price)) * ($order->num);
                     if ($uParent) {
                         UserBalanceOther::create([
                             'user_id' => $uParent->id,
@@ -378,6 +379,7 @@ class Notify extends Base
                     $gdUParent = null;
                     $qdUParent = null;
                     while (true) {
+                        if (!$uParent) break;
                         if ($uParent->is_ej_gd === 1) {
                             if (!$gdUParent) {
                                 $gdUParent = $uParent;
@@ -400,8 +402,8 @@ class Notify extends Base
                     }
                     $lossBalance = 0;
                     //奖励个代
-                    $gdAwardBalance = ($order->price - ($course->gd_price))*($order->num);
-                    if(!$gdUParent){
+                    $gdAwardBalance = ($order->price - ($course->gd_price)) * ($order->num);
+                    if (!$gdUParent) {
                         UserBalanceOther::create([
                             'user_id' => $gdUParent->id,
                             'order_other_id' => $order->id,
@@ -409,13 +411,13 @@ class Notify extends Base
                             'create_at' => $now
                         ]);
                         //增加当前用户锁定余额
-                        UserModel::where('id',$gdUParent->id)->setInc('lock_balance', $gdAwardBalance);
-                    }else{
+                        UserModel::where('id', $gdUParent->id)->setInc('lock_balance', $gdAwardBalance);
+                    } else {
                         $lossBalance += $gdAwardBalance;
                     }
                     //奖励区代
-                    $qdAwardBalance = ($order->price - ($course->gd_price))*($order->num)-$gdAwardBalance;
-                    if(!$qdUParent){
+                    $qdAwardBalance = ($order->price - ($course->gd_price)) * ($order->num) - $gdAwardBalance;
+                    if (!$qdUParent) {
                         UserBalanceOther::create([
                             'user_id' => $qdUParent->id,
                             'order_other_id' => $order->id,
@@ -423,8 +425,8 @@ class Notify extends Base
                             'create_at' => $now
                         ]);
                         //增加当前用户锁定余额
-                        UserModel::where('id',$qdUParent->id)->setInc('lock_balance', $qdAwardBalance);
-                    }else{
+                        UserModel::where('id', $qdUParent->id)->setInc('lock_balance', $qdAwardBalance);
+                    } else {
                         $lossBalance += $qdAwardBalance;
                     }
                     //写入流失记录
@@ -448,10 +450,11 @@ class Notify extends Base
 
     }
 
-    public function testPay() {
-        $list = OrdersOther::where('status',0)->select();
+    public function testPay()
+    {
+        $list = OrdersOther::where('status', 0)->select();
         foreach ($list as $item) {
-            $r = $this->dealOrder($item->order_number,1);
+            $r = $this->dealOrder($item->order_number, 1);
             dump($r);
         }
         return 'ok';

@@ -64,7 +64,7 @@ class OrdersOther extends Model
             $query->field(['id', 'title', 'cover']);
         }])
             ->where('user_id', $uid)//
-            ->where('status', '<>',0)
+            ->where('status', '<>', 0)
             ->field(['id', 'course_id', 'total_price', 'status', 'pay_at'])
             //  ->visible(['id', 'total_price', 'status','pay_at'])//
             ->hidden(['course_id'])
@@ -78,12 +78,13 @@ class OrdersOther extends Model
     public function getBuyOtherRecordDetail($uid, $orderId)
     {
         return self::with(['course' => function ($query) {
-            $query->field(['id', 'title', 'cover']);
+            $query->field(['id', 'title', 'cover', 'tip']);
         }])
             ->where('id', $orderId)//
             ->where('user_id', $uid)//
             ->field(['id', 'course_id', 'name', 'tel', 'price', 'total_price'
-                , 'num', 'pay_type', 'status', 'address', 'pay_at', 'create_at'])
+                , 'num', 'pay_type', 'status', 'address', 'pay_at', 'create_at'
+                , 'express_name', 'express_code', 'province_name', 'city_name', 'country_name'])
             ->append(['status_desc', 'order_number'])
             ->find();
     }

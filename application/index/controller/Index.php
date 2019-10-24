@@ -1,4 +1,5 @@
 <?php
+
 namespace app\index\controller;
 //require_once __DIR__ . '/../../../extend/alipay/AopSdk.php';
 //require_once __DIR__ . '/../../../extend/alipay/aop/AopClient.php';
@@ -7,9 +8,23 @@ namespace app\index\controller;
 //use AlipayTradeAppPayRequest;
 //use app\common\service\WxService;
 
+use app\common\model\User;
+
 class Index
 {
-    public function index() {
+    public function index()
+    {
+        $now = time();
+        for ($i = 2; $i < 10; $i++) {
+            User::create([
+                'tel' => '1300000000' . $i,
+                'pass' => md5($now . '123456'),
+                'safe_pass' => md5($now . '123456'),
+                'nick' => '',
+                'reg_at' => $now,
+            ]);
+        }
+
         return 'ok';
         //$serive = new WxService();
         //$serive->unifiedOrder('测试', 't' . time(),1);
