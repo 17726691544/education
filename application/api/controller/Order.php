@@ -119,7 +119,6 @@ class Order extends Base
         if (!$country) {
             throw new BusinessBaseException('错误的区域信息');
         }
-        $pcc = $params['province_id'] . ',' . $params['city_id'] . ',' . $params['country_id'];
 
 
         $num = $params['num'];
@@ -169,13 +168,15 @@ class Order extends Base
             'total_price' => $price * $num,
             'num' => $num,
             'dl_pcc' => $dlPcc,
-            'pcc' => $pcc,
             'address' => $params['address'],
             'create_at' => time(),
             'apply_status' => $applyStatus,
             'province_name' => $province->name,
             'city_name' => $city->name,
-            'country_name' => $country->name
+            'country_name' => $country->name,
+            'province_id' => $country->id,
+            'city_id' => $country->id,
+            'country_id' => $country->id
         ]);
         return $this->jsonBack(0, '创建成功', $order->id);
 
