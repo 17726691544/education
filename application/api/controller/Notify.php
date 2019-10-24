@@ -67,7 +67,7 @@ class Notify extends Base
     public function testDealOrder()
     {
         $orderNo = $this->request->param('orderId');
-        $orderNo = 'E' . ($orderNo + 1370178326);
+        $orderNo = 'E' . ($orderNo + 1470178326);
         $this->dealOrder($orderNo, 1);
         return 'ok';
 
@@ -489,7 +489,8 @@ class Notify extends Base
                 return true;
             } catch (\Exception $e) {
                 Db::rollback();
-                return $e->getMessage();
+//                return $e->getMessage();
+                throw $e;
             }
         } else {
             return false;
