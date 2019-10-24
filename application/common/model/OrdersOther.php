@@ -8,7 +8,7 @@ use think\Model;
 
 class OrdersOther extends Model
 {
-    const START_TRADE_NUM = 1470178326;
+    const START_TRADE_NUM = 1270178326;
     protected $table = 'orders_other';
 
     protected $type = [
