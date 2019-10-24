@@ -37,3 +37,6 @@ Aa236623
 
 174439330@qq.com
 123456
+
+
+cd /www/server/panel && python tools.py panel Aa236623 admin111

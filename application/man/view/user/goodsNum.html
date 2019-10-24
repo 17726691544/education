@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品销量</title>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/admin.css?id=8">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</head>
+<body>
+    <div class="row">
+
+        <div class="col-md-12 margin-bottom-10 text-right">
+            <span class="btn btn-success" onclick="reloadPage()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body" id="app" v-cloak="">
+                    <h3 style="margin-bottom: 2rem">
+                        <span class="label label-success">本月总销量 {$info.totalNum ? $info.totalNum : 0}</span>
+                        <span class="label label-warning">本月销售总额 ￥{$info.totalSell ? $info.totalSell : 0}</span>
+                    </h3>
+                    <form class="form-inline" method="post">
+                        <div class="form-group">
+                            <label class="sr-only">区代手机号</label>
+                            <input v-model="key" type="text" class="form-control" placeholder="区代手机号">
+                        </div>
+                        <button @click="search" type="button" class="btn btn-primary">搜索</button>
+                    </form>
+                    <table v-if="info" class="table table-bordered table-hover" style="margin-top: 1rem">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>账户</th>
+                            <th>代理区域</th>
+                            <th>本月销量</th>
+                            <th>本月销售额</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{info.id}}</td>
+                            <td>{{info.tel}}</td>
+                            <td>{{info.area}}</td>
+                            <td>{{info.totalNum}}</td>
+                            <td>{{info.totalSell}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+    <script type="text/javascript">
+        const app = new Vue({
+            el:'#app',
+            data:{
+                info:null,
+                key:''
+            },
+            methods:{
+                search:function () {
+                    $.post("{:url('goodsNum')}",{key:this.key},function (ret) {
+                        if (ret.code === 0) {
+                            app.info = ret.data;
+                        } else {
+                            layer.msg(ret.msg);
+                        }
+                    },'json');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

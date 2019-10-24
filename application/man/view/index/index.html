@@ -72,6 +72,24 @@
                                     </li>
                                 {/if}
 
+                                {if ($is_su || in_array('user/goodsorder',$access))}
+                                <li>
+                                    <a onclick="xadmin.add_tab('商品订单','{:url("User/goodsOrder")}')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>商品订单</cite>
+                                    </a>
+                                </li>
+                                {/if}
+
+                                {if ($is_su || in_array('user/goodsnum',$access))}
+                                <li>
+                                    <a onclick="xadmin.add_tab('商品销量','{:url("User/goodsNum")}')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>商品销量</cite>
+                                    </a>
+                                </li>
+                                {/if}
+
                                 {if ($is_su || in_array('user/withdraw',$access))}
                                 <li>
                                     <a onclick="xadmin.add_tab('提现申请','{:url("User/withdraw")}')">
