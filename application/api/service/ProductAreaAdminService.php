@@ -31,12 +31,18 @@ class ProductAreaAdminService
             'country_id' => $agentOhter->country_id,
             'status' => 3
         ];
-       return OrdersOther::where($where)
+        $ordersOther = OrdersOther::where($where)
             ->field(['province_id', 'city_id', 'country_id',
-                'sum(num) as totalNum', 'sum(total_price) as totalPrice','province_name','city_name','country_name'])
-            ->group(['province_id', 'city_id', 'country_id','province_name','city_name','country_name'])
+                'sum(num) as totalNum', 'sum(total_price) as totalPrice'])
+            ->group(['province_id', 'city_id', 'country_id'])
             ->find();
+        if($agentOhter && $ordersOther){
+            $agentOhter = $agentOhter->toArray();
+            $agentOhter['totalNum'] = $ordersOther->totalNum;
+            $agentOhter['totalPrice'] = $ordersOther->totalPrice;
+        }
 
+        return $agentOhter;
     }
 
     /**
