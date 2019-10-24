@@ -26,7 +26,7 @@ class Course extends Model
 
     public function getCourseDetail($id)
     {
-        $file = ['id', 'title', 'cover', 'price','gd_price','qd_price', 'tip', 'grades','type'];
+        $file = ['id', 'title', 'cover', 'price','gd_price','qd_price', 'tip', 'grades','type','gd_num','qd_num'];
         return self::where('id', $id)
             ->where('status', 0)//
             ->field($file)
