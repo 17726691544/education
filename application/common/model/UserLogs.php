@@ -17,7 +17,9 @@ class UserLogs extends Model
     public function getTypeAttr($value)
     {
         if (!empty($value)) {
-            $types = [1 => '提现', 2 => '推荐区代', 3 => '区代推荐人', 4 => '区代', 5 => '教学中心', 6 => '个代', 7 => '个代推荐人',8=>'解冻资金'];
+            $types = [1 => '提现', 2 => '推荐区代', 3 => '区代推荐人',
+                4 => '区代', 5 => '教学中心', 6 => '个代',
+                7 => '个代推荐人', 8 => '解冻资金', 9 => '商品区代奖励', 10 => '商品个代奖励'];
             return $types[$value];
         }
 
@@ -27,7 +29,7 @@ class UserLogs extends Model
     {
         return self::where('user_id', $uid)
             ->field(['num', 'tip', 'type', 'create_at'])
-            ->order('id','desc')
+            ->order('id', 'desc')
             ->paginate($pageNum, false, [
                 'page' => $page
             ]);
