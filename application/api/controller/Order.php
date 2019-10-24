@@ -174,8 +174,8 @@ class Order extends Base
             'province_name' => $province->name,
             'city_name' => $city->name,
             'country_name' => $country->name,
-            'province_id' => $country->id,
-            'city_id' => $country->id,
+            'province_id' => $province->id,
+            'city_id' => $city->id,
             'country_id' => $country->id
         ]);
         return $this->jsonBack(0, '创建成功', $order->id);
