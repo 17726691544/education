@@ -347,7 +347,7 @@ class Notify extends Base
                 $course = CourseModel::get($order->course_id);
                 $configModel = ConfigModel::get(1);
 
-                if ($user->is_ej_gd === 1 && $user->is_ej_qd !== 1) {
+                if ($user->is_ej_gd === 1 && $user->is_ej_qd === 0) {
                     //寻找父级第一个区代
                     $uParent = UserModel::get($user->parent_id);
                     $qdUParent = null;
