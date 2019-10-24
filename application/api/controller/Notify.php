@@ -345,6 +345,8 @@ class Notify extends Base
                 //奖励关系处理
                 $user = UserModel::get($order->user_id);
                 $course = CourseModel::get($order->course_id);
+                $configModel = ConfigModel::get(1);
+
                 if ($user->is_ej_gd === 1) {
                     //寻找父级第一个区代
                     $uParent = UserModel::get($user->parent_id);
@@ -369,6 +371,17 @@ class Notify extends Base
                         ]);
                         //增加当前用户锁定余额
                         UserModel::where('id', $qdUParent->id)->setInc('lock_balance', $awardBalance);
+
+                        //增加用户流水记录
+                        //税费
+                        $tax = round($configModel->goods_rate / 100 * $awardBalance, 2);
+                        UserLogs::create([
+                            'user_id' => $qdUParent->id,
+                            'num' => $awardBalance - $tax,
+                            'tip' => "用户应得" . $awardBalance . '。税费' . $tax,
+                            'type' => 9,
+                            'create_at' => $now
+                        ]);
                     } else {
                         //奖励流失,插入流失记录
                         OrdersOtherLoss::create([
@@ -385,44 +398,38 @@ class Notify extends Base
                     $qdUParent = null;
                     while (true) {
                         if (!$uParent) break;
-                        if ($uParent->is_ej_gd === 1) {
-                            if (!$gdUParent) {
-                                $gdUParent = $uParent;
-                            }
-                        }
                         if ($uParent->is_ej_qd === 1) {
-                            if (!$qdUParent) {
-                                $qdUParent = $uParent;
-                            }
+                            $qdUParent = $uParent;
+                            break;
                         }
-                        if ($gdUParent && $qdUParent) {
-                            if ($gdUParent->id === $qdUParent->id) {
-                                $qdUParent = null;
-                            } else {
-                                break;
-                            }
+                        if ($uParent->is_ej_gd === 1) {
+                            $gdUParent = $uParent;
                         }
                         if ($uParent->parent_id === 0) break;
                         $uParent = UserModel::get($uParent->parent_id);
                     }
+
+                    $qdAwardBalance = 0;
+                    $gdAwardBalance = 0;
                     $lossBalance = 0;
-                    //奖励个代
-                    $gdAwardBalance = ($course->price - ($course->gd_price)) * ($order->num);
-                    if ($gdUParent) {
-                        UserBalanceOther::create([
-                            'user_id' => $gdUParent->id,
-                            'order_other_id' => $order->id,
-                            'lock_balance' => $gdAwardBalance,
-                            'create_at' => $now
-                        ]);
-                        //增加当前用户锁定余额
-                        UserModel::where('id', $gdUParent->id)->setInc('lock_balance', $gdAwardBalance);
+                    if ($qdUParent && $gdUParent === null) {
+                        $qdAwardBalance = ($course->price - ($course->qd_price)) * ($order->num);
+                    } elseif ($qdUParent && $gdUParent) {
+                        //个代
+                        $gdAwardBalance = ($course->price - ($course->gd_price)) * ($order->num);
+                        //区代
+                        $qdAwardBalance = ($course->gd_price - ($course->qd_price)) * ($order->num);
+                    } elseif ($gdUParent && $qdUParent === null) {
+                        $awardBalance = ($course->price - ($course->qd_price)) * ($order->num);
+                        $gdAwardBalance = ($course->price - ($course->gd_price)) * ($order->num);
+                        $lossBalance = $awardBalance - $gdAwardBalance;
                     } else {
-                        $lossBalance += $gdAwardBalance;
+                        //没找到个代 区代 全部流失
+                        $lossBalance = ($course->price - ($course->qd_price)) * ($order->num);
                     }
-                    //奖励区代
-                    $qdAwardBalance = ($course->gd_price - ($course->qd_price)) * ($order->num);
-                    if ($qdUParent) {
+
+                    //区代
+                    if ($qdAwardBalance > 0) {
                         UserBalanceOther::create([
                             'user_id' => $qdUParent->id,
                             'order_other_id' => $order->id,
@@ -431,11 +438,45 @@ class Notify extends Base
                         ]);
                         //增加当前用户锁定余额
                         UserModel::where('id', $qdUParent->id)->setInc('lock_balance', $qdAwardBalance);
-                    } else {
-                        $lossBalance += $qdAwardBalance;
+
+                        //增加用户流水记录
+                        //税费
+                        $qdtax = round($configModel->goods_rate / 100 * $qdAwardBalance, 2);
+                        UserLogs::create([
+                            'user_id' => $qdUParent->id,
+                            'num' => $qdAwardBalance - $qdtax,
+                            'tip' => "用户应得" . $qdAwardBalance . '。税费' . $qdtax,
+                            'type' => 9,
+                            'create_at' => $now
+                        ]);
                     }
-                    //写入流失记录
+
+                    //个代
+                    if ($gdAwardBalance > 0) {
+                        UserBalanceOther::create([
+                            'user_id' => $gdUParent->id,
+                            'order_other_id' => $order->id,
+                            'lock_balance' => $gdAwardBalance,
+                            'create_at' => $now
+                        ]);
+                        //增加当前用户锁定余额
+                        UserModel::where('id', $gdUParent->id)->setInc('lock_balance', $gdAwardBalance);
+
+                        //增加用户流水记录
+                        //税费
+                        $gdtax = round($configModel->goods_rate / 100 * $gdAwardBalance, 2);
+                        UserLogs::create([
+                            'user_id' => $gdUParent->id,
+                            'num' => $gdAwardBalance - $gdtax,
+                            'tip' => "用户应得" . $gdAwardBalance . '。税费' . $gdtax,
+                            'type' => 9,
+                            'create_at' => $now
+                        ]);
+                    }
+
+                    //流失
                     if ($lossBalance > 0) {
+                        //写入流失记录
                         OrdersOtherLoss::create([
                             'user_id' => $user->id,
                             'orders_otherid' => $order->id,
@@ -443,9 +484,7 @@ class Notify extends Base
                             'create_at' => $now
                         ]);
                     }
-
                 }
-
                 Db::commit();
                 return true;
             } catch (\Exception $e) {
@@ -457,6 +496,7 @@ class Notify extends Base
         }
 
     }
+
 
     public function testPay()
     {
