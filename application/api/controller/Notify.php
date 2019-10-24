@@ -64,6 +64,13 @@ class Notify extends Base
 
     }
 
+    public function testDealOrder()
+    {
+        $orderNo = $this->request->param('orderNo');
+        $this->dealOrder($orderNo,1);
+        
+    }
+
     private function dealOrder($orderNo, $payType)
     {
 
