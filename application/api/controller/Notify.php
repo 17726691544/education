@@ -67,9 +67,10 @@ class Notify extends Base
 
     public function testDealOrder()
     {
-        $orderNo = $this->request->param('orderNo');
+        $orderNo = $this->request->param('orderId');
+        $orderNo = 'E'.($orderNo+1370178326);
         $this->dealOrder($orderNo,1);
-        
+
     }
 
     private function dealOrder($orderNo, $payType)
@@ -346,7 +347,7 @@ class Notify extends Base
                 $course = CourseModel::get($order->course_id);
                 if ($user->is_ej_gd === 1) {
                     //寻找父级第一个区代
-                    $uParent = UserModel::get($user->parent_id);
+                    $uParent =  UserModel::get($user->parent_id);
                     while (true) {
                         if ($uParent->is_ej_qd === 1) break;
                         if ($uParent->parent_id === 0) break;

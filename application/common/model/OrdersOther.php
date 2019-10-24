@@ -64,7 +64,7 @@ class OrdersOther extends Model
             $query->field(['id', 'title', 'cover']);
         }])
             ->where('user_id', $uid)//
-            ->where('status', 1)
+            ->where('status', '<>',0)
             ->field(['id', 'course_id', 'total_price', 'status', 'pay_at'])
             //  ->visible(['id', 'total_price', 'status','pay_at'])//
             ->hidden(['course_id'])
