@@ -359,7 +359,7 @@ class Notify extends Base
                         $uParent = UserModel::get($uParent->parent_id);
                     }
                     //奖励
-                    $awardBalance = ($order->price - ($course->qd_price)) * ($order->num);
+                    $awardBalance = ($course->gd_price - ($course->qd_price)) * ($order->num);
                     if ($qdUParent) {
                         UserBalanceOther::create([
                             'user_id' => $qdUParent->id,
@@ -407,7 +407,7 @@ class Notify extends Base
                     }
                     $lossBalance = 0;
                     //奖励个代
-                    $gdAwardBalance = ($order->price - ($course->gd_price)) * ($order->num);
+                    $gdAwardBalance = ($course->price - ($course->gd_price)) * ($order->num);
                     if ($gdUParent) {
                         UserBalanceOther::create([
                             'user_id' => $gdUParent->id,
@@ -421,7 +421,7 @@ class Notify extends Base
                         $lossBalance += $gdAwardBalance;
                     }
                     //奖励区代
-                    $qdAwardBalance = ($order->price - ($course->qd_price)) * ($order->num) - $gdAwardBalance;
+                    $qdAwardBalance = ($course->gd_price - ($course->qd_price)) * ($order->num);
                     if ($qdUParent) {
                         UserBalanceOther::create([
                             'user_id' => $qdUParent->id,
