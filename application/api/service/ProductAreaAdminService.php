@@ -18,7 +18,7 @@ class ProductAreaAdminService
 
         //获取区域代理信息
         $agentOhter = AgentOther::where('user_id', $uid)
-            ->hidden(['id','user_id','province_id','city_id','country_id','create_at'])
+            ->field(['province_id', 'city_id', 'country_id', 'province', 'city', 'country'])
             ->find();
         if (!$agentOhter) {
             throw new BusinessBaseException('没找到区域代理信息');
@@ -28,15 +28,16 @@ class ProductAreaAdminService
         $where = [
             'province_id' => $agentOhter->province_id,
             'city_id' => $agentOhter->city_id,
-            'country_id' => $agentOhter->country_id,
-            'status' => 3
+            'country_id' => $agentOhter->country_id
+
         ];
         $ordersOther = OrdersOther::where($where)
+            ->where('status', '<>', 0)
             ->field(['province_id', 'city_id', 'country_id',
                 'sum(num) as totalNum', 'sum(total_price) as totalPrice'])
             ->group(['province_id', 'city_id', 'country_id'])
             ->find();
-        if($agentOhter && $ordersOther){
+        if ($agentOhter && $ordersOther) {
             $agentOhter = $agentOhter->toArray();
             $agentOhter['totalNum'] = $ordersOther->totalNum;
             $agentOhter['totalPrice'] = $ordersOther->totalPrice;
