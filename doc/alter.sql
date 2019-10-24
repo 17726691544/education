@@ -1,6 +1,8 @@
  ALTER TABLE `user` ADD `is_ej_qd` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否为耳机区代 0、不是  1、是';
  ALTER TABLE `user` ADD `is_ej_gd` tinyint(255) unsigned NOT NULL DEFAULT '0' COMMENT '是否为耳机个代 0、不是  1、是';
 
+ ALTER TABLE `config` ADD `goods_rate` tinyint(3) unsigned NOT NULL DEFAULT '5' COMMENT '商品税费百分比';
+
 
 
  ALTER TABLE `course` ADD `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '产品类型 0：课程 1：耳机';

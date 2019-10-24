@@ -54,6 +54,10 @@ class Goods extends Base
                 return $this->jsonBack(1,$r);
             }
 
+            if ($params['price'] <= $params['gd_price'] || $params['gd_price'] <= $params['qd_price'] ) {
+                return $this->jsonBack(2,'零售价格>个代价格>区代价格');
+            }
+
             $now = time();
             CourseModel::create([
                 'title' => $params['title'],
@@ -130,6 +134,10 @@ class Goods extends Base
             $r = $this->validate($params,$rule,$msg);
             if (true !== $r) {
                 return $this->jsonBack(1,$r);
+            }
+
+            if ($params['price'] <= $params['gd_price'] || $params['gd_price'] <= $params['qd_price'] ) {
+                return $this->jsonBack(2,'零售价格>个代价格>区代价格');
             }
 
             $now = time();
