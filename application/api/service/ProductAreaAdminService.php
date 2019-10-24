@@ -24,6 +24,8 @@ class ProductAreaAdminService
             throw new BusinessBaseException('没找到区域代理信息');
         }
 
+        $now = time();
+        $monthStart = strtotime(date('Y-m-1', $now));
         //统计用户区域销量信息
         $where = [
             'province_id' => $agentOhter->province_id,
@@ -32,7 +34,8 @@ class ProductAreaAdminService
 
         ];
         $ordersOther = OrdersOther::where($where)
-            ->where('status', '<>', 0)
+            ->where('status', '>', 0)
+            ->where('create_at', 'BETWEEN', [$monthStart,$now])
             ->field(['province_id', 'city_id', 'country_id',
                 'sum(num) as totalNum', 'sum(total_price) as totalPrice'])
             ->group(['province_id', 'city_id', 'country_id'])
