@@ -430,21 +430,22 @@ class Notify extends Base
 
                     //区代
                     if ($qdAwardBalance > 0) {
+                        $qdtax = round($configModel->goods_rate / 100 * $qdAwardBalance, 2);
+                        $localBalance = $qdAwardBalance - $qdtax;
                         UserBalanceOther::create([
                             'user_id' => $qdUParent->id,
                             'order_other_id' => $order->id,
-                            'lock_balance' => $qdAwardBalance,
+                            'lock_balance' => $localBalance,
                             'create_at' => $now
                         ]);
                         //增加当前用户锁定余额
-                        UserModel::where('id', $qdUParent->id)->setInc('lock_balance', $qdAwardBalance);
+                        UserModel::where('id', $qdUParent->id)->setInc('lock_balance', $localBalance);
 
                         //增加用户流水记录
                         //税费
-                        $qdtax = round($configModel->goods_rate / 100 * $qdAwardBalance, 2);
                         UserLogs::create([
                             'user_id' => $qdUParent->id,
-                            'num' => $qdAwardBalance - $qdtax,
+                            'num' => $localBalance,
                             'tip' => "用户应得" . $qdAwardBalance . '。税费' . $qdtax,
                             'type' => 9,
                             'create_at' => $now
@@ -453,21 +454,22 @@ class Notify extends Base
 
                     //个代
                     if ($gdAwardBalance > 0) {
+                        $gdtax = round($configModel->goods_rate / 100 * $gdAwardBalance, 2);
+                        $localBalance = $gdAwardBalance - $gdtax;
                         UserBalanceOther::create([
                             'user_id' => $gdUParent->id,
                             'order_other_id' => $order->id,
-                            'lock_balance' => $gdAwardBalance,
+                            'lock_balance' => $localBalance,
                             'create_at' => $now
                         ]);
                         //增加当前用户锁定余额
-                        UserModel::where('id', $gdUParent->id)->setInc('lock_balance', $gdAwardBalance);
+                        UserModel::where('id', $gdUParent->id)->setInc('lock_balance', $localBalance);
 
                         //增加用户流水记录
                         //税费
-                        $gdtax = round($configModel->goods_rate / 100 * $gdAwardBalance, 2);
                         UserLogs::create([
                             'user_id' => $gdUParent->id,
-                            'num' => $gdAwardBalance - $gdtax,
+                            'num' =>$localBalance,
                             'tip' => "用户应得" . $gdAwardBalance . '。税费' . $gdtax,
                             'type' => 9,
                             'create_at' => $now
