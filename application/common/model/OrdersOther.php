@@ -12,7 +12,8 @@ class OrdersOther extends Model
     protected $table = 'orders_other';
 
     protected $type = [
-        'create_at' => 'timestamp'
+        'create_at' => 'timestamp',
+        'pay_at' => 'timestamp'
     ];
 
     public function getStatusDescAttr($value, $data)
@@ -63,8 +64,11 @@ class OrdersOther extends Model
             $query->field(['id', 'title', 'cover']);
         }])
             ->where('user_id', $uid)//
-            ->field(['id', 'course_id', 'total_price', 'status'])
-            ->visible(['id', 'total_price', 'status'])//
+            ->where('status', 1)
+            ->field(['id', 'course_id', 'total_price', 'status', 'pay_at'])
+            //  ->visible(['id', 'total_price', 'status','pay_at'])//
+            ->hidden(['course_id'])
+            ->order('id', 'desc')
             ->append(['status_desc'])
             ->paginate($pageNum, false, [
                 'page' => $page
@@ -80,7 +84,7 @@ class OrdersOther extends Model
             ->where('user_id', $uid)//
             ->field(['id', 'course_id', 'name', 'tel', 'price', 'total_price'
                 , 'num', 'pay_type', 'status', 'address', 'pay_at', 'create_at'])
-            ->append(['status_desc','order_number'])
+            ->append(['status_desc', 'order_number'])
             ->find();
     }
 }
