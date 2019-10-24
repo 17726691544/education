@@ -471,7 +471,7 @@ class Notify extends Base
                             'user_id' => $gdUParent->id,
                             'num' =>$localBalance,
                             'tip' => "用户应得" . $gdAwardBalance . '。税费' . $gdtax,
-                            'type' => 9,
+                            'type' => 10,
                             'create_at' => $now
                         ]);
                     }
