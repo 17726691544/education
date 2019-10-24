@@ -2,6 +2,8 @@
 
 namespace app\man\controller;
 use app\common\controller\Base;
+use app\common\model\AgentOther;
+use app\common\model\OrdersOther;
 use app\man\model\User as UserModel;
 use app\man\model\UserLogs;
 use app\man\model\WithdrawLogs;
@@ -186,4 +188,184 @@ class User extends Base
             return $e->getMessage();
         }
     }
+
+    /**
+     * 商品订单
+     * @return mixed
+     */
+    public function goodsOrder() {
+        $params = $this->getParams(['status','code']);
+        $params['status'] = $params['status'] === null ? '1' : $params['status'];
+        $query = [
+            'query' => $params
+        ];
+        if ($this->request->isPost()) {
+            $query['page'] = 1;
+        }
+
+        $map = [];
+
+        if ($params['code']) {
+            $user_id = UserModel::where('tel',$params['code'])->value('id');
+            if (!$user_id) {
+                $this->error('用户不存在');
+            }
+            $map[] = ['user_id','=',$user_id];
+        }
+
+        if ($params['status'] === '-1') {
+            $map[] = ['status','in',[1,2,3]];
+        } else {
+            $map[] = ['status','=',$params['status']];
+        }
+
+        try {
+            $list = OrdersOther::with('user,course')->where($map)->paginate(10,false,$query);
+            $this->assign('list',$list);
+            $this->assign('params',$params);
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
+        return $this->fetch('goodsOrder');
+    }
+
+    /**
+     * 订单信息
+     * @return \think\response\Json
+     */
+    public function orderInfo() {
+        $params = $this->getParams(['id']);
+        $rule = [
+            'id' => 'require|integer|>:0'
+        ];
+        $msg = [
+            'id' => '错误的操作'
+        ];
+
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        try {
+            $order = OrdersOther::with('user,course')->append(['order_number'])->get($params['id']);
+            if (!$order) {
+                throw $this->createError('错误的操作');
+            }
+        } catch (\Exception $e) {
+            return $this->jsonBack(2,$e->getMessage());
+        }
+
+        return $this->jsonBack(0,'',$order);
+    }
+
+    /**
+     * 订单发货
+     * @return \think\response\Json
+     */
+    public function sendOrder() {
+        $params = $this->getParams(['id','express_name','express_code']);
+        $rule = [
+            'id' => 'require|integer|>:0',
+            'express_name' => 'require|min:1',
+            'express_code' => 'require|min:1'
+        ];
+        $msg = [
+            'id' => '错误的操作',
+            'express_name' => '快递公司不为空',
+            'express_code' => '快递单号不为空'
+        ];
+
+        $r = $this->validate($params,$rule,$msg);
+        if (true !== $r) {
+            return $this->jsonBack(1,$r);
+        }
+
+        Db::startTrans();
+        try {
+            $order = OrdersOther::where('id',$params['id'])->lock(true)->find();
+            if (!$order) {
+                throw $this->createError('订单不存在');
+            }
+
+            if ($order->status !== 1) {
+                throw $this->createError('该订单已发货');
+            }
+
+            $order->express_name = $params['express_name'];
+            $order->express_code = $params['express_code'];
+            $order->status = 2;
+            $order->save();
+            Db::commit();
+            return $this->jsonBack(0,'操作成功');
+        } catch (\Exception $e) {
+            Db::rollback();;
+            return $this->jsonBack(2,$e->getMessage());
+        }
+    }
+
+    /**
+     * 商品销量
+     * @return mixed|\think\response\Json
+     */
+    public function goodsNum() {
+        if ($this->request->isPost()) {
+            $params = $this->getParams(['key']);
+            $rule = [
+                'key' => 'require|mobile'
+            ];
+            $msg = [
+                'key' => '区代手机号不正确'
+            ];
+
+            $r = $this->validate($params,$rule,$msg);
+            if (true !== $r) {
+                return $this->jsonBack(1,$r);
+            }
+
+            try {
+                $user = UserModel::where('tel',$params['key'])->find();
+                if (!$user || $user->is_ej_qd !== 1) throw $this->createError('用户不存在或不是区代');
+                $agent = AgentOther::where('user_id',$user->id)->find();
+                if (!$agent) throw $this->createError('系统错误,找不到匹配的区代');
+
+                $now = time();
+                $monthStart = strtotime(date('Y-m-1',$now));
+                $info = OrdersOther::where('status','>',0)
+                    ->where('create_at','between',[$monthStart,$now])
+                    ->where('country_id',$agent->country_id)
+                    ->field('SUM(`num`) as totalNum,SUM(`total_price`) as totalSell')
+                    ->find();
+
+                return $this->jsonBack(0,'',[
+                    'id' => $user->id,
+                    'tel' => $user->tel,
+                    'area' => "{$agent->province} {$agent->city} {$agent->country}",
+                    'totalNum' => $info['totalNum'],
+                    'totalSell' => $info['totalSell']
+                ]);
+
+            } catch (\Exception $e) {
+                return $this->jsonBack(2,$e->getMessage());
+            }
+
+        } else {
+            $now = time();
+            $monthStart = strtotime(date('Y-m-1',$now));
+
+            try {
+                $info = OrdersOther::where('status','>',0)
+                    ->where('create_at','between',[$monthStart,$now])
+                    ->field('SUM(`num`) as totalNum,SUM(`total_price`) as totalSell')
+                    ->find();
+                $this->assign('info',$info);
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
+
+            return $this->fetch('goodsNum');
+        }
+    }
+
+
 }

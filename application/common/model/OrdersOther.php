@@ -8,7 +8,7 @@ use think\Model;
 
 class OrdersOther extends Model
 {
-    const START_TRADE_NUM = 1370178326;
+    const START_TRADE_NUM = 1470178326;
     protected $table = 'orders_other';
 
     protected $type = [
@@ -30,6 +30,10 @@ class OrdersOther extends Model
     public function course()
     {
         return $this->belongsTo('Course', 'course_id', 'id');
+    }
+
+    public function user() {
+        return $this->belongsTo('User', 'user_id', 'id');
     }
 
     /**
