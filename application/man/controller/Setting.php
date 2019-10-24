@@ -15,20 +15,22 @@ class Setting extends Base
      */
     public function index() {
         if ($this->request->isPost()) {
-            $params = $this->getParams(['quota_price','qd_quota','qdtjr_rate','gd_quota','tixian_less']);
+            $params = $this->getParams(['quota_price','qd_quota','qdtjr_rate','gd_quota','tixian_less','goods_rate']);
             $rule = [
                 'quota_price' => 'require|float|>=:0.01',
                 'qd_quota' => 'require|integer|>=:1',
                 'qdtjr_rate' => 'require|integer|between:0,100',
                 'gd_quota' => 'require|integer|>=:1',
                 'tixian_less' => 'require|float|>=:0.01',
+                'goods_rate' => 'require|integer|between:0,100'
             ];
             $msg = [
                 'quota_price' => '名额单价不小于0.01',
                 'qd_quota' => '区代购买名额不小于1',
                 'qdtjr_rate' => '区代推荐人奖励百分比在0-100之间',
                 'gd_quota' => '个代购买名额不小于1',
-                'tixian_less' => '最低提现金额不小于0.01'
+                'tixian_less' => '最低提现金额不小于0.01',
+                'goods_rate' => '商品奖励税率百分比在0-100之间'
             ];
             $r = $this->validate($params,$rule,$msg);
             if (true !== $r) {
@@ -40,7 +42,8 @@ class Setting extends Base
                 'qd_quota' => $params['qd_quota'],
                 'qdtjr_rate' => $params['qdtjr_rate'],
                 'gd_quota' => $params['gd_quota'],
-                'tixian_less' => $params['tixian_less']
+                'tixian_less' => $params['tixian_less'],
+                'goods_rate' => $params['goods_rate']
             ],['id'=>1]);
 
             $this->success('修改成功');

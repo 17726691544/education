@@ -489,8 +489,7 @@ class Notify extends Base
                 return true;
             } catch (\Exception $e) {
                 Db::rollback();
-//                return $e->getMessage();
-                throw $e;
+                return $e->getMessage();
             }
         } else {
             return false;

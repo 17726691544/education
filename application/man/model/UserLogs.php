@@ -25,7 +25,7 @@ class UserLogs extends Model
      * @return mixed
      */
     public function getTypeStrAttr($value,$data) {
-        $map = ['','提现','推荐区代','区代推荐人', '区代', '教学中心', '个代', '个代推荐人','解冻资金'];
+        $map = ['','提现','推荐区代','区代推荐人', '区代', '教学中心', '个代', '个代推荐人','解冻资金','商品区代奖励','商品个代奖励'];
         return $map[$data['type']];
     }
 

@@ -224,7 +224,7 @@ class WxService
      * @return string
      */
     public function wxSuccess() {
-        return '<xml><return_code><![CDATA[SUCCESS]]>SUCCESS</return_code><return_msg><![CDATA[OK]]>OK</return_msg></xml>';
+        return '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
     }
 
     /**
@@ -232,7 +232,7 @@ class WxService
      * @return string
      */
     public function wxFail() {
-        return '<xml><return_code><![CDATA[FAIL]]>FAIL</return_code><return_msg><![CDATA[FAIL]]>FAIL</return_msg></xml>';
+        return 'fail';
     }
 
     /**
