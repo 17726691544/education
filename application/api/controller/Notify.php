@@ -403,7 +403,9 @@ class Notify extends Base
                             break;
                         }
                         if ($uParent->is_ej_gd === 1) {
-                            $gdUParent = $uParent;
+                            if (!$gdUParent) {
+                                $gdUParent = $uParent;
+                            }
                         }
                         if ($uParent->parent_id === 0) break;
                         $uParent = UserModel::get($uParent->parent_id);
@@ -469,7 +471,7 @@ class Notify extends Base
                         //税费
                         UserLogs::create([
                             'user_id' => $gdUParent->id,
-                            'num' =>$localBalance,
+                            'num' => $localBalance,
                             'tip' => "用户应得" . $gdAwardBalance . '。税费' . $gdtax,
                             'type' => 10,
                             'create_at' => $now
