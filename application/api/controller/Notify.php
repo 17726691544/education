@@ -46,7 +46,6 @@ class Notify extends Base
         unset($info['sign']);
         $sign = $service->sign($info);
         if ($preSign !== $sign) {
-            dump('验证签名失败');
             return $service->wxFail();
         }
 
@@ -439,5 +438,14 @@ class Notify extends Base
             return false;
         }
 
+    }
+
+    public function testPay() {
+        $list = OrdersOther::where('status',0)->select();
+        foreach ($list as $item) {
+            $r = $this->dealOrder($item->order_number,1);
+            dump($r);
+        }
+        return 'ok';
     }
 }
