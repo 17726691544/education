@@ -429,7 +429,6 @@ class Notify extends Base
                         //没找到个代 区代 全部流失
                         $lossBalance = ($course->price - ($course->qd_price)) * ($order->num);
                     }
-
                     //区代
                     if ($qdAwardBalance > 0) {
                         $qdtax = round($configModel->goods_rate / 100 * $qdAwardBalance, 2);
