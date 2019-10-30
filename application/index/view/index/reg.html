@@ -71,7 +71,7 @@
 	         <img src="/static/front/image/common/password.png"/>
 	         <input v-model="invite_code" type="text" placeholder="请输入老师手机号码"/>
 	      </div>
-	      <div class="btn" tapmode>注册</div>
+	      <div class="btn" @click="reg">注册</div>
 	   </div>
     </div>
     <div class="accept">注册即同意<font style="color:#1778D8">《用户协议》</font></div>
@@ -90,13 +90,18 @@
 			tel_code: '',
 			pass: '',
 			safe_pass: '',
-			invite_code: '',
+			invite_code: '{$code}',
 			tip: '获取验证码',
 			left: 60
 		},
 		methods: {
 			reg: function () {
 				//注册
+				if (this.u_type == 0) {
+					layer.msg("请选择账户类型");
+					return;
+				}
+
 				var postData = {
 					tel: this.tel,
 					u_type: this.u_type,
@@ -108,6 +113,9 @@
 				$.post('{:url("api/user/register")}',postData,function (ret) {
 					if (ret.code === 0) {
 						layer.msg("注册成功，请在APP端登陆");
+						setTimeout(function () {
+							location.href = 'https://jiaoyu.cqallx.com/xz/download.html';
+						},1000);
 					} else {
 						layer.msg(ret.msg);
 					}

@@ -12,6 +12,9 @@ class Index extends Base
     }
 
     public function reg() {
+        $params = $this->getParams(['code']);
+        $params['code'] = $params['code'] ? $params['code'] : '';
+        $this->assign('code',$params['code']);
         return $this->fetch('reg');
     }
 }

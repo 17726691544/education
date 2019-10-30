@@ -26,7 +26,7 @@ class Qrcode extends Base
         if (!$user) throw new BusinessBaseException('获取用户信息失败');
 
         // 生成二维码并直接展示给前端
-        $content = 'http://www.baidu.com?inviteCode=' . $user->invite_code;
+        $content = $this->request->domain() . '/index.php/reg?code=' . $user->invite_code;
         $qr_code = new QrcodeUtil();
         $qr_img = $qr_code->createServer($content);
         $base64_encode = base64_encode($qr_img);
