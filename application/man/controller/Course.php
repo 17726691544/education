@@ -16,7 +16,10 @@ class Course extends Base
      */
     public function index() {
         try {
-            $list = CourseModel::where('status',0)->order('id desc')->paginate(10);
+            $list = CourseModel::where('status',0)
+                ->where('type',0)
+                ->order('id desc')
+                ->paginate(10);
             $this->assign('list',$list);
             return $this->fetch('index');
         } catch (\Exception $e) {

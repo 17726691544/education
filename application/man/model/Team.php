@@ -51,6 +51,6 @@ class Team extends Model
      * @return mixed
      */
     public function getImagesArrAttr($value,$data) {
-        return json_decode($data['images'],true);
+        return json_decode(htmlspecialchars_decode($data['images']),true);
     }
 }
