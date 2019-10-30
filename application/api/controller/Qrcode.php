@@ -30,6 +30,7 @@ class Qrcode extends Base
         $qr_code = new QrcodeUtil();
         $qr_img = $qr_code->createServer($content);
         $base64_encode = base64_encode($qr_img);
+
         return $this->jsonBack(0,'成功' ,$base64_encode);
 
     }
