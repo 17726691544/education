@@ -25,7 +25,8 @@
         "ext-simplexml": "*",
         "ext-openssl": "*",
         "ext-mbstring": "*",
-        "aliyuncs/oss-sdk-php": "^2.3"
+        "aliyuncs/oss-sdk-php": "^2.3",
+        "endroid/qrcode": "^3.7"
     },
     "autoload": {
         "psr-4": {
