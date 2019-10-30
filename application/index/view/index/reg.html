@@ -2,153 +2,157 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>登陆/注册</title>
     <link rel="stylesheet" type="text/css" href="/static/front/css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="/static/front/css/aui-flex.css"/>
     <link rel="stylesheet" type="text/css" href="/static/front/css/common.css?id=2"/>
-	<style>
-		select {
-			border: none;
-			background: none;
-			border-radius: 0;
-			box-shadow: none;
-			display: block;
-			padding: 0;
-			margin: 0;
-			width: 100%;
-			min-height: 2.2rem;
-			color: #424242;
-			font-size: 15px;
-			font-family: inherit;
-			box-sizing: border-box;
-			-webkit-user-select: text;
-			user-select: text;
-			-webkit-appearance: none;
-			appearance: none;
-			-webkit-appearance: none;
-			padding-left: 40px;
-		}
-	</style>
+    <style>
+        select {
+            border: none;
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+            display: block;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            min-height: 2.2rem;
+            color: #424242;
+            font-size: 15px;
+            font-family: inherit;
+            box-sizing: border-box;
+            -webkit-user-select: text;
+            user-select: text;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-appearance: none;
+            padding-left: 40px;
+        }
+    </style>
 </head>
 <body style="background:#fff;">
- <div id="app" v-cloak>
+<div id="app" v-cloak>
     <div class="login-top-banner">
         <img src="/static/front/image/common/logo.png" class="logo"/>
     </div>
     <div class="login-float-banner">
-       <div class="aui-flex-col">
-          <div class="aui-flex-8 aui-font-size-18 activebar active">注册<div class="line"></div></div>
-       </div>
-       <div class="blockBanners">
-	      <div class="banner banimg">
-	         <img src="/static/front/image/common/username.png"/>
-	         <input v-model="tel" type="text" placeholder="请输入手机号"/>
-	      </div>
-	      <div class="banner banimg">
-	         <img src="/static/front/image/common/password.png"/>
-	         <input v-model="tel_code" type="text" placeholder="请输入验证码"/>
-	         <div @click="verify" class="op">{{tip}}</div>
-	      </div>
-	      <div class="banner banimg">
-	         <img src="/static/front/image/common/password.png"/>
-	         <input v-model="pass" type="password" placeholder="请设置登陆密码"/>
-	      </div>
-	      <div class="banner banimg">
-	         <img src="/static/front/image/common/password.png"/>
-	         <input v-model="safe_pass" type="password" placeholder="请设置安全密码"/>
-	      </div>
-		   <div class="banner banimg">
-			   <img src="/static/front/image/common/password.png"/>
-			   <select v-model="u_type">
-				   <option value="0">选择账号类型</option>
-				   <option value="1">学员</option>
-				   <option value="2">教师</option>
-			   </select>
-		   </div>
-	      <div class="banner banimg">
-	         <img src="/static/front/image/common/password.png"/>
-	         <input v-model="invite_code" type="text" placeholder="请输入老师手机号码"/>
-	      </div>
-	      <div class="btn" @click="reg">注册</div>
-	   </div>
+        <div class="aui-flex-col">
+            <div class="aui-flex-8 aui-font-size-18 activebar active">注册
+                <div class="line"></div>
+            </div>
+        </div>
+        <div class="blockBanners">
+            <div class="banner banimg">
+                <img src="/static/front/image/common/username.png"/>
+                <input v-model="tel" type="text" placeholder="请输入手机号"/>
+            </div>
+            <div class="banner banimg">
+                <img src="/static/front/image/common/password.png"/>
+                <input v-model="tel_code" type="text" placeholder="请输入验证码"/>
+                <div @click="verify" class="op">{{tip}}</div>
+            </div>
+            <div class="banner banimg">
+                <img src="/static/front/image/common/password.png"/>
+                <input v-model="pass" type="password" placeholder="请设置登陆密码"/>
+            </div>
+            <div class="banner banimg">
+                <img src="/static/front/image/common/password.png"/>
+                <input v-model="safe_pass" type="password" placeholder="请设置安全密码"/>
+            </div>
+            <div class="banner banimg">
+                <img src="/static/front/image/common/password.png"/>
+                <select v-model="u_type">
+                    <option value="0">选择账号类型</option>
+                    <option value="1">学员</option>
+                    <option value="2">教师</option>
+                </select>
+            </div>
+            <div class="banner banimg">
+                <img src="/static/front/image/common/password.png"/>
+                <input v-model="invite_code" type="text" placeholder="请输入老师手机号码"/>
+            </div>
+            <div class="btn" @click="reg">注册</div>
+        </div>
     </div>
-    <div class="accept">注册即同意<font style="color:#1778D8">《用户协议》</font></div>
- </div>   
+    <p style="text-align: center;margin-top: 10px;"><a href="https://jiaoyu.cqallx.com/xz/download.html"><font style="color:#1778D8">下载APP</font></a></p>
+    <div style="margin-top: 10px;" class="accept">注册即同意<font style="color:#1778D8">《用户协议》</font></div>
+</div>
 </body>
 <script type="text/javascript" src="/static/front/script/jquery.min.js"></script>
 <script type="text/javascript" src="/static/front/script/layer/layer.js"></script>
 <script type="text/javascript" src="/static/front/script/vue.min.js"></script>
 <script>
-	let timer;
-	const app = new Vue({
-		el: '#app',
-		data: {
-			tel: '',
-			u_type: 0,
-			tel_code: '',
-			pass: '',
-			safe_pass: '',
-			invite_code: '{$code}',
-			tip: '获取验证码',
-			left: 60
-		},
-		methods: {
-			reg: function () {
-				//注册
-				if (this.u_type == 0) {
-					layer.msg("请选择账户类型");
-					return;
-				}
+    let timer;
+    const app = new Vue({
+        el: '#app',
+        data: {
+            tel: '',
+            u_type: 0,
+            tel_code: '',
+            pass: '',
+            safe_pass: '',
+            invite_code: '{$code}',
+            tip: '获取验证码',
+            left: 60
+        },
+        methods: {
+            reg: function () {
+                //注册
+                if (this.u_type == 0) {
+                    layer.msg("请选择账户类型");
+                    return;
+                }
 
-				var postData = {
-					tel: this.tel,
-					u_type: this.u_type,
-					tel_code: this.tel_code,
-					pass: this.pass,
-					safe_pass: this.safe_pass,
-					invite_code: this.invite_code
-				};
-				$.post('{:url("api/user/register")}',postData,function (ret) {
-					if (ret.code === 0) {
-						layer.msg("注册成功，请在APP端登陆");
-						setTimeout(function () {
-							location.href = 'https://jiaoyu.cqallx.com/xz/download.html';
-						},1000);
-					} else {
-						layer.msg(ret.msg);
-					}
-				},'json');
-			},
-			verify: function () {
-				//注册验证码
-				if (timer) {
-					return;
-				}
-				var postData = {
-					tel: this.tel,
-					send_type: 1,
-					code_type: 1
-				};
-				$.post('{:url("api/user/getCode")}',postData,function (ret) {
-					if (ret.code === 0) {
-						timer = setInterval(function () {
-							if (--app.left <= 0) {
-								clearInterval(timer);
-								timer = null;
-								app.tip = '获取验证码';
-								app.left = 60;
-							} else {
-								app.tip = app.left + 's';
-							}
-						},1000);
-					} else {
-						layer.msg(ret.msg);
-					}
-				},'json');
-			},
-		}
-	});
+                var postData = {
+                    tel: this.tel,
+                    u_type: this.u_type,
+                    tel_code: this.tel_code,
+                    pass: this.pass,
+                    safe_pass: this.safe_pass,
+                    invite_code: this.invite_code
+                };
+                $.post('{:url("api/user/register")}', postData, function (ret) {
+                    if (ret.code === 0) {
+                        layer.msg("注册成功，请在APP端登陆");
+                        setTimeout(function () {
+                            location.href = 'https://jiaoyu.cqallx.com/xz/download.html';
+                        }, 1000);
+                    } else {
+                        layer.msg(ret.msg);
+                    }
+                }, 'json');
+            },
+            verify: function () {
+                //注册验证码
+                if (timer) {
+                    return;
+                }
+                var postData = {
+                    tel: this.tel,
+                    send_type: 1,
+                    code_type: 1
+                };
+                $.post('{:url("api/user/getCode")}', postData, function (ret) {
+                    if (ret.code === 0) {
+                        timer = setInterval(function () {
+                            if (--app.left <= 0) {
+                                clearInterval(timer);
+                                timer = null;
+                                app.tip = '获取验证码';
+                                app.left = 60;
+                            } else {
+                                app.tip = app.left + 's';
+                            }
+                        }, 1000);
+                    } else {
+                        layer.msg(ret.msg);
+                    }
+                }, 'json');
+            },
+        }
+    });
 </script>
 </html>
