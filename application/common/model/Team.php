@@ -12,14 +12,21 @@ class Team extends Model
 
     public function getImagesAttr($value)
     {
-        if(!empty($value)){
+        if (!empty($value)) {
             return json_decode(htmlspecialchars_decode($value));
         }
     }
 
-    public static function  getTeamList($page, $pageNum)
+    public function getDetailAttr($value)
     {
-        return self::field(['id','name','tip','images'])->paginate($pageNum, false, [
+        if (!empty($value)) {
+            return htmlspecialchars_decode($value);
+        }
+    }
+
+    public static function getTeamList($page, $pageNum)
+    {
+        return self::field(['id', 'name', 'tip', 'images'])->paginate($pageNum, false, [
             'page' => $page
         ])->hidden(['images'])->each(function ($item, $key) {
             try {
@@ -32,6 +39,6 @@ class Team extends Model
 
     public static function getTeamDetail($teamId)
     {
-        return self::get($teamId)->hidden(['create_at','id']);
+        return self::get($teamId)->hidden(['create_at', 'id']);
     }
 }
