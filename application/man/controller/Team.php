@@ -46,7 +46,7 @@ class Team extends Base
                 return $this->jsonBack(1,$r);
             }
 
-            $arr = json_decode($params['images'],true);
+            $arr = json_decode(htmlspecialchars_decode($params['images']),true);
             if (!is_array($arr) || empty($arr) || count($arr) > 3) {
                 return $this->jsonBack(2,'请上传1-3张团队图片');
             }
@@ -92,7 +92,7 @@ class Team extends Base
                 return $this->jsonBack(1,$r);
             }
 
-            $arr = json_decode($params['images'],true);
+            $arr = json_decode(htmlspecialchars_decode($params['images']),true);
             if (!is_array($arr) || empty($arr) || count($arr) > 3) {
                 return $this->jsonBack(2,'请上传1-3张团队图片');
             }

@@ -120,7 +120,7 @@
                 id: '{$team.id}',
                 name: '{$team.name}',
                 tip: '{$team.tip}',
-                images: JSON.parse('{$team.images|raw}')
+                images: JSON.parse('{$team.images|raw|htmlspecialchars_decode}')
             },
             methods:{
                 bindUploader:function () {
