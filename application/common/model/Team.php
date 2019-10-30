@@ -13,7 +13,7 @@ class Team extends Model
     public function getImagesAttr($value)
     {
         if(!empty($value)){
-            return json_decode($value);
+            return json_decode(htmlspecialchars_decode($value));
         }
     }
 
