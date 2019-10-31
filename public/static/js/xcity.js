@@ -1,4 +1,4 @@
-﻿$.fn.xcity = function(pName,cName,aName){
+$.fn.xcity = function(pName,cName,aName){
 
     this.p = $(this).find('select[lay-filter=province]');
 

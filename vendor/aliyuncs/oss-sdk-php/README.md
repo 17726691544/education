@@ -1,4 +1,4 @@
-﻿# Alibaba Cloud OSS SDK for PHP
+# Alibaba Cloud OSS SDK for PHP
 
 [![Latest Stable Version](https://poser.pugx.org/aliyuncs/oss-sdk-php/v/stable)](https://packagist.org/packages/aliyuncs/oss-sdk-php)
 [![Build Status](https://travis-ci.org/aliyun/aliyun-oss-php-sdk.svg?branch=master)](https://travis-ci.org/aliyun/aliyun-oss-php-sdk)
