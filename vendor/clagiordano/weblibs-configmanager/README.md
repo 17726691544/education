@@ -1,4 +1,4 @@
-﻿![BuildStatus](https://travis-ci.org/clagiordano/weblibs-configmanager.svg?branch=master) ![License](https://img.shields.io/github/license/clagiordano/weblibs-configmanager.svg)
+![BuildStatus](https://travis-ci.org/clagiordano/weblibs-configmanager.svg?branch=master) ![License](https://img.shields.io/github/license/clagiordano/weblibs-configmanager.svg)
 
 # weblibs-configmanager
 weblibs-configmanager is a tool library for easily read and access to php config array file and direct read/write configuration file / object.
