@@ -9,7 +9,6 @@ use app\common\controller\Base;
 use app\common\exception\BusinessBaseException;
 use app\common\validate\BaseValidate;
 use app\common\model\User;
-
 class Qrcode extends Base
 {
 
