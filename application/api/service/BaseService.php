@@ -7,7 +7,6 @@ namespace app\api\service;
 use app\common\enum\CodeCaheEnum;
 use app\common\exception\BusinessBaseException;
 use app\common\model\CodeCahe;
-use app\common\model\User;
 
 class BaseService
 {

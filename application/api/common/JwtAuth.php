@@ -18,6 +18,7 @@ class JwtAuth
     private $expiresAt = 86400;
     private $tokenData;
 
+
     public static function instance()
     {
         if (is_null(self::$instance)) {
