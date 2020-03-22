@@ -3,6 +3,8 @@
 namespace app\index\controller;
 
 use app\common\controller\Base;
+use think\Response;
+
 
 class Index extends Base
 {
